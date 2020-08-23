@@ -752,44 +752,35 @@ CUDA_API void test()
 
 #pragma endregion
 
+class LifePeriodTest
+{
+public:
+	__host__ __device__ LifePeriodTest();
+	__host__ __device__ ~LifePeriodTest();
+
+private:
+
+};
+
+__global__ void LifeTest()
+{
+	LifePeriodTest test;
+}
+
 #pragma test
 int main()
 {
-	//int width, height, nrChannels;
-	//unsigned char *data = stbi_load("C:\\Users\\Hordr\\source\\repos\\CudaAPI\\x64\\Debug\\Textures\\test.png", &width, &height, &nrChannels, 0);
-	////std::cout << (int)data[5] << std::endl;
-	////std::cout << nrChannels << std::endl;
-	////int temp = sizeof(unsigned char);
-	////std::cout << sizeof(data) / sizeof(unsigned char) << std::endl;
-	//int elenum = width * height;
-	//for (int i = 0; i < elenum; i++)
-	//{
-	//	std::cout << (int)data[4 * i + 0] << "\t";
-	//	std::cout << (int)data[4 * i + 1] << "\t";
-	//	std::cout << (int)data[4 * i + 2] << "\t";
-	//	std::cout << (int)data[4 * i + 3] << std::endl;
-	//}
-	//stbi_image_free(data);
-	//std::cout << "tesing..." << std::endl;
-
-	//BufferMap* fb = new BufferMap[256*144];
-	//BufferMap* pb = new BufferMap[256 * 144];
-	initializeResources(256, 144, 100);
-	test1 << <1, 1 >> > ();
-	//addBufferMap(fb);
-	//addBufferMap(pb);
-	////AddSphere(0.0f, 0.0f, -5.0f, 1.0f, 1.0f, 1.0f, 1.0f,1.0f);
-	//AddPlane(0.0f, -2.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f);
-	//addTexture("C:\\Users\\Hordr\\source\\repos\\CavakazeRenderer\\CavakazeRenderer\\bin\\Debug\\Textures\\albedo.png");
-	//addTexture("C:\\Users\\Hordr\\source\\repos\\CavakazeRenderer\\CavakazeRenderer\\bin\\Debug\\Textures\\normal.png");
-	//addTexture("C:\\Users\\Hordr\\source\\repos\\CavakazeRenderer\\CavakazeRenderer\\bin\\Debug\\Textures\\metallic.png");
-	//addTexture("C:\\Users\\Hordr\\source\\repos\\CavakazeRenderer\\CavakazeRenderer\\bin\\Debug\\Textures\\roughness.png");
-	//addTexture("C:\\Users\\Hordr\\source\\repos\\CavakazeRenderer\\CavakazeRenderer\\bin\\Debug\\Textures\\ao.png");
-	//generateTextureList();
-	//setPrimitiveDesinyPBRMaterial(0, 0, 1, 2, 3, 4);
-	//generateScene();
-	//SendCamera(0.0f, 0.0f, 0.0f, -0.008749789f, 0.7140866f, -0.699945867f, -0.008926612f, 1.04719341f, 1.77777779f, 5, 0);
-	//renderScene(0,1);
+	LifeTest << <1, 1 >> > ();
 }
 
 #pragma endregion
+
+LifePeriodTest::LifePeriodTest()
+{
+	printf("Called LifePeriodTest::LifePeriodTest()\n");
+}
+
+LifePeriodTest::~LifePeriodTest()
+{
+	printf("Called LifePeriodTest::~LifePeriodTest()\n");
+}
