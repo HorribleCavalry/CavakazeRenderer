@@ -4,23 +4,38 @@
     <Filter Include="SourceCode">
       <UniqueIdentifier>{d4074090-9ce5-4d52-b642-78c39e693c0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SourceCode\Common">
+      <UniqueIdentifier>{89e05029-9663-4eae-9ca1-f06c68773d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CudaSTD">
+      <UniqueIdentifier>{764c04fe-04f1-4560-94f9-5d9e6bebbb67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SourceCode\stb_image.h">
-      <Filter>SourceCode</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\CudaAPI.cuh">
       <Filter>SourceCode</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="SourceCode\stb_image.cpp">
-      <Filter>SourceCode</Filter>
-    </ClCompile>
+    <ClInclude Include="SourceCode\Common\CudaUtility.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Common\stb_image.h">
+      <Filter>SourceCode\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\CudaSTD\CudaSTD.cuh">
+      <Filter>CudaSTD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">
       <Filter>SourceCode</Filter>
     </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\CudaSTD.cu">
+      <Filter>CudaSTD</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SourceCode\Common\stb_image.cpp">
+      <Filter>SourceCode\Common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

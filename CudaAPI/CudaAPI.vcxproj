@@ -11,14 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SourceCode\Common\CudaUtility.cuh" />
+    <ClInclude Include="SourceCode\Common\stb_image.h" />
     <ClInclude Include="SourceCode\CudaAPI.cuh" />
-    <ClInclude Include="SourceCode\stb_image.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="SourceCode\stb_image.cpp" />
+    <ClInclude Include="SourceCode\CudaSTD\CudaSTD.cuh" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu" />
+    <CudaCompile Include="SourceCode\CudaSTD\CudaSTD.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SourceCode\Common\stb_image.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A782D3AC-CF7C-402E-9326-9C5A564F4D75}</ProjectGuid>
