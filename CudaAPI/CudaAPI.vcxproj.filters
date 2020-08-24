@@ -9,9 +9,6 @@
     <ClInclude Include="SourceCode\stb_image.h">
       <Filter>SourceCode</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\CudaUtil.cuh">
-      <Filter>SourceCode</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\CudaAPI.cuh">
       <Filter>SourceCode</Filter>
     </ClInclude>
