@@ -13,6 +13,9 @@
   <ItemGroup>
     <CudaCompile Include="SourceCode\kernel.cu" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="SourceCode\CudaUtility.cuh" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A782D3AC-CF7C-402E-9326-9C5A564F4D75}</ProjectGuid>
     <RootNamespace>CudaAPI</RootNamespace>
