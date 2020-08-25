@@ -21,14 +21,10 @@ namespace custd
 		printf("Nothing");
 	}
 
-	void endl()
-	{
-		printf("\n");
-	}
-
 	Stream::Stream()
 	{
 	}
+
 	Stream::~Stream()
 	{
 	}
@@ -84,7 +80,7 @@ namespace custd
 	}
 	const Stream & Stream::operator<<(const char & val) const
 	{
-		printf("%c",val);
+		printf("%c", val);
 		return *this;
 	}
 	const Stream & Stream::operator<<(const char * val) const
@@ -97,4 +93,11 @@ namespace custd
 		(*edl)();
 		return *this;
 	}
+
+	void endl()
+	{
+		printf("\n");
+	}
+
+
 }

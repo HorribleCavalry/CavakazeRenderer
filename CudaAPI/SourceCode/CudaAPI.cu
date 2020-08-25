@@ -2,6 +2,40 @@
 #include <limits>
 #include "CudaSTD/CudaSTD.cuh"
 #include "Common/CudaUtility.cuh"
+
+#include <cuda/std/type_traits>
+#include <cuda/std/utility>
+
+class ost
+{
+	__host__ __device__ ost()
+	{
+		printf("Called ost\n");
+	}
+
+	__host__ __device__ ost(const ost&)
+	{
+		printf("Called ost\n");
+	}
+
+	__host__ __device__ ost(ost&&)
+	{
+		printf("Called ost\n");
+	}
+};
+
+__global__ void kernel()
+{
+	ost ot;
+	//custd::Stream cout;
+	//cout << "Yes";
+	//cuda::std::
+	//custd::print(3);
+	//custd::Stream st;
+	//st << "Yes\n";
+	printf("Yes");
+}
+
 int main()
 {
 	short shortNum = std::numeric_limits<short>::max();
@@ -33,4 +67,8 @@ int main()
 
 	custd::cout << "floatNum: " << floatNum << custd::endl;
 	custd::cout << "doubleNum: " << doubleNum << custd::endl;
+
+	custd::cout << "Now the following code is called in kernel:" << custd::endl;
+	//custd::initCout
+	kernel << <1, 1 >> > ();
 }
