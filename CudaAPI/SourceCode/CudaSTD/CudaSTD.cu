@@ -20,4 +20,81 @@ namespace custd
 		//}
 		printf("Nothing");
 	}
+
+	void endl()
+	{
+		printf("\n");
+	}
+
+	Stream::Stream()
+	{
+	}
+	Stream::~Stream()
+	{
+	}
+	const Stream & Stream::operator<<(const short & val) const
+	{
+		printf("%d", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const unsigned short & val) const
+	{
+		printf("%u", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const int & val) const
+	{
+		printf("%i", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const unsigned int & val) const
+	{
+		printf("%u", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const long & val) const
+	{
+		printf("%ld", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const unsigned long & val) const
+	{
+		printf("%lu", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const long long & val) const
+	{
+		printf("%lld", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const unsigned long long & val) const
+	{
+		printf("%llu", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const float & val) const
+	{
+		printf("%f", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const double & val) const
+	{
+		printf("%f", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const char & val) const
+	{
+		printf("%c",val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(const char * val) const
+	{
+		printf("%s", val);
+		return *this;
+	}
+	const Stream & Stream::operator<<(void(*edl)()) const
+	{
+		(*edl)();
+		return *this;
+	}
 }
