@@ -17,6 +17,7 @@
     <ClInclude Include="SourceCode\CudaSTD\CudaSTD.cuh" />
   </ItemGroup>
   <ItemGroup>
+    <CudaCompile Include="SourceCode\Common\CudaUtility.cu" />
     <CudaCompile Include="SourceCode\CudaAPI.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\CudaSTD.cu" />
   </ItemGroup>
