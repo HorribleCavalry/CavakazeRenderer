@@ -7,6 +7,10 @@
 #include <cuda/std/cassert>
 #include <device_launch_parameters.h>
 
+#define Int int
+#define Uint unsigned int
+#define Float double
+
 //CHECK(bool isAssert, char* errorInfo);
 //This marco can run on host and device.
 //If isAssert is false, then the program will stop.

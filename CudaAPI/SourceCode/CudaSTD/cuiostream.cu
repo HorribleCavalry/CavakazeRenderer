@@ -1,5 +1,4 @@
-﻿#include "CudaSTD.cuh"
-#include <cuda/std/type_traits>
+﻿#include "cuiostream.cuh"
 namespace custd
 {
 	template<typename T>

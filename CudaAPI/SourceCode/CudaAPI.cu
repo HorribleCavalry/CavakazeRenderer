@@ -5,7 +5,7 @@
 //#include <cstdio>
 //#include <cuda/std/type_traits>
 //#include <cuda/std/utility>
-
+#include <array>
 namespace TestNameSpace
 {
 
@@ -13,6 +13,7 @@ namespace TestNameSpace
 
 __global__ void kernel()
 {
+	check(false, "Nothing.", __FILE__, __LINE__);
 	//CHECK(false, "Nothing.");
 	printf("Yes");
 	//TestNameSpace::ost ot;
