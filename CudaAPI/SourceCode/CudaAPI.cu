@@ -1,5 +1,8 @@
 ﻿#include "CudaAPI.cuh"
 
+//To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
+//Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
+
 __global__ void kernel()
 {
 	CHECK(false, "Nothing.");
