@@ -7,8 +7,8 @@
     <Filter Include="SourceCode\Common">
       <UniqueIdentifier>{89e05029-9663-4eae-9ca1-f06c68773d02}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CudaSTD">
-      <UniqueIdentifier>{764c04fe-04f1-4560-94f9-5d9e6bebbb67}</UniqueIdentifier>
+    <Filter Include="SourceCode\CudaSTD">
+      <UniqueIdentifier>{251802fa-374f-4d75-9b72-7891e984ad26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -18,40 +18,40 @@
     <ClInclude Include="SourceCode\Common\stb_image.h">
       <Filter>SourceCode\Common</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\Common\CudaUtility.cuh">
-      <Filter>SourceCode\Common</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\Common\Cuda3DMath.cuh">
       <Filter>SourceCode\Common</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\CudaSTD\cuarray.cuh">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\CudaSTD\CudaUtility.cuh">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </ClInclude>
     <ClInclude Include="SourceCode\CudaSTD\cuiostream.cuh">
-      <Filter>CudaSTD</Filter>
+      <Filter>SourceCode\CudaSTD</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\CudaSTD\cuvector.cuh">
-      <Filter>CudaSTD</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\CudaSTD\cuarray.cuh">
-      <Filter>CudaSTD</Filter>
+      <Filter>SourceCode\CudaSTD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">
       <Filter>SourceCode</Filter>
     </CudaCompile>
-    <CudaCompile Include="SourceCode\Common\CudaUtility.cu">
-      <Filter>SourceCode\Common</Filter>
-    </CudaCompile>
     <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu">
       <Filter>SourceCode\Common</Filter>
     </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cu">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
     <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cu">
-      <Filter>CudaSTD</Filter>
+      <Filter>SourceCode\CudaSTD</Filter>
     </CudaCompile>
     <CudaCompile Include="SourceCode\CudaSTD\cuvector.cu">
-      <Filter>CudaSTD</Filter>
-    </CudaCompile>
-    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu">
-      <Filter>CudaSTD</Filter>
+      <Filter>SourceCode\CudaSTD</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>

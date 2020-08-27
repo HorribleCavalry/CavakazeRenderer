@@ -12,18 +12,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\Common\Cuda3DMath.cuh" />
-    <ClInclude Include="SourceCode\Common\CudaUtility.cuh" />
     <ClInclude Include="SourceCode\Common\stb_image.h" />
     <ClInclude Include="SourceCode\CudaAPI.cuh" />
     <ClInclude Include="SourceCode\CudaSTD\cuarray.cuh" />
+    <ClInclude Include="SourceCode\CudaSTD\CudaUtility.cuh" />
     <ClInclude Include="SourceCode\CudaSTD\cuiostream.cuh" />
     <ClInclude Include="SourceCode\CudaSTD\cuvector.cuh" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu" />
-    <CudaCompile Include="SourceCode\Common\CudaUtility.cu" />
     <CudaCompile Include="SourceCode\CudaAPI.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu" />
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\cuvector.cu" />
   </ItemGroup>

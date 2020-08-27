@@ -1,10 +1,6 @@
 ﻿#ifndef __CUDASTD__CUH__
 #define __CUDASTD__CUH__
-#include <cstdio>
-#include <cstdlib>
-#include <cuda_runtime.h>
-#include <cuda/std/cassert>
-#include <device_launch_parameters.h>
+#include "CudaUtility.cuh"
 
 namespace custd
 {

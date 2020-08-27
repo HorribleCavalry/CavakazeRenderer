@@ -1,5 +1,5 @@
 ﻿#include "CudaUtility.cuh"
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const char * file, const int & line)
+void check(const bool & isAssert, const char * errorInfo, const char * file, const int & line)
 {
 	if (!isAssert)
 	{

@@ -1,21 +1,9 @@
 ﻿#include "CudaAPI.cuh"
-//#include <limits>
-//#include "CudaSTD/CudaSTD.cuh"
-#include "Common/CudaUtility.cuh"
-//#include <cstdio>
-//#include <cuda/std/type_traits>
-//#include <cuda/std/utility>
-#include <array>
-namespace TestNameSpace
-{
-
-}
 
 __global__ void kernel()
 {
-	check(false, "Nothing.", __FILE__, __LINE__);
-	//CHECK(false, "Nothing.");
-	printf("Yes");
+	CHECK(false, "Nothing.");
+	//printf("Yes");
 	//TestNameSpace::ost ot;
 	//custd::Stream cout;
 	//cout << "Yes";
@@ -27,6 +15,7 @@ __global__ void kernel()
 
 int main()
 {
+
 	//short shortNum = std::numeric_limits<short>::max();
 	//unsigned short unsignedShortNum = std::numeric_limits<unsigned short>::max();
 
@@ -59,5 +48,5 @@ int main()
 
 	//custd::cout << "Now the following code is called in kernel:" << custd::endl;
 	//custd::initCout
-	kernel << <1, 1 >> > ();
+	kernel <<<1, 1 >>> ();
 }
