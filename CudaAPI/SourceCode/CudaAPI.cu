@@ -56,6 +56,10 @@ __global__ void kernel()
 	basePtrList[1] = &c0;
 	basePtrList[2] = &c1;
 
+	custd::cuvector<Base> baseVec;
+	baseVec.push_back(base);
+	baseVec.push_back(c0);
+	baseVec.push_back(c1);
 
 	tem[0] = base;
 	tem[1] = c0;
@@ -66,6 +70,19 @@ __global__ void kernel()
 		tem[i].print();
 		basePtrList[i]->print();
 	}
+
+	for (Int i = 0; i < 3; i++)
+	{
+		baseVec[i].print();
+	}
+
+	custd::cuvector<Uint> vec;
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
 }
 
 int main()
@@ -105,5 +122,13 @@ int main()
 	//custd::initCout
 	//std::array<int, 32> vals;
 	//vals.
+	
+	custd::cuvector<Uint> vec;
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
+	vec.push_back(12);
 	kernel <<<1, 1 >>> ();
 }

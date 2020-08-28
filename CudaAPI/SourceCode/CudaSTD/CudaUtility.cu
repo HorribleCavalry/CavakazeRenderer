@@ -71,7 +71,7 @@ __host__ __device__ void check(const bool & isAssert, const char * errorInfo, co
 	}
 }
 
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Int valArry[], const Uint & size, const char * file, const int & line)
+__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Int* valArry, const Uint & size, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
