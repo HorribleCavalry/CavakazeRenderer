@@ -2,13 +2,13 @@
 #define __CUDA3DMATH__CUH__
 
 #include "../CudaSTD/CudaUtility.cuh"
+#include "../CudaSTD/cuvector.cuh"
 
-//template<int size>
-//class vec
-//{
-//private:
-//public:
-//	Vec()
-//};
+class vec2
+{
+private:
+public:
+	
+};
 
 #endif // !__CUDA3DMATH__CUH__
