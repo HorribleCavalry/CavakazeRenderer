@@ -130,5 +130,8 @@ int main()
 	vec.push_back(12);
 	vec.push_back(12);
 	vec.push_back(12);
+
+	std::vector<Uint> vv(12);
+	custd::cuvector<Uint> cuv(12);
 	kernel <<<1, 1 >>> ();
 }

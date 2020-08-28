@@ -19,6 +19,12 @@ namespace custd
 		{
 			CHECK(data, "The data initialization in construct function failed");
 		}
+		__host__ __device__ cuvector(const Uint& _Size)
+			:data(new T[_Size]), Size(_Size), Capacity(_Size)
+		{
+			CHECK(data, "The data initialization in construct function failed");
+
+		}
 		__host__ __device__ ~cuvector()
 		{
 			if (data)
