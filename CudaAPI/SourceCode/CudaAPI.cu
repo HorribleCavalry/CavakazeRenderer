@@ -1,11 +1,43 @@
 ﻿#include "CudaAPI.cuh"
+#include <array>
+#include <vector>
+
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
+class Base
+{
+public:
+
+	__host__ __device__ virtual void print()
+	{
+		printf("Called Base!\n");
+	}
+};
+
+class Child0 : public Base
+{
+public:
+	__host__ __device__ virtual void print() override
+	{
+		printf("Called Child0!\n");
+	}
+};
+
+class Child1 : public Base
+{
+public:
+	__host__ __device__ virtual void print() override
+	{
+		printf("Called Child1!\n");
+	}
+};
+
 __global__ void kernel()
 {
-	CHECK(false, "Nothing.");
+	//CHECK(false, "Nothing.");
+	//custd::kout(23);
 	//printf("Yes");
 	//TestNameSpace::ost ot;
 	//custd::Stream cout;
@@ -14,6 +46,26 @@ __global__ void kernel()
 	//custd::print(3);
 	//custd::Stream st;
 	//st << "Yes\n";
+	Base base;
+	Base tem[3];
+	Child0 c0;
+	Child1 c1;
+
+	Base** basePtrList = new Base*[3];
+	basePtrList[0] = &base;
+	basePtrList[1] = &c0;
+	basePtrList[2] = &c1;
+
+
+	tem[0] = base;
+	tem[1] = c0;
+	tem[2] = c1;
+
+	for (int i = 0; i < 3; i++)
+	{
+		tem[i].print();
+		basePtrList[i]->print();
+	}
 }
 
 int main()
@@ -51,5 +103,7 @@ int main()
 
 	//custd::cout << "Now the following code is called in kernel:" << custd::endl;
 	//custd::initCout
+	//std::array<int, 32> vals;
+	//vals.
 	kernel <<<1, 1 >>> ();
 }

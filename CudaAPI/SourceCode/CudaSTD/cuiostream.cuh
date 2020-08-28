@@ -11,10 +11,6 @@ namespace custd
 	{
 	public:
 		__host__ __device__ Stream();
-		//__host__ __device__ Stream(const Stream&) = delete;
-		//__host__ __device__ Stream(Stream&&) = delete;
-		//__host__ __device__ Stream& operator=(const Stream&) = delete;
-		//__host__ __device__ Stream& operator=(Stream&&) = delete;
 		__host__ __device__ ~Stream();
 		__host__ __device__ const Stream& operator<<(const short& val) const;
 		__host__ __device__ const Stream& operator<<(const unsigned short& val) const;
@@ -35,15 +31,18 @@ namespace custd
 		__host__ __device__ const Stream& operator<<(const char* val) const;
 
 		__host__ __device__ const Stream& operator<<(void(*edl)()) const;
-
 	};
 
 	const Stream cout;
+
+	//template<typename T>
+	__device__ void kout(const int& val);
 	 //const Stream kout;
 	__host__ __device__ void endl();
-	
+	//__device__ float deviceTest;
 	namespace
 	{
+		const Stream cout;
 		class InitKernelResource
 		{
 		public:
@@ -57,7 +56,8 @@ namespace custd
 		static const InitKernelResource initCout;
 		InitKernelResource::InitKernelResource()
 		{
-			//cudaMemcpyToSymbol(custd::cout, &cout, sizeof(Stream));
+			//float val = 4.0f;
+			//cudaMemcpyToSymbol(deviceTest, &val, sizeof(float));
 		}
 
 		InitKernelResource::~InitKernelResource()

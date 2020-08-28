@@ -93,6 +93,12 @@ namespace custd
 		return *this;
 	}
 
+	//template<typename T>
+	__device__ void kout(const int& val)
+	{
+		printf("%d", val);
+	}
+
 	void endl()
 	{
 		printf("\n");
