@@ -13,6 +13,6 @@ public:
 	vec2();
 };
 
-typedef vec2i vec2<Int>;
+//typedef vec2i vec2<Int>;
 
 #endif // !__CUDA3DMATH__CUH__

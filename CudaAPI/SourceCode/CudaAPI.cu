@@ -6,9 +6,20 @@
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
+__duel__ void testDuel()
+{
+	printf("Called testDuel");
+}
+
+
 class Base
 {
 public:
+	Int a;
+	__host__ __device__ Base()
+	{
+		a = 1;
+	}
 
 	__host__ __device__ virtual void print()
 	{
@@ -19,6 +30,14 @@ public:
 class Child0 : public Base
 {
 public:
+	Int b;
+	Float c;
+	__host__ __device__ Child0()
+	{
+		b = 1;
+		c = 1.0;
+	}
+
 	__host__ __device__ virtual void print() override
 	{
 		printf("Called Child0!\n");
@@ -28,6 +47,13 @@ public:
 class Child1 : public Base
 {
 public:
+	Int d;
+	Int e;
+	__host__ __device__ Child1()
+	{
+		d = 1;
+		e = 1;
+	}
 	__host__ __device__ virtual void print() override
 	{
 		printf("Called Child1!\n");
@@ -36,102 +62,26 @@ public:
 
 __global__ void kernel()
 {
-	//CHECK(false, "Nothing.");
-	//custd::kout(23);
-	//printf("Yes");
-	//TestNameSpace::ost ot;
-	//custd::Stream cout;
-	//cout << "Yes";
-	//cuda::std::
-	//custd::print(3);
-	//custd::Stream st;
-	//st << "Yes\n";
-	Base base;
-	Base tem[3];
-	Child0 c0;
-	Child1 c1;
-
-	Base** basePtrList = new Base*[3];
-	basePtrList[0] = &base;
-	basePtrList[1] = &c0;
-	basePtrList[2] = &c1;
-
-	custd::cuvector<Base> baseVec;
-	baseVec.push_back(base);
-	baseVec.push_back(c0);
-	baseVec.push_back(c1);
-
-	tem[0] = base;
-	tem[1] = c0;
-	tem[2] = c1;
-
-	for (int i = 0; i < 3; i++)
-	{
-		tem[i].print();
-		basePtrList[i]->print();
-	}
-
-	for (Int i = 0; i < 3; i++)
-	{
-		baseVec[i].print();
-	}
-
-	custd::cuvector<Uint> vec;
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
+	testDuel();
 }
 
 int main()
 {
+	//custd::cuvector<Base> vec;
+	Base base;
+	Base c0 = Child0();
+	Base c1 = Child1();
 
-	//short shortNum = std::numeric_limits<short>::max();
-	//unsigned short unsignedShortNum = std::numeric_limits<unsigned short>::max();
+	std::vector<Base> vec;
+	vec.push_back(base);
+	vec.push_back(c0);
+	vec.push_back(c1);
 
-	//int intNum = std::numeric_limits<int>::max();
-	//unsigned int unsignedIntNum = std::numeric_limits<unsigned int>::max();
+	for each (Base it in vec)
+	{
+		it.print();
+	}
 
-	//long longNum = std::numeric_limits<long>::max();
-	//unsigned long unsignedLongNum = std::numeric_limits<unsigned long>::max();
+	kernel << <1, 1>> > ();
 
-	//long long longLongNum = std::numeric_limits<long long>::max();
-	//unsigned long long unsignedLongLongNum = std::numeric_limits<unsigned long long>::max();
-
-	//float floatNum = std::numeric_limits<float>::max();
-	//double doubleNum = std::numeric_limits<double>::max();
-
-	//custd::cout << "shortNum: " << shortNum <<custd::endl;
-	//custd::cout << "unsignedShortNum: " << unsignedShortNum <<custd::endl;
-
-	//custd::cout << "intNum: " << intNum <<custd::endl;
-	//custd::cout << "unsignedIntNum: " << unsignedIntNum <<custd::endl;
-
-	//custd::cout << "longNum: " << longNum <<custd::endl;
-	//custd::cout << "unsignedLongNum: " << unsignedLongNum <<custd::endl;
-
-	//custd::cout << "longLongNum: " << longLongNum <<custd::endl;
-	//custd::cout << "unsignedLongLongNum: " << unsignedLongLongNum <<custd::endl;
-
-	//custd::cout << "floatNum: " << floatNum << custd::endl;
-	//custd::cout << "doubleNum: " << doubleNum << custd::endl;
-
-	//custd::cout << "Now the following code is called in kernel:" << custd::endl;
-	//custd::initCout
-	//std::array<int, 32> vals;
-	//vals.
-	
-	custd::cuvector<Uint> vec;
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-	vec.push_back(12);
-
-	std::vector<Uint> vv(12);
-	custd::cuvector<Uint> cuv(12);
-	kernel <<<1, 1 >>> ();
 }

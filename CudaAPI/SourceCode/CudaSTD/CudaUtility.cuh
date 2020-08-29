@@ -12,6 +12,8 @@
 #define Uint unsigned int
 #define Float double
 
+#define __duel__ __host__ __device__
+
 //CHECK(bool isAssert, char* errorInfo);
 //This marco can run on host and device.
 //If isAssert is false, then the program will stop.
