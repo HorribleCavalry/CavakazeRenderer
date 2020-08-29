@@ -11,13 +11,13 @@ namespace custd
 	//private:
 	//	T* data;
 	//public:
-	//	__host__ __device__ cuarray();
-	//	//__host__ __device__ cuarray(const cuarray<T, Size>& ar) = delete;
-	//	//__host__ __device__ cuarray(cuarray<T, Size>&& ar) = delete;
+	//	__duel__ cuarray();
+	//	//__duel__ cuarray(const cuarray<T, Size>& ar) = delete;
+	//	//__duel__ cuarray(cuarray<T, Size>&& ar) = delete;
 
-	//	//__host__ __device__ operator =(const cuarray<T, Size>& ar) = delete;
-	//	//__host__ __device__ operator =(cuarray<T, Size>&& ar) = delete;
-	//	__host__ __device__ ~cuarray();
+	//	//__duel__ operator =(const cuarray<T, Size>& ar) = delete;
+	//	//__duel__ operator =(cuarray<T, Size>&& ar) = delete;
+	//	__duel__ ~cuarray();
 
 	//public:
 	//	int size();

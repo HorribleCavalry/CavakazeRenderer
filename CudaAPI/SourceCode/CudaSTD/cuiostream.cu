@@ -2,7 +2,7 @@
 namespace custd
 {
 	template<typename T>
-	__host__ __device__ void print(const T & para)
+	__duel__ void print(const T & para)
 	{
 		//switch (typeid(para))
 		//{

@@ -16,12 +16,12 @@ class Base
 {
 public:
 	Int a;
-	__host__ __device__ Base()
+	__duel__ Base()
 	{
 		a = 1;
 	}
 
-	__host__ __device__ virtual void print()
+	__duel__ virtual void print()
 	{
 		printf("Called Base!\n");
 	}
@@ -32,13 +32,13 @@ class Child0 : public Base
 public:
 	Int b;
 	Float c;
-	__host__ __device__ Child0()
+	__duel__ Child0()
 	{
 		b = 1;
 		c = 1.0;
 	}
 
-	__host__ __device__ virtual void print() override
+	__duel__ virtual void print() override
 	{
 		printf("Called Child0!\n");
 	}
@@ -49,12 +49,12 @@ class Child1 : public Base
 public:
 	Int d;
 	Int e;
-	__host__ __device__ Child1()
+	__duel__ Child1()
 	{
 		d = 1;
 		e = 1;
 	}
-	__host__ __device__ virtual void print() override
+	__duel__ virtual void print() override
 	{
 		printf("Called Child1!\n");
 	}
@@ -62,6 +62,20 @@ public:
 
 __global__ void kernel()
 {
+	Base base;
+	Base c0 = Child0();
+	Base c1 = Child1();
+
+	custd::cuvector<Base> vec;
+	vec.push_back(base);
+	vec.push_back(c0);
+	vec.push_back(c1);
+
+	for (int i = 0; i < 3; i++)
+	{
+		vec[i].print();
+	}
+
 	testDuel();
 }
 

@@ -20,7 +20,7 @@
 //If isAssert is true, nothing will be happen.
 #define CHECK(isAssert, errorInfo) check(isAssert, errorInfo, __FILE__, __LINE__)
 //Try to avoid using this function, recommend marco CHECK to use.
-__host__ __device__ void check(const bool& isAssert, const char* errorInfo, const char* file, const int& line);
+__duel__ void check(const bool& isAssert, const char* errorInfo, const char* file, const int& line);
 
 //CHECK(bool isAssert, char* errorInfo, Number val);
 //This marco can run on host and device.
@@ -28,15 +28,15 @@ __host__ __device__ void check(const bool& isAssert, const char* errorInfo, cons
 //If isAssert is true, nothing will be happen.
 //#define CHECK(isAssert, errorInfo, val) check(isAssert, errorInfo, val, __FILE__, __LINE__)
 //Try to avoid using this function, recommend marco CHECK to use.
-__host__ __device__ void check(const bool& isAssert, const char* errorInfo, const Bool& val, const char* file, const int& line);
-__host__ __device__ void check(const bool& isAssert, const char* errorInfo, const Int& val, const char* file, const int& line);
-__host__ __device__ void check(const bool& isAssert, const char* errorInfo, const Uint& val, const char* file, const int& line);
-__host__ __device__ void check(const bool& isAssert, const char* errorInfo, const Float& val, const char* file, const int& line);
+__duel__ void check(const bool& isAssert, const char* errorInfo, const Bool& val, const char* file, const int& line);
+__duel__ void check(const bool& isAssert, const char* errorInfo, const Int& val, const char* file, const int& line);
+__duel__ void check(const bool& isAssert, const char* errorInfo, const Uint& val, const char* file, const int& line);
+__duel__ void check(const bool& isAssert, const char* errorInfo, const Float& val, const char* file, const int& line);
 
 
 //#define CHECK(isAssert, errorInfo, valArray, size) check(isAssert, errorInfo, valArray, size, __FILE__, __LINE__)
 
-__host__ __device__ void check(const bool& isAssert, const char* errorInfo, const Int val[], const Uint& size, const char* file, const int& line);
+__duel__ void check(const bool& isAssert, const char* errorInfo, const Int val[], const Uint& size, const char* file, const int& line);
 
 
 //CUDA_CHECK(cudaError_t err);

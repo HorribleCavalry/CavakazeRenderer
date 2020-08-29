@@ -1,4 +1,4 @@
-#include "Cuda3DMath.cuh"
+﻿#include "Cuda3DMath.cuh"
 
 template<typename T>
 vec2<T>::vec2()

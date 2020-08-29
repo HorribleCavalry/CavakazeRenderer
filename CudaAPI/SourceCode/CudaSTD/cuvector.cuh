@@ -14,27 +14,27 @@ namespace custd
 		Uint Size;
 		Uint Capacity;
 	public:
-		__host__ __device__ cuvector()
+		__duel__ cuvector()
 			:data(new T), Size(0), Capacity(0)
 		{
 			CHECK(data, "The data initialization in construct function failed");
 		}
-		__host__ __device__ cuvector(const Uint& _Size)
+		__duel__ cuvector(const Uint& _Size)
 			:data(new T[_Size]), Size(_Size), Capacity(_Size)
 		{
 			CHECK(data, "The data initialization in construct function failed");
 
 		}
-		__host__ __device__ ~cuvector()
+		__duel__ ~cuvector()
 		{
 			if (data)
 				delete[] data;
 		}
 
-		__host__ __device__ Uint size();
-		__host__ __device__ Uint capacity();
+		__duel__ Uint size();
+		__duel__ Uint capacity();
 
-		__host__ __device__ void push_back(const T& val)
+		__duel__ void push_back(const T& val)
 		{
 			CHECK(data, "The data in current cuvector is nullptr!");
 			//Int* debugArray = new Int[3];
@@ -70,7 +70,7 @@ namespace custd
 		}
 		
 
-		__host__ __device__ T& operator[](Int idx)
+		__duel__ T& operator[](Int idx)
 		{
 			CHECK(idx < Size, "The input index in current cuvector is out of range!");
 			CHECK(idx >= 0, "The input index in a cuvector can not be a negative value!");

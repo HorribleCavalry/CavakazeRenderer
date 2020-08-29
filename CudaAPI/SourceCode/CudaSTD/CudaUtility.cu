@@ -12,7 +12,7 @@ void check(const bool & isAssert, const char * errorInfo, const char * file, con
 	}
 }
 
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Bool & val, const char * file, const int & line)
+__duel__ void check(const bool & isAssert, const char * errorInfo, const Bool & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -29,7 +29,7 @@ __host__ __device__ void check(const bool & isAssert, const char * errorInfo, co
 	}
 }
 
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Int & val, const char * file, const int & line)
+__duel__ void check(const bool & isAssert, const char * errorInfo, const Int & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -43,7 +43,7 @@ __host__ __device__ void check(const bool & isAssert, const char * errorInfo, co
 	}
 }
 
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Uint & val, const char * file, const int & line)
+__duel__ void check(const bool & isAssert, const char * errorInfo, const Uint & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -57,7 +57,7 @@ __host__ __device__ void check(const bool & isAssert, const char * errorInfo, co
 	}
 }
 
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Float & val, const char * file, const int & line)
+__duel__ void check(const bool & isAssert, const char * errorInfo, const Float & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -71,7 +71,7 @@ __host__ __device__ void check(const bool & isAssert, const char * errorInfo, co
 	}
 }
 
-__host__ __device__ void check(const bool & isAssert, const char * errorInfo, const Int* valArry, const Uint & size, const char * file, const int & line)
+__duel__ void check(const bool & isAssert, const char * errorInfo, const Int* valArry, const Uint & size, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
