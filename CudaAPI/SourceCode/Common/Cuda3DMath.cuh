@@ -7,6 +7,39 @@
 template<typename T>
 class vec2
 {
+public:
+	T x, y;
+public:
+	__duel__ vec2() :x(0.0), y(0.0) {}
+	__duel__ vec2(const vec2<T>& v) : x(v.x), y(v.y) {}
+	__duel__ vec2(vec2<T>&& v) : x(v.x), y(v.y) {}
+	__duel__ vec2<T>& operator=(const vec2<T>& v)
+	{
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+	__duel__ vec2<T>& operator=(vec2<T>&& v)
+	{
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+	__duel__ ~vec2() {}
+public:
+	__duel__ vec2(const T& n) : x(n), y(n) {}
+	__duel__ vec2(const T& _x, const T& _y) : x(_x), y(_y) {}
+
+	template<typename U>
+	__duel__ const vec2<T>(const vec2<U>& v) : x(v.x), y(v.y) {}
+
+public:
+	__duel__ T& operator[](const T& idx)
+	{
+		CHECK(idx >= 0 && idx <= 1, "The <idx> in vec2<T>::operator[idx] is illegal!");
+		return idx == 0 ? x : y;
+	}
+public:
 };
 
 template<>
@@ -43,42 +76,7 @@ public:
 public:
 	__duel__ Int& operator[](const Int& idx)
 	{
-		CHECK(idx >= 0 && idx <= 1, "The <idx> invec2<T>::operator[idx] is illegal!");
-		return idx == 0 ? x : y;
-	}
-public:
-
-};
-
-template<>
-class vec2<Float>
-{
-public:
-	Float x, y;
-public:
-	__duel__ vec2() :x(0.0), y(0.0) {}
-	__duel__ vec2(const vec2<Float>& v) : x(v.x), y(v.y) {}
-	__duel__ vec2(vec2<Float>&& v) : x(v.x), y(v.y) {}
-	__duel__ vec2<Float>& operator=(const vec2<Float>& v)
-	{
-		x = v.x;
-		y = v.y;
-		return *this;
-	}
-	__duel__ vec2<Float>& operator=(vec2<Float>&& v)
-	{
-		x = v.x;
-		y = v.y;
-		return *this;
-	}
-	__duel__ ~vec2() {}
-public:
-	__duel__ vec2(const Float& n) : x(n), y(n) {}
-	__duel__ vec2(const Float& _x, const Float& _y) : x(_x), y(_y) {}
-public:
-	__duel__ Float& operator[](const Int& idx)
-	{
-		CHECK(idx >= 0 && idx <= 1, "The <idx> invec2<T>::operator[idx] is illegal!");
+		CHECK(idx >= 0 && idx <= 1, "The <idx> in vec2<Int>::operator[idx] is illegal!");
 		return idx == 0 ? x : y;
 	}
 public:

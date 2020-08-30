@@ -12,17 +12,20 @@ __duel__ void testDuel()
 
 __global__ void kernel()
 {
-	//vec2i vi;
-	//vec2f vf;
-
-	//vf.x = 1.5;
-	//vf.y = 1.5;
-	//printf("%f\n", vf.x);
-	//vi = vf;
-	//printf("%d\n", vi[0]);
-
-	//vi[0] = 2;
-	//printf("%d\n", vi[0]);
+	//vec2i i(0.0f);
+	vec2i i;
+	printf("%d\n", i.x);
+	vec2f f;
+	printf("%f\n", f.x);
+	i = vec2i(2);
+	printf("%d\n", i.x);
+	f = vec2f(1.5);
+	printf("%f\n", f.x);
+	//i = f;
+	//f = i;
+	printf("%f\n", f.x);
+	i = (vec2i)f;
+	printf("%d\n", i.x);
 
 }
 
