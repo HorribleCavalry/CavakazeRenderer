@@ -12,22 +12,36 @@ __duel__ void testDuel()
 
 __global__ void kernel()
 {
-	vec2i vi;
-	vec2f vf;
+	//vec2i vi;
+	//vec2f vf;
 
-	vf.x = 1.5;
-	vf.y = 1.5;
-	printf("%f\n", vf.x);
-	vi = vf;
-	printf("%d\n", vi[0]);
+	//vf.x = 1.5;
+	//vf.y = 1.5;
+	//printf("%f\n", vf.x);
+	//vi = vf;
+	//printf("%d\n", vi[0]);
 
-	vi[0] = 2;
-	printf("%d\n", vi[0]);
+	//vi[0] = 2;
+	//printf("%d\n", vi[0]);
 
 }
 
 
+//class Person
+//{
+//public:
+//	Person() {}
+//	Person(const Person&) {}
+//	Person(Person&&) {}
+//	const Person& operator=(const Person&) {}
+//	const Person& operator=(Person&&) {}
+//	~Person() {}
+//};
+
 int main()
 {
+	vec2i i;
+	vec2f f;
+	i = (vec2i)f;
 	kernel << <1, 1 >> > ();
 }

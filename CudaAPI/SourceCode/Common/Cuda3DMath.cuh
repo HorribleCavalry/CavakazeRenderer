@@ -7,44 +7,6 @@
 template<typename T>
 class vec2
 {
-public:
-	T x, y;
-public:
-	__duel__ vec2() :x(0), y(0) {}
-
-	__duel__ vec2(const T& _x, const T& _y) : x(_x), y(_y) {}
-
-
-	template<typename U>
-	__duel__ vec2(const vec2<U>& vec) = delete;
-
-	template<typename U>
-	__duel__ vec2(vec2<U>&& vec) = delete;
-
-	template<typename U>
-	__duel__ vec2<T>& operator=(const vec2<U>& vec)
-	{
-		x = static_cast<T>(vec.x);
-		y = static_cast<T>(vec.y);
-		return *this;
-	}
-
-	template<typename U>
-	__duel__ vec2<T>& operator=(vec2<U>&& vec)
-	{
-		x = static_cast<T>(vec.x);
-		y = static_cast<T>(vec.y);
-		return *this;
-	}
-
-	__duel__ ~vec2() {}
-
-public:
-	__duel__ T& operator[](const Int& idx)
-	{
-		CHECK(idx >= 0 && idx <= 1, "The <idx> invec2<T>::operator[idx] is illegal!");
-		return idx == 0 ? x : y;
-	}
 };
 
 template<>
@@ -54,17 +16,73 @@ public:
 	Int x, y;
 public:
 	__duel__ vec2() :x(0), y(0) {}
-
+	__duel__ vec2(const vec2<Int>& v) : x(v.x), y(v.y) {}
+	__duel__ vec2(vec2<Int>&& v) : x(v.x), y(v.y) {}
+	__duel__ const vec2<Int>& operator=(const vec2<Int>& v)
+	{
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+	__duel__ const vec2<Int>& operator=(vec2<Int>&& v)
+	{
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+	__duel__ ~vec2() {}
+public:
+	__duel__ vec2(const Int& n) : x(n), y(n) {}
 	__duel__ vec2(const Int& _x, const Int& _y) : x(_x), y(_y) {}
 
-	__duel__ ~vec2() {}
+	__duel__ vec2(const Float& n) = delete;
+	__duel__ vec2(const Float& _x, const Float& _y) = delete;
+
+	__duel__ explicit vec2(const vec2<Float>& v) : x(v.x), y(v.y) {}
 
 public:
-	__duel__ T& operator[](const Int& idx)
+	__duel__ Int& operator[](const Int& idx)
 	{
 		CHECK(idx >= 0 && idx <= 1, "The <idx> invec2<T>::operator[idx] is illegal!");
 		return idx == 0 ? x : y;
 	}
+public:
+
+};
+
+template<>
+class vec2<Float>
+{
+public:
+	Float x, y;
+public:
+	__duel__ vec2() :x(0.0), y(0.0) {}
+	__duel__ vec2(const vec2<Float>& v) : x(v.x), y(v.y) {}
+	__duel__ vec2(vec2<Float>&& v) : x(v.x), y(v.y) {}
+	__duel__ vec2<Float>& operator=(const vec2<Float>& v)
+	{
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+	__duel__ vec2<Float>& operator=(vec2<Float>&& v)
+	{
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+	__duel__ ~vec2() {}
+public:
+	__duel__ vec2(const Float& n) : x(n), y(n) {}
+	__duel__ vec2(const Float& _x, const Float& _y) : x(_x), y(_y) {}
+public:
+	__duel__ Float& operator[](const Int& idx)
+	{
+		CHECK(idx >= 0 && idx <= 1, "The <idx> invec2<T>::operator[idx] is illegal!");
+		return idx == 0 ? x : y;
+	}
+public:
+
 };
 
 typedef vec2<Int> vec2i;
