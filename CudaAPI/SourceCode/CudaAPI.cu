@@ -9,21 +9,21 @@
 __global__ void kernel()
 {
 	//vec2i i(0.0f);
-	vec2i i;
+	CUM::vec2i i;
 	printf("%d\n", i.x);
-	vec2f f;
+	CUM::vec2f f;
 	printf("%f\n", f.x);
-	i = vec2i(2);
+	i = CUM::vec2i(2);
 	printf("%d\n", i.x);
-	f = vec2f(1.5);
+	f = CUM::vec2f(1.5);
 	printf("%f\n", f.x);
 	//i = f;
 	//f = i;
 	printf("%f\n", f.x);
-	i = (vec2i)f;
+	i = (CUM::vec2i)f;
 	printf("%d\n", i.x);
 
-	vec2i iAdded(6);
+	CUM::vec2i iAdded(6);
 	printf("%d\n", iAdded.x);
 	iAdded += i;
 	printf("%d\n", iAdded.x);
@@ -48,8 +48,8 @@ __global__ void kernel()
 
 int main()
 {
-	vec2i i;
-	vec2f f;
-	i = (vec2i)f;
+	CUM::vec2i i;
+	CUM::vec2f f;
+	i = (CUM::vec2i)f;
 	kernel << <1, 1 >> > ();
 }
