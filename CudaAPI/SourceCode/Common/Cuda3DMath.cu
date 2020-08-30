@@ -203,165 +203,193 @@ __duel__ const vec2<Int>& operator/=(vec2<Int>& v0, const vec2<Int>& v1)
 
 
 #pragma region vec2f add operation
-template<typename T>
-__duel__ const vec2<Float>& operator+(const T & n, const vec2<Float>& v)
+
+__duel__ const vec2<Float> operator+(const Float& n, const vec2<Float>& v)
 {
 	return vec2<Float>(n + v.x, n + v.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator+(const vec2<Float>& v, const T & n)
+
+__duel__ const vec2<Float> operator+(const vec2<Float>& v, const Float& n)
 {
 	return vec2<Float>(v.x + n, v.y + n);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator+(const vec2<Float>& v0, const vec2<T>& v1)
+__duel__ const vec2<Float> operator+(const vec2<Float>& v0, const vec2<Int>& v1)
 {
 	return vec2<Float>(v0.x + v1.x, v0.y + v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator+(const vec2<T>& v0, const vec2<Float>& v1)
+
+__duel__ const vec2<Float> operator+(const vec2<Int>& v0, const vec2<Float>& v1)
 {
 	return vec2<Float>(v0.x + v1.x, v0.y + v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const T & n)
+
+__duel__ const vec2<Float> operator+(const vec2<Float>& v0, const vec2<Float>& v1)
+{
+	return vec2<Float>(v0.x + v1.x, v0.y + v1.y);
+}
+
+__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const Float& n)
 {
 	v.x += n;
 	v.y += n;
 	return v;
 }
-template<typename T>
-__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<T>& v1)
+
+__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<Int>& v1)
 {
 	v0.x += v1.x;
 	v0.y += v1.y;
 	return v0;
 }
+__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<Float>& v1)
+{
+	v0.x += v1.x;
+	v0.y += v1.y;
+	return v0;
+}
+
 #pragma endregion
 
 #pragma region vec2f subtract operation
-template<typename T>
-__duel__ const vec2<Float>& operator-(const T & n, const vec2<Float>& v)
+
+__duel__ const vec2<Float> operator-(const Float& n, const vec2<Float>& v)
 {
 	return vec2<Float>(n - v.x, n - v.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator-(const vec2<Float>& v, const T & n)
+
+__duel__ const vec2<Float> operator-(const vec2<Float>& v, const Float& n)
 {
 	return vec2<Float>(v.x - n, v.y - n);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator-(const vec2<Float>& v0, const vec2<T>& v1)
+__duel__ const vec2<Float> operator-(const vec2<Float>& v0, const vec2<Int>& v1)
 {
 	return vec2<Float>(v0.x - v1.x, v0.y - v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator-(const vec2<T>& v0, const vec2<Float>& v1)
+
+__duel__ const vec2<Float> operator-(const vec2<Int>& v0, const vec2<Float>& v1)
 {
 	return vec2<Float>(v0.x - v1.x, v0.y - v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator-=(vec2<Float>& v, const T & n)
+
+__duel__ const vec2<Float> operator-(const vec2<Float>& v0, const vec2<Float>& v1)
+{
+	return vec2<Float>(v0.x - v1.x, v0.y - v1.y);
+}
+
+__duel__ const vec2<Float>& operator-=(vec2<Float>& v, const Float& n)
 {
 	v.x -= n;
 	v.y -= n;
 	return v;
 }
-template<typename T>
-__duel__ const vec2<Float>& operator-=(vec2<Float>& v0, const vec2<T>& v1)
+
+__duel__ const vec2<Float>& operator-=(vec2<Float>& v0, const vec2<Int>& v1)
 {
 	v0.x -= v1.x;
 	v0.y -= v1.y;
 	return v0;
 }
+__duel__ const vec2<Float>& operator-=(vec2<Float>& v0, const vec2<Float>& v1)
+{
+	v0.x -= v1.x;
+	v0.y -= v1.y;
+	return v0;
+}
+
 #pragma endregion
 
 #pragma region vec2f multiply operation
-template<typename T>
-__duel__ const vec2<Float>& operator*(const T & n, const vec2<Float>& v)
+
+__duel__ const vec2<Float> operator*(const Float& n, const vec2<Float>& v)
 {
 	return vec2<Float>(n * v.x, n * v.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator*(const vec2<Float>& v, const T & n)
+
+__duel__ const vec2<Float> operator*(const vec2<Float>& v, const Float& n)
 {
 	return vec2<Float>(v.x * n, v.y * n);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator*(const vec2<Float>& v0, const vec2<T>& v1)
+__duel__ const vec2<Float> operator*(const vec2<Float>& v0, const vec2<Int>& v1)
 {
 	return vec2<Float>(v0.x * v1.x, v0.y * v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator*(const vec2<T>& v0, const vec2<Float>& v1)
+
+__duel__ const vec2<Float> operator*(const vec2<Int>& v0, const vec2<Float>& v1)
 {
 	return vec2<Float>(v0.x * v1.x, v0.y * v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator*=(vec2<Float>& v, const T & n)
+
+__duel__ const vec2<Float> operator*(const vec2<Float>& v0, const vec2<Float>& v1)
+{
+	return vec2<Float>(v0.x * v1.x, v0.y * v1.y);
+}
+
+__duel__ const vec2<Float>& operator*=(vec2<Float>& v, const Float& n)
 {
 	v.x *= n;
 	v.y *= n;
 	return v;
 }
-template<typename T>
-__duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<T>& v1)
+
+__duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<Int>& v1)
 {
 	v0.x *= v1.x;
 	v0.y *= v1.y;
 	return v0;
 }
+__duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<Float>& v1)
+{
+	v0.x *= v1.x;
+	v0.y *= v1.y;
+	return v0;
+}
+
 #pragma endregion
 
-#pragma region vec2f multiply operation
-template<typename T>
-__duel__ const vec2<Float>& operator/(const T & n, const vec2<Float>& v)
-{
-	CHECK(v.x != 0, "(T)n/vec2<Float>(v).x: can not divide 0!");
-	CHECK(v.y != 0, "(T)n/vec2<Float>(v).y: can not divide 0!");
+#pragma region vec2f divide operation
 
+__duel__ const vec2<Float> operator/(const Float& n, const vec2<Float>& v)
+{
 	return vec2<Float>(n / v.x, n / v.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator/(const vec2<Float>& v, const T & n)
-{
-	CHECK(n != 0, "vec2<Float>(v)/(T)n: can not divide 0!");
 
+__duel__ const vec2<Float> operator/(const vec2<Float>& v, const Float& n)
+{
 	return vec2<Float>(v.x / n, v.y / n);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator/(const vec2<Float>& v0, const vec2<T>& v1)
+__duel__ const vec2<Float> operator/(const vec2<Float>& v0, const vec2<Int>& v1)
 {
-	CHECK(v1.x != 0, "vec2<Float>(v0).x/vec2<T>(v1).x: can not divide 0!");
-	CHECK(v1.y != 0, "vec2<Float>(v0).y/vec2<T>(v1).y: can not divide 0!");
-
 	return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator/(const vec2<T>& v0, const vec2<Float>& v1)
-{
-	CHECK(v1.x != 0, "vec2<T>(v0).x/vec2<Float>(v1).x: can not divide 0!");
-	CHECK(v1.y != 0, "vec2<T>(v0).y/vec2<Float>(v1).y: can not divide 0!");
 
+__duel__ const vec2<Float> operator/(const vec2<Int>& v0, const vec2<Float>& v1)
+{
 	return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
 }
-template<typename T>
-__duel__ const vec2<Float>& operator/=(vec2<Float>& v, const T & n)
-{
-	CHECK(n != 0, "vec2<Float>(v)/=(T)n: can not divide 0!");
 
+__duel__ const vec2<Float> operator/(const vec2<Float>& v0, const vec2<Float>& v1)
+{
+	return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
+}
+
+__duel__ const vec2<Float>& operator/=(vec2<Float>& v, const Float& n)
+{
 	v.x /= n;
 	v.y /= n;
 	return v;
 }
-template<typename T>
-__duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<T>& v1)
-{
-	CHECK(v1.x != 0, "vec2<Float>(v0).x/=vec2<T>(v1).x: can not divide 0!");
-	CHECK(v1.y != 0, "vec2<Float>(v0).y/=vec2<T>(v1).y: can not divide 0!");
 
+__duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Int>& v1)
+{
 	v0.x /= v1.x;
 	v0.y /= v1.y;
 	return v0;
 }
+__duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Float>& v1)
+{
+	v0.x /= v1.x;
+	v0.y /= v1.y;
+	return v0;
+}
+
 #pragma endregion

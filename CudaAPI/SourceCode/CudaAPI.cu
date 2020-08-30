@@ -28,7 +28,7 @@ __global__ void kernel()
 	iAdded += i;
 	printf("%d\n", iAdded.x);
 	
-	f /= 0;
+	//f /= 0;
 
 	//auto result = Add(i, f);
 
