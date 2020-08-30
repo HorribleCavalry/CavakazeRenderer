@@ -23,7 +23,14 @@ __global__ void kernel()
 	i = (vec2i)f;
 	printf("%d\n", i.x);
 
-	auto result = Add(i, f);
+	vec2i iAdded(6);
+	printf("%d\n", iAdded.x);
+	iAdded += i;
+	printf("%d\n", iAdded.x);
+	
+	f /= 0;
+
+	//auto result = Add(i, f);
 
 }
 

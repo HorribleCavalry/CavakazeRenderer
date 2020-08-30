@@ -73,6 +73,19 @@ public:
 
 	__duel__ explicit vec2(const vec2<Float>& v) : x(v.x), y(v.y) {}
 
+	__duel__ const vec2<Int>& operator=(const Int& n)
+	{
+		x = n;
+		y = n;
+	}
+	__duel__ const vec2<Int>& operator=(Int&& n)
+	{
+		x = n;
+		y = n;
+	}
+
+	__duel__ const vec2<Int>& operator=(const Float& n) = delete;
+	__duel__ const vec2<Int>& operator=(Float&& n) = delete;
 public:
 	__duel__ Int& operator[](const Int& idx)
 	{
@@ -86,21 +99,141 @@ public:
 typedef vec2<Int> vec2i;
 typedef vec2<Float> vec2f;
 
-template<typename T,typename U>
-auto dot(const T& v0, const T& v1) ->decltype(v0.x*v1.x)
-{
-	return v0.x*v1.x + v0.y*v1.y;
-}
+#pragma region vec2 dot operation
 
-template<typename T, typename U>
-auto Add(const T& v0, const U& v1)
-{
-	return { v0.x + v1.x,v0.y + v1.y };
-}
+auto dot(const vec2<Int>& v0, const vec2<Int>& v1) ->decltype(v0.x*v1.x);
+auto dot(const vec2<Int>& v0, const vec2<Float>& v1) ->decltype(v0.x*v1.x);
+auto dot(const vec2<Float>& v0, const vec2<Int>& v1) ->decltype(v0.x*v1.x);
+auto dot(const vec2<Float>& v0, const vec2<Float>& v1) ->decltype(v0.x*v1.x);
 
-//template<typename T, typename U>
-//auto operator+(const vec2<T>& v0, const vec2<U>& v1)
-//{
-//	return vec2(v0.x + v1.x, v0.y + v1.y);
-//}
+auto dot(const Int& n, const vec2<Int>& v) ->decltype(n*v.x);
+auto dot(const Int& n, const vec2<Float>& v) ->decltype(n*v.x);
+auto dot(const Float& n, const vec2<Int>& v) ->decltype(n*v.x);
+auto dot(const Float& n, const vec2<Float>& v) ->decltype(n*v.x);
+
+auto dot(const vec2<Int>& v, const Int& n) -> decltype(v.x*n);
+auto dot(const vec2<Int>& v, const Float& n) -> decltype(v.x*n);
+auto dot(const vec2<Float>& v, const Int& n) -> decltype(v.x*n);
+auto dot(const vec2<Float>& v, const Float& n) -> decltype(v.x*n);
+
+#pragma endregion
+
+#pragma region vec2i add operation
+
+__duel__ const vec2<Int> operator+(const Int& n, const vec2<Int>& v);
+__duel__ const vec2<Int> operator+(const vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int> operator+(const vec2<Int>& v0, const vec2<Int>& v1);
+
+__duel__ const vec2<Int>& operator+=(vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int>& operator+=(vec2<Int>& v0, const vec2<Int>& v1);
+
+#pragma endregion
+
+#pragma region vec2i subtract operation
+
+__duel__ const vec2<Int> operator-(const Int& n, const vec2<Int>& v);
+__duel__ const vec2<Int> operator-(const vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int> operator-(const vec2<Int>& v0, const vec2<Int>& v1);
+
+__duel__ const vec2<Int>& operator-=(vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int>& operator-=(vec2<Int>& v0, const vec2<Int>& v1);
+
+#pragma endregion
+
+#pragma region vec2i multiply operation
+
+__duel__ const vec2<Int> operator*(const Int& n, const vec2<Int>& v);
+__duel__ const vec2<Int> operator*(const vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int> operator*(const vec2<Int>& v0, const vec2<Int>& v1);
+
+__duel__ const vec2<Int>& operator*=(vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int>& operator*=(vec2<Int>& v0, const vec2<Int>& v1);
+
+#pragma endregion
+
+#pragma region vec2i divide operation
+
+__duel__ const vec2<Int> operator/(const Int& n, const vec2<Int>& v);
+__duel__ const vec2<Int> operator/(const vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int> operator/(const vec2<Int>& v0, const vec2<Int>& v1);
+
+__duel__ const vec2<Int>& operator/=(vec2<Int>& v, const Int& n);
+__duel__ const vec2<Int>& operator/=(vec2<Int>& v0, const vec2<Int>& v1);
+
+#pragma endregion
+
+#pragma region vec2f add operation
+
+template<typename T>
+__duel__ const vec2<Float>& operator+(const T& n, const vec2<Float>& v);
+template<typename T>
+__duel__ const vec2<Float>& operator+(const vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator+(const vec2<Float>& v0, const vec2<T>& v1);
+template<typename T>
+__duel__ const vec2<Float>& operator+(const vec2<T>& v0, const vec2<Float>& v1);
+
+template<typename T>
+__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<T>& v1);
+
+#pragma endregion
+
+#pragma region vec2f subtract operation
+
+template<typename T>
+__duel__ const vec2<Float>& operator-(const T& n, const vec2<Float>& v);
+template<typename T>
+__duel__ const vec2<Float>& operator-(const vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator-(const vec2<Float>& v0, const vec2<T>& v1);
+template<typename T>
+__duel__ const vec2<Float>& operator-(const vec2<T>& v0, const vec2<Float>& v1);
+
+template<typename T>
+__duel__ const vec2<Float>& operator-=(vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator-=(vec2<Float>& v0, const vec2<T>& v1);
+
+#pragma endregion
+
+#pragma region vec2f multiply operation
+
+template<typename T>
+__duel__ const vec2<Float>& operator*(const T& n, const vec2<Float>& v);
+template<typename T>
+__duel__ const vec2<Float>& operator*(const vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator*(const vec2<Float>& v0, const vec2<T>& v1);
+template<typename T>
+__duel__ const vec2<Float>& operator*(const vec2<T>& v0, const vec2<Float>& v1);
+
+template<typename T>
+__duel__ const vec2<Float>& operator*=(vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<T>& v1);
+
+#pragma endregion
+
+#pragma region vec2f divide operation
+
+template<typename T>
+__duel__ const vec2<Float>& operator/(const T& n, const vec2<Float>& v);
+template<typename T>
+__duel__ const vec2<Float>& operator/(const vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator/(const vec2<Float>& v0, const vec2<T>& v1);
+template<typename T>
+__duel__ const vec2<Float>& operator/(const vec2<T>& v0, const vec2<Float>& v1);
+
+template<typename T>
+__duel__ const vec2<Float>& operator/=(vec2<Float>& v, const T& n);
+template<typename T>
+__duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<T>& v1);
+
+#pragma endregion
+
+
 #endif // !__CUDA3DMATH__CUH__
+
