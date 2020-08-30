@@ -2,53 +2,56 @@
 
 #pragma region vec2 dot operation
 
-auto dot(const vec2<Int>& v0, const vec2<Int>& v1) ->decltype(v0.x*v1.x)
+const Int dot(const vec2<Int>& v0, const vec2<Int>& v1)
 {
 	return v0.x*v1.x + v0.y*v1.y;
 }
-auto dot(const vec2<Int>& v0, const vec2<Float>& v1) ->decltype(v0.x*v1.x)
+const Float dot(const vec2<Int>& v0, const vec2<Float>& v1)
 {
 	return v0.x*v1.x + v0.y*v1.y;
 }
-auto dot(const vec2<Float>& v0, const vec2<Int>& v1) ->decltype(v0.x*v1.x)
+const Float dot(const vec2<Float>& v0, const vec2<Int>& v1)
 {
 	return v0.x*v1.x + v0.y*v1.y;
 }
-auto dot(const vec2<Float>& v0, const vec2<Float>& v1) ->decltype(v0.x*v1.x)
+const Float dot(const vec2<Float>& v0, const vec2<Float>& v1)
 {
 	return v0.x*v1.x + v0.y*v1.y;
 }
 
-auto dot(const Int& n, const vec2<Int>& v) ->decltype(n*v.x)
+const Int dot(const Int& n, const vec2<Int>& v)
 {
 	return n * v.x + n * v.y;
 }
-auto dot(const Int& n, const vec2<Float>& v) ->decltype(n*v.x)
+const Float dot(const Int& n, const vec2<Float>& v)
 {
 	return n * v.x + n * v.y;
 }
-auto dot(const Float& n, const vec2<Int>& v) ->decltype(n*v.x)
+const Float dot(const Float& n, const vec2<Int>& v)
 {
 	return n * v.x + n * v.y;
 }
-auto dot(const Float& n, const vec2<Float>& v) ->decltype(n*v.x)
+const Float dot(const Float& n, const vec2<Float>& v)
 {
 	return n * v.x + n * v.y;
 }
 
-auto dot(const vec2<Int>& v, const Int& n) -> decltype(v.x*n)
+const Int dot(const vec2<Int>& v, const Int& n)
 {
 	return v.x*n + v.y*n;
 }
-auto dot(const vec2<Int>& v, const Float& n) -> decltype(v.x*n)
+
+const Float dot(const vec2<Int>& v, const Float& n)
 {
 	return v.x*n + v.y*n;
 }
-auto dot(const vec2<Float>& v, const Int& n) -> decltype(v.x*n)
+
+const Float dot(const vec2<Float>& v, const Int& n)
 {
 	return v.x*n + v.y*n;
 }
-auto dot(const vec2<Float>& v, const Float& n) -> decltype(v.x*n)
+
+const Float dot(const vec2<Float>& v, const Float& n)
 {
 	return v.x*n + v.y*n;
 }

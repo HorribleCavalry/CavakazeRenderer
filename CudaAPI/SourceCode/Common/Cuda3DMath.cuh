@@ -4,6 +4,7 @@
 #include "../CudaSTD/CudaUtility.cuh"
 #include "../CudaSTD/cuvector.cuh"
 
+#pragma region vec2
 template<typename T>
 class vec2
 {
@@ -31,7 +32,7 @@ public:
 	__duel__ vec2(const T& _x, const T& _y) : x(_x), y(_y) {}
 
 	template<typename U>
-	__duel__ const vec2<T>(const vec2<U>& v) : x(v.x), y(v.y) {}
+	__duel__ vec2<T>(const vec2<U>& v) : x(v.x), y(v.y) {}
 
 public:
 	__duel__ T& operator[](const T& idx)
@@ -103,20 +104,20 @@ typedef vec2<Float> vec2f;
 
 #pragma region vec2 dot operation
 
-auto dot(const vec2<Int>& v0, const vec2<Int>& v1) ->decltype(v0.x*v1.x);
-auto dot(const vec2<Int>& v0, const vec2<Float>& v1) ->decltype(v0.x*v1.x);
-auto dot(const vec2<Float>& v0, const vec2<Int>& v1) ->decltype(v0.x*v1.x);
-auto dot(const vec2<Float>& v0, const vec2<Float>& v1) ->decltype(v0.x*v1.x);
+const Int dot(const vec2<Int>& v0, const vec2<Int>& v1);
+const Float dot(const vec2<Int>& v0, const vec2<Float>& v1);
+const Float dot(const vec2<Float>& v0, const vec2<Int>& v1);
+const Float dot(const vec2<Float>& v0, const vec2<Float>& v1);
 
-auto dot(const Int& n, const vec2<Int>& v) ->decltype(n*v.x);
-auto dot(const Int& n, const vec2<Float>& v) ->decltype(n*v.x);
-auto dot(const Float& n, const vec2<Int>& v) ->decltype(n*v.x);
-auto dot(const Float& n, const vec2<Float>& v) ->decltype(n*v.x);
+const Int dot(const Int& n, const vec2<Int>& v);
+const Float dot(const Int& n, const vec2<Float>& v);
+const Float dot(const Float& n, const vec2<Int>& v);
+const Float dot(const Float& n, const vec2<Float>& v);
 
-auto dot(const vec2<Int>& v, const Int& n) -> decltype(v.x*n);
-auto dot(const vec2<Int>& v, const Float& n) -> decltype(v.x*n);
-auto dot(const vec2<Float>& v, const Int& n) -> decltype(v.x*n);
-auto dot(const vec2<Float>& v, const Float& n) -> decltype(v.x*n);
+const Int dot(const vec2<Int>& v, const Int& n);
+const Float dot(const vec2<Int>& v, const Float& n);
+const Float dot(const vec2<Float>& v, const Int& n);
+const Float dot(const vec2<Float>& v, const Float& n);
 
 #pragma endregion
 
@@ -220,6 +221,7 @@ __duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Float>& v1);
 
 #pragma endregion
 
+#pragma endregion
 
 #endif // !__CUDA3DMATH__CUH__
 
