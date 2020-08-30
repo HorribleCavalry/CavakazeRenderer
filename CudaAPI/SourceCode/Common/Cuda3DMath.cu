@@ -350,30 +350,46 @@ __duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<Float>& v1)
 
 __duel__ const vec2<Float> operator/(const Float& n, const vec2<Float>& v)
 {
+	CHECK(v.x != 0, "(Float)n/vec2<Float>(v).x: can not devide 0!");
+	CHECK(v.y != 0, "(Float)n/vec2<Float>(v).y: can not devide 0!");
+
 	return vec2<Float>(n / v.x, n / v.y);
 }
 
 __duel__ const vec2<Float> operator/(const vec2<Float>& v, const Float& n)
 {
+	CHECK(n != 0, "vec2<Float>(v)/(Float)n: can not devide 0!");
+
 	return vec2<Float>(v.x / n, v.y / n);
 }
 __duel__ const vec2<Float> operator/(const vec2<Float>& v0, const vec2<Int>& v1)
 {
+	CHECK(v1.x != 0, "vec2<Float>(v0).x/vec2<Int>(v1).x: can not devide 0!");
+	CHECK(v1.y != 0, "vec2<Float>(v0).y/vec2<Int>(v1).y: can not devide 0!");
+
 	return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
 }
 
 __duel__ const vec2<Float> operator/(const vec2<Int>& v0, const vec2<Float>& v1)
 {
+	CHECK(v1.x != 0, "vec2<Int>(v0).x/vec2<Float>(v1).x: can not devide 0!");
+	CHECK(v1.y != 0, "vec2<Int>(v0).y/vec2<Float>(v1).y: can not devide 0!");
+
 	return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
 }
 
 __duel__ const vec2<Float> operator/(const vec2<Float>& v0, const vec2<Float>& v1)
 {
+	CHECK(v1.x != 0, "vec2<Float>(v0).x/vec2<Float>(v1).x: can not devide 0!");
+	CHECK(v1.y != 0, "vec2<Float>(v0).y/vec2<Float>(v1).y: can not devide 0!");
+
 	return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
 }
 
 __duel__ const vec2<Float>& operator/=(vec2<Float>& v, const Float& n)
 {
+	CHECK(n != 0, "vec2<Float>(v)/=(Float)n: can not devide 0!");
+
 	v.x /= n;
 	v.y /= n;
 	return v;
@@ -381,12 +397,18 @@ __duel__ const vec2<Float>& operator/=(vec2<Float>& v, const Float& n)
 
 __duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Int>& v1)
 {
+	CHECK(v1.x != 0, "vec2<Float>(v0).x/=vec2<Int>(v1).x: can not devide 0!");
+	CHECK(v1.y != 0, "vec2<Float>(v0).y/=vec2<Int>(v1).y: can not devide 0!");
+
 	v0.x /= v1.x;
 	v0.y /= v1.y;
 	return v0;
 }
 __duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Float>& v1)
 {
+	CHECK(v1.x != 0, "vec2<Float>(v0).x/=vec2<Float>(v1).x: can not devide 0!");
+	CHECK(v1.y != 0, "vec2<Float>(v0).y/=vec2<Float>(v1).y: can not devide 0!");
+
 	v0.x /= v1.x;
 	v0.y /= v1.y;
 	return v0;
