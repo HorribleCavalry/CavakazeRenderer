@@ -47,6 +47,26 @@ public:
 	}
 };
 
+template<>
+class vec2<Int>
+{
+public:
+	Int x, y;
+public:
+	__duel__ vec2() :x(0), y(0) {}
+
+	__duel__ vec2(const Int& _x, const Int& _y) : x(_x), y(_y) {}
+
+	__duel__ ~vec2() {}
+
+public:
+	__duel__ T& operator[](const Int& idx)
+	{
+		CHECK(idx >= 0 && idx <= 1, "The <idx> invec2<T>::operator[idx] is illegal!");
+		return idx == 0 ? x : y;
+	}
+};
+
 typedef vec2<Int> vec2i;
 typedef vec2<Float> vec2f;
 
