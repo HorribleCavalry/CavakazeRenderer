@@ -6,10 +6,6 @@
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
-__duel__ void testDuel()
-{
-}
-
 __global__ void kernel()
 {
 	//vec2i i(0.0f);
@@ -26,6 +22,8 @@ __global__ void kernel()
 	printf("%f\n", f.x);
 	i = (vec2i)f;
 	printf("%d\n", i.x);
+
+	auto result = Add(i, f);
 
 }
 

@@ -86,6 +86,18 @@ public:
 typedef vec2<Int> vec2i;
 typedef vec2<Float> vec2f;
 
+template<typename T,typename U>
+auto dot(const T& v0, const T& v1) ->decltype(v0.x*v1.x)
+{
+	return v0.x*v1.x + v0.y*v1.y;
+}
+
+template<typename T, typename U>
+auto Add(const T& v0, const U& v1)
+{
+	return { v0.x + v1.x,v0.y + v1.y };
+}
+
 //template<typename T, typename U>
 //auto operator+(const vec2<T>& v0, const vec2<U>& v1)
 //{
