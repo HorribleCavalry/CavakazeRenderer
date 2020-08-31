@@ -521,9 +521,11 @@ namespace CUM
 	public:
 		Float& operator[](const Uint& i)
 		{
-			CHECK(0 <= i && i <= 16, "Mat4x4:: operator[](Uint idx): idx is out of range!");
-			return m[i][j];
+			CHECK(0 <= i && i < 16, "Mat4x4:: operator[](Uint idx): idx is out of range!");
+			return m[(i - i % 4) / 4][i % 4];
 		}
+
+
 	};
 }
 
