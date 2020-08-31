@@ -462,6 +462,69 @@ namespace CUM
 
 #pragma endregion
 
+	class Mat4x4
+	{
+	public:
+		Float m[4][4];
+	public:
+		__duel__ Mat4x4()
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = i == j ? 1 : 0;
+				}
+			}
+		}
+		__duel__ Mat4x4(const Mat4x4& mat)
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+		__duel__ Mat4x4(Mat4x4&& mat)
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+		__duel__ const Mat4x4& operator=(const Mat4x4& mat)
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+		__duel__ const Mat4x4& operator=(Mat4x4&& mat)
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+		__duel__ ~Mat4x4() {}
+	public:
+		Float& operator[](const Uint& i)
+		{
+			CHECK(0 <= i && i <= 16, "Mat4x4:: operator[](Uint idx): idx is out of range!");
+			return m[i][j];
+		}
+	};
 }
 
 #endif // !__CUDA3DMATH__CUH__
