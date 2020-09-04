@@ -6,6 +6,15 @@
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
+class creation
+{
+public:
+	__duel__ creation(unsigned long _id) : id(_id) {}
+	unsigned long id;
+	const static creation human;
+};
+const creation creation::human(1);
+
 __global__ void kernel()
 {
 	//vec2i i(0.0f);
@@ -31,7 +40,7 @@ __global__ void kernel()
 	//f /= 0;
 
 	//auto result = Add(i, f);
-
+	//printf("%d\n", creation::human.id);
 }
 
 
@@ -52,4 +61,5 @@ int main()
 	CUM::vec2f f;
 	i = (CUM::vec2i)f;
 	kernel << <1, 1 >> > ();
+	printf("%d\n", creation::human.human.id);
 }
