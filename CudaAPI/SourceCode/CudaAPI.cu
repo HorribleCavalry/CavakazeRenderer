@@ -1,6 +1,7 @@
 ﻿#include "CudaAPI.cuh"
 #include <array>
 #include <vector>
+#include "CudaAPI.h"
 
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -32,8 +33,26 @@ __global__ void kernel()
 	CUM::vec4<Float> v4lt(v4l);
 	CUM::vec4<Float> v4rt(v4r);
 	//f /= 0;
-	printf("%f\n",CUM::Mat4x4_identity.m[1][1]);
+	//printf("%f\n",CUM::Mat4x4_identity.m[1][1]);
 
+	CUM::Mat4x4<Float> matF;
+	CUM::Mat4x4<Int> matI;
+
+	CUM::vec4i v4ii;
+
+	LogData(matF);
+	LogData(matI);
+	LogData(v4r);
+	LogData(v4l);
+	LogData(v4ii);
+	CUM::Mat4x4<Float> mt0;
+	CUM::Mat4x4<Float> mt1;
+	CUM::Mat4x4<Int> mt2;
+	CUM::Mat4x4<Int> mt3;
+	//mt0 = mt2;
+	LogData(mt0 + mt1);
+	LogData(mt2 + mt3);
+	LogData(mt0 + mt2);
 	//auto result = Add(i, f);
 	//printf("%d\n", creation::human.id);
 }
@@ -63,5 +82,9 @@ int main()
 	CUM::vec4<Float> vL;
 	CUM::vec4<Float> v(reR());
 	kernel << <1, 1 >> > ();
+
+	CUM::Mat4x4<Float> mat;
+	CUM::logData<Float>(mat);
+
 	//printf("%d\n", creation::human.human.id);
 }

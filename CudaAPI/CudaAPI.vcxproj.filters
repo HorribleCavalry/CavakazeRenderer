@@ -33,6 +33,7 @@
     <ClInclude Include="SourceCode\CudaSTD\cuvector.cuh">
       <Filter>SourceCode\CudaSTD</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\CudaAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">

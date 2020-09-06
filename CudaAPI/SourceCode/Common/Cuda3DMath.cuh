@@ -3,8 +3,12 @@
 
 #include "../CudaSTD/CudaUtility.cuh"
 #include "../CudaSTD/cuvector.cuh"
+#include "../CudaSTD/cuiostream.cuh"
+#include <cuda/std/type_traits>
 namespace CUM
 {
+#define LogData(data) logData(data)
+
 #pragma region vec2
 	template<typename T>
 	class vec2
@@ -223,6 +227,13 @@ namespace CUM
 #pragma endregion
 
 #pragma endregion
+
+	template<typename T>
+	__duel__ void logData(const vec2<T>& v)
+	{
+		const custd::Ostream os;
+		os << v.x << "\t" << v.y << custd::endl;
+	}
 
 #pragma region vec3
 	template<typename T>
@@ -463,6 +474,13 @@ namespace CUM
 #pragma endregion
 
 	template<typename T>
+	__duel__ void logData(const vec3<T>& v)
+	{
+		const custd::Ostream os;
+		os << v.x << "\t" << v.y << "\t" << v.z << custd::endl;
+	}
+
+	template<typename T>
 	class vec4
 	{
 	public:
@@ -477,11 +495,21 @@ namespace CUM
 		__duel__ vec4(const vec4& v) : vec4(v.x, v.y, v.z, v.w) {}
 		__duel__ vec4(vec4&& v) : vec4(v) {}
 	};
+	typedef vec4<Int> vec4i;
+	typedef vec4<Float> vec4f;
 
+	template<typename T>
+	__duel__ void logData(const vec4<T>& v)
+	{
+		const custd::Ostream os;
+		os << v.x << "\t" << v.y << "\t" << v.z << "\t" << v.w << custd::endl;
+	}
+
+	template<typename T>
 	class Mat4x4
 	{
 	public:
-		Float m[4][4];
+		T m[4][4];
 	public:
 		__duel__ Mat4x4()
 		{
@@ -535,11 +563,36 @@ namespace CUM
 		}
 		__duel__ ~Mat4x4() {}
 	public:
+
+		template<>
+		__duel__ Mat4x4<Float>operator=(const Mat4x4<Int>& mat) <Float>
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+
+		template<>
+		__duel__ explicit Mat4x4<Int>operator=(const Mat4x4<Float>& mat)<Int>
+		{
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = 0; j < 4; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+	public:
 		__duel__ Mat4x4(
-			Float m00, Float m01, Float m02, Float m03,
-			Float m10, Float m11, Float m12, Float m13,
-			Float m20, Float m21, Float m22, Float m23,
-			Float m30, Float m31, Float m32, Float m33
+			T m00, T m01, T m02, T m03,
+			T m10, T m11, T m12, T m13,
+			T m20, T m21, T m22, T m23,
+			T m30, T m31, T m32, T m33
 		)
 			//:
 			//m[0][0](m00), m[0][1](m01), m[0][2](m02), m[0][3](m03),
@@ -553,17 +606,107 @@ namespace CUM
 			m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
 		}
 	public:
-		//vec4 Row()
+		__duel__ vec4<T>&& Row(Uint idx) const
+		{
+			CHECK(idx >= 0 && idx <= 3, "Mat4x4::Row(idx): idx is out of range!");
+			switch (idx)
+			{
+			case 0: return vec4<T>(m[0][0], m[0][1], m[0][2], m[0][3]); break;
+			case 1: return vec4<T>(m[1][0], m[1][1], m[1][2], m[1][3]); break;
+			case 2: return vec4<T>(m[2][0], m[2][1], m[2][2], m[2][3]); break;
+			case 3: return vec4<T>(m[3][0], m[3][1], m[3][2], m[3][3]); break;
+			default:
+				CHECK(false, "It can not run Mat4x4::Row(), called switch::default");
+				break;
+			}
+		}
+
+		__duel__ vec4<T>&& Column(Uint idx) const
+		{
+			CHECK(idx >= 0 && idx <= 3, "Mat4x4::Column(idx): idx is out of range!");
+			switch (idx)
+			{
+			case 0: return vec4<T>(m[0][0], m[1][0], m[2][0], m[3][0]); break;
+			case 1: return vec4<T>(m[0][1], m[1][1], m[2][1], m[3][1]); break;
+			case 2: return vec4<T>(m[0][2], m[1][2], m[2][2], m[3][2]); break;
+			case 3: return vec4<T>(m[0][3], m[1][3], m[2][3], m[3][3]); break;
+			default:
+				CHECK(false, "It can not run Mat4x4::Column(), called switch::default");
+				break;
+			}
+		}
+
+		__duel__ Mat4x4& transpose()
+		{
+			Float temp;
+			for (Uint i = 0; i < 4; i++)
+			{
+				for (Uint j = i + 1; j < 4; i++)
+				{
+					temp = m[i][j];
+					m[i][j] = m[j][i];
+					m[j][i] = temp;
+				}
+			}
+
+			return *this;
+		}
+
 	public:
 
 
 	public:
 		//__device__  static const Mat4x4 identiy;
 	};
+
+	template<typename T>
+	__duel__ const Mat4x4<T> operator+(const Mat4x4<T>& mat0, const Mat4x4<T>& mat1)
+	{
+		Mat4x4<T> result;
+		for (Uint i = 0; i < 4; i++)
+		{
+			for (Uint j = 0; j < 4; j++)
+			{
+				result.m[i][j] = mat0.m[i][j] + mat1.m[i][j];
+			}
+		}
+		return result;
+	}
+
+	template<typename T, typename U>
+	__duel__ const Mat4x4<Float> operator+(const Mat4x4<T>& mat0, const Mat4x4<U>& mat1)
+	{
+		Mat4x4<Float> result;
+		for (Uint i = 0; i < 4; i++)
+		{
+			for (Uint j = 0; j < 4; j++)
+			{
+				result.m[i][j] = mat0.m[i][j] + mat1.m[i][j];
+			}
+		}
+		return result;
+	}
+
+	template<typename T>
+	__duel__ void logData(const Mat4x4<T>& mat)
+	{
+		const custd::Ostream os;
+		for (Uint i = 0; i < 4; i++)
+		{
+			for (Uint j = 0; j < 4; j++)
+			{
+				os << mat.m[i][j] << "\t";
+			}
+			os << custd::endl;
+		}
+	}
+
 }
 
+
+
 #pragma region mat4x4 marco
-#define Mat4x4_identity Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+#define Mat4x4_identity Mat4x4<Float>(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 //#define Mat4x4_identity Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 #pragma endregion
 

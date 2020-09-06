@@ -880,5 +880,19 @@ namespace CUM
 	//	0, 1, 0, 0,
 	//	0, 0, 1, 0,
 	//	0, 0, 0, 1);
+
+	//template<typename T>
+	//__duel__ const Mat4x4<T> operator+(const Mat4x4<T>& mat0, const Mat4x4<T>& mat1)
+	//{
+	//	Mat4x4<T> result;
+	//	for (Uint i = 0; i < 4; i++)
+	//	{
+	//		for (Uint j = 0; j < 4; j++)
+	//		{
+	//			result.m[i][j] = mat0.m[i][j] + mat1.m[i][j];
+	//		}
+	//	}
+	//	return result;
+	//}
 	#pragma endregion
 }

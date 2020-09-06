@@ -14,6 +14,7 @@
     <ClInclude Include="SourceCode\Common\Cuda3DMath.cuh" />
     <ClInclude Include="SourceCode\Common\stb_image.h" />
     <ClInclude Include="SourceCode\CudaAPI.cuh" />
+    <ClInclude Include="SourceCode\CudaAPI.h" />
     <ClInclude Include="SourceCode\CudaSTD\cuarray.cuh" />
     <ClInclude Include="SourceCode\CudaSTD\CudaUtility.cuh" />
     <ClInclude Include="SourceCode\CudaSTD\cuiostream.cuh" />
