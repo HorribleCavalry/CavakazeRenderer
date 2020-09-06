@@ -6,15 +6,6 @@
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
-class creation
-{
-public:
-	__duel__ creation(unsigned long _id) : id(_id) {}
-	unsigned long id;
-	const static creation human;
-};
-const creation creation::human(1);
-
 __global__ void kernel()
 {
 	//vec2i i(0.0f);
@@ -36,8 +27,12 @@ __global__ void kernel()
 	printf("%d\n", iAdded.x);
 	iAdded += i;
 	printf("%d\n", iAdded.x);
-	
+	CUM::vec4<Float> v4l;
+	CUM::vec4<Float>&& v4r = CUM::vec4<Float>(0, 0, 0, 1);
+	CUM::vec4<Float> v4lt(v4l);
+	CUM::vec4<Float> v4rt(v4r);
 	//f /= 0;
+	printf("%f\n",CUM::Mat4x4_identity.m[1][1]);
 
 	//auto result = Add(i, f);
 	//printf("%d\n", creation::human.id);
@@ -55,11 +50,18 @@ __global__ void kernel()
 //	~Person() {}
 //};
 
+__duel__ CUM::vec4<Float>&& reR()
+{
+	return CUM::vec4<Float>();
+}
+
 int main()
 {
 	CUM::vec2i i;
 	CUM::vec2f f;
 	i = (CUM::vec2i)f;
+	CUM::vec4<Float> vL;
+	CUM::vec4<Float> v(reR());
 	kernel << <1, 1 >> > ();
-	printf("%d\n", creation::human.human.id);
+	//printf("%d\n", creation::human.human.id);
 }

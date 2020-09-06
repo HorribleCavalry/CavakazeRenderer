@@ -874,5 +874,11 @@ namespace CUM
 #pragma endregion
 
 
-
+	#pragma region mat4x4
+	//__device__  const Mat4x4 Mat4x4::identiy(
+	//	1, 0, 0, 0,
+	//	0, 1, 0, 0,
+	//	0, 0, 1, 0,
+	//	0, 0, 0, 1);
+	#pragma endregion
 }
