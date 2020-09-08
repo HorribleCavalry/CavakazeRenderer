@@ -1,7 +1,4 @@
 ﻿#include "CudaAPI.cuh"
-#include <array>
-#include <vector>
-#include "CudaAPI.h"
 
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -47,5 +44,10 @@ int main()
 	vf0 = vi1;
 	vf1.x = 1.5;
 	vf0 = vf1;
+	//vi0 = (CUM::vec2i)vf0;
 	//vi0 = vf0;
+	vf0 = vi0;
+	//vf1 = vf1 + vf1;
+	//vf1 = vi0 + vf1;
+	//vf0 = 1.0 + vi0;
 }

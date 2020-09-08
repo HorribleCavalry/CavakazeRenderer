@@ -17,7 +17,11 @@ namespace CUM
 		T x, y;
 	public:
 		__duel__ vec2() :x(0.0), y(0.0) {}
+		__duel__ vec2(const T& _x, const T& _y) :x(_x), y(_y) {}
 		__duel__ vec2(const vec2<T>& v) : x(v.x), y(v.y) {}
+		template<typename U>
+		__duel__ explicit vec2(const vec2<U>& v) : x(v.x), y(v.y) {}
+		//__duel__ vec2(const vec2<T>& v) : x(v.x), y(v.y) {}
 		__duel__ ~vec2() {}
 	public:
 
@@ -39,122 +43,145 @@ namespace CUM
 	typedef vec2<Int> vec2i;
 	typedef vec2<Float> vec2f;
 
-#pragma region vec2 dot operation
+#pragma region vec2 vector operation
 
-	const Int dot(const vec2<Int>& v0, const vec2<Int>& v1);
-	const Float dot(const vec2<Int>& v0, const vec2<Float>& v1);
-	const Float dot(const vec2<Float>& v0, const vec2<Int>& v1);
-	const Float dot(const vec2<Float>& v0, const vec2<Float>& v1);
+	template<typename T>
+	__duel__ const T dot(const vec2<T>& v0, const vec2<T>& v1);
 
-	const Int dot(const Int& n, const vec2<Int>& v);
-	const Float dot(const Int& n, const vec2<Float>& v);
-	const Float dot(const Float& n, const vec2<Int>& v);
-	const Float dot(const Float& n, const vec2<Float>& v);
-
-	const Int dot(const vec2<Int>& v, const Int& n);
-	const Float dot(const vec2<Int>& v, const Float& n);
-	const Float dot(const vec2<Float>& v, const Int& n);
-	const Float dot(const vec2<Float>& v, const Float& n);
+	template<typename T, typename U>
+	__duel__ Float dot(const vec2<T>& v0, const vec2<U>& v1);
 
 #pragma endregion
 
-#pragma region vec2i add operation
+#pragma region vec2 same type operation
 
-	__duel__ const vec2<Int> operator+(const Int& n, const vec2<Int>& v);
-	__duel__ const vec2<Int> operator+(const vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int> operator+(const vec2<Int>& v0, const vec2<Int>& v1);
+#pragma region vec2 same type operation +
 
-	__duel__ const vec2<Int>& operator+=(vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int>& operator+=(vec2<Int>& v0, const vec2<Int>& v1);
+	template<typename T>
+	__duel__ const vec2<T> operator+(const T& n, const vec2<T>& v);
+	template<typename T>
+	__duel__ const vec2<T> operator+(const vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T> operator+(const vec2<T>& v0, const vec2<T>& v1);
 
-#pragma endregion
-
-#pragma region vec2i subtract operation
-
-	__duel__ const vec2<Int> operator-(const Int& n, const vec2<Int>& v);
-	__duel__ const vec2<Int> operator-(const vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int> operator-(const vec2<Int>& v0, const vec2<Int>& v1);
-
-	__duel__ const vec2<Int>& operator-=(vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int>& operator-=(vec2<Int>& v0, const vec2<Int>& v1);
+	template<typename T>
+	__duel__ const vec2<T>& operator+=(vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T>& operator+=(vec2<T>& v0, const vec2<T>& v1);
 
 #pragma endregion
 
-#pragma region vec2i multiply operation
+#pragma region vec2 same type operation -
+	template<typename T>
+	__duel__ const vec2<T> operator-(const T& n, const vec2<T>& v);
+	template<typename T>
+	__duel__ const vec2<T> operator-(const vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T> operator-(const vec2<T>& v0, const vec2<T>& v1);
 
-	__duel__ const vec2<Int> operator*(const Int& n, const vec2<Int>& v);
-	__duel__ const vec2<Int> operator*(const vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int> operator*(const vec2<Int>& v0, const vec2<Int>& v1);
-
-	__duel__ const vec2<Int>& operator*=(vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int>& operator*=(vec2<Int>& v0, const vec2<Int>& v1);
-
-#pragma endregion
-
-#pragma region vec2i divide operation
-
-	__duel__ const vec2<Int> operator/(const Int& n, const vec2<Int>& v);
-	__duel__ const vec2<Int> operator/(const vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int> operator/(const vec2<Int>& v0, const vec2<Int>& v1);
-
-	__duel__ const vec2<Int>& operator/=(vec2<Int>& v, const Int& n);
-	__duel__ const vec2<Int>& operator/=(vec2<Int>& v0, const vec2<Int>& v1);
+	template<typename T>
+	__duel__ const vec2<T>& operator-=(vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T>& operator-=(vec2<T>& v0, const vec2<T>& v1);
 
 #pragma endregion
 
-#pragma region vec2f add operation
+#pragma region vec2 same type operation *
 
-	__duel__ const vec2<Float> operator+(const Float& n, const vec2<Float>& v);
-	__duel__ const vec2<Float> operator+(const vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float> operator+(const vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float> operator+(const vec2<Int>& v0, const vec2<Float>& v1);
-	__duel__ const vec2<Float> operator+(const vec2<Float>& v0, const vec2<Float>& v1);
+	template<typename T>
+	__duel__ const vec2<T> operator*(const T& n, const vec2<T>& v);
+	template<typename T>
+	__duel__ const vec2<T> operator*(const vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T> operator*(const vec2<T>& v0, const vec2<T>& v1);
 
-	__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const Float& n);
+	template<typename T>
+	__duel__ const vec2<T>& operator*=(vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T>& operator*=(vec2<T>& v0, const vec2<T>& v1);
+
+#pragma endregion
+
+#pragma region vec2 same type operation /
+
+	template<typename T>
+	__duel__ const vec2<T> operator/(const T& n, const vec2<T>& v);
+	template<typename T>
+	__duel__ const vec2<T> operator/(const vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T> operator/(const vec2<T>& v0, const vec2<T>& v1);
+
+	template<typename T>
+	__duel__ const vec2<T>& operator/=(vec2<T>& v, const T& n);
+	template<typename T>
+	__duel__ const vec2<T>& operator/=(vec2<T>& v0, const vec2<T>& v1);
+
+#pragma endregion
+
+#pragma endregion
+
+#pragma region vec2 different type operation
+
+#pragma region vec2 different type operation +
+
+	template<typename T, typename U>
+	__duel__ const vec2<Float> operator+(const T& n, const vec2<U>& v);
+	template<typename T, typename U>
+	__duel__ const vec2<Float> operator+(const vec2<T>& v, const U& n);
+	template<typename T, typename U>
+	__duel__ const vec2<Float> operator+(const vec2<T>& v0, const vec2<U>& v1);
+
+	__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const Int& n);
 	__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<Float>& v1);
 
 #pragma endregion
 
-#pragma region vec2f subtract operation
-
-	__duel__ const vec2<Float> operator-(const Float& n, const vec2<Float>& v);
-	__duel__ const vec2<Float> operator-(const vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float> operator-(const vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float> operator-(const vec2<Int>& v0, const vec2<Float>& v1);
-	__duel__ const vec2<Float> operator-(const vec2<Float>& v0, const vec2<Float>& v1);
-
-	__duel__ const vec2<Float>& operator-=(vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float>& operator-=(vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float>& operator-=(vec2<Float>& v0, const vec2<Float>& v1);
-
-#pragma endregion
-
-#pragma region vec2f multiply operation
-
-	__duel__ const vec2<Float> operator*(const Float& n, const vec2<Float>& v);
-	__duel__ const vec2<Float> operator*(const vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float> operator*(const vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float> operator*(const vec2<Int>& v0, const vec2<Float>& v1);
-	__duel__ const vec2<Float> operator*(const vec2<Float>& v0, const vec2<Float>& v1);
-
-	__duel__ const vec2<Float>& operator*=(vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float>& operator*=(vec2<Float>& v0, const vec2<Float>& v1);
-
-#pragma endregion
-
-#pragma region vec2f divide operation
-
-	__duel__ const vec2<Float> operator/(const Float& n, const vec2<Float>& v);
-	__duel__ const vec2<Float> operator/(const vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float> operator/(const vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float> operator/(const vec2<Int>& v0, const vec2<Float>& v1);
-	__duel__ const vec2<Float> operator/(const vec2<Float>& v0, const vec2<Float>& v1);
-
-	__duel__ const vec2<Float>& operator/=(vec2<Float>& v, const Float& n);
-	__duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Int>& v1);
-	__duel__ const vec2<Float>& operator/=(vec2<Float>& v0, const vec2<Float>& v1);
+//#pragma region vec2 different type operation -
+//	template<typename T, typename U>
+//	__duel__ const vec2<T> operator-(const T& n, const vec2<T>& v);
+//	template<typename T, typename U>
+//	__duel__ const vec2<T> operator-(const vec2<T>& v, const T& n);
+//	template<typename T, typename U>
+//	__duel__ const vec2<T> operator-(const vec2<T>& v0, const vec2<T>& v1);
+//
+//	template<typename T, typename U>
+//	__duel__ const vec2<T>& operator-=(vec2<T>& v, const T& n);
+//	template<typename T, typename U>
+//	__duel__ const vec2<T>& operator-=(vec2<T>& v0, const vec2<T>& v1);
+//
+//#pragma endregion
+//
+//#pragma region vec2 different type operation *
+//
+//	template<typename T, typename U>
+//	__duel__ const vec2<Float> operator*(const T& n, const vec2<U>& v);
+//	template<typename T, typename U>
+//	__duel__ const vec2<Float> operator*(const vec2<T>& v, const U& n);
+//	template<typename T, typename U>
+//	__duel__ const vec2<Float> operator*(const vec2<T>& v0, const vec2<U>& v1);
+//
+//	template<typename T, typename U>
+//	__duel__ const vec2<Float>& operator*=(vec2<T>& v, const U& n);
+//	template<typename T, typename U>
+//	__duel__ const vec2<Float>& operator*=(vec2<T>& v0, const vec2<U>& v1);
+//
+//#pragma endregion
+//
+//#pragma region vec2 different type operation /
+//
+//	template<typename T, typename U>
+//	__duel__ const vec2<T> operator/(const T& n, const vec2<T>& v);
+//	template<typename T, typename U>
+//	__duel__ const vec2<T> operator/(const vec2<T>& v, const T& n);
+//	template<typename T, typename U>
+//	__duel__ const vec2<T> operator/(const vec2<T>& v0, const vec2<T>& v1);
+//
+//	template<typename T, typename U>
+//	__duel__ const vec2<T>& operator/=(vec2<T>& v, const T& n);
+//	template<typename T, typename U>
+//	__duel__ const vec2<T>& operator/=(vec2<T>& v0, const vec2<T>& v1);
+//
+//#pragma endregion
 
 #pragma endregion
 
