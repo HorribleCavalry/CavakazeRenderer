@@ -16,7 +16,7 @@ namespace CUM
 	public:
 		T x, y;
 	public:
-		__duel__ vec2() :x(0.0), y(0.0) {}
+		__duel__ vec2() :x(0), y(0) {}
 		__duel__ vec2(const T& _x, const T& _y) :x(_x), y(_y) {}
 		__duel__ vec2(const vec2<T>& v) : x(v.x), y(v.y) {}
 		template<typename U>
@@ -231,18 +231,18 @@ namespace CUM
 		return vec2<Float>(v0.x + v1.x, v0.y + v1.y);
 	}
 
-	__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const Int& n)
-	{
-		v.x += n;
-		v.y += n;
-		return v;
-	}
-	__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<Int>& v1)
-	{
-		v0.x += v1.x;
-		v0.y += v1.y;
-		return v0;
-	}
+	//__duel__ const vec2<Float>& operator+=(vec2<Float>& v, const Int& n)
+	//{
+	//	v.x += n;
+	//	v.y += n;
+	//	return v;
+	//}
+	//__duel__ const vec2<Float>& operator+=(vec2<Float>& v0, const vec2<Int>& v1)
+	//{
+	//	v0.x += v1.x;
+	//	v0.y += v1.y;
+	//	return v0;
+	//}
 
 #pragma endregion
 
@@ -541,7 +541,7 @@ namespace CUM
 			m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
 		}
 	public:
-		__duel__ vec4<T>&& Row(Uint idx) const
+		__duel__ vec4<T>&& Row(Int idx) const
 		{
 			CHECK(idx >= 0 && idx <= 3, "Mat4x4::Row(idx): idx is out of range!");
 			switch (idx)
@@ -556,7 +556,7 @@ namespace CUM
 			}
 		}
 
-		__duel__ vec4<T>&& Column(Uint idx) const
+		__duel__ vec4<T>&& Column(Int idx) const
 		{
 			CHECK(idx >= 0 && idx <= 3, "Mat4x4::Column(idx): idx is out of range!");
 			switch (idx)

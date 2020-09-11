@@ -1,4 +1,4 @@
-﻿#include "CudaAPI.cuh"
+﻿#include "Common/Cuda3DMath.cuh"
 
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -6,14 +6,14 @@
 
 __global__ void kernel()
 {
-	CUM::vec2i vi0;
-	CUM::vec2i vi1;
-	CUM::vec2f vf0;
-	CUM::vec2f vf1;
+	//CUM::vec2i vi0;
+	//CUM::vec2i vi1;
+	//CUM::vec2f vf0;
+	//CUM::vec2f vf1;
 	//vi0 = vi1;
-	vf0 = vi1;
-	vf1.x = 1.5;
-	vf0 = vf1;
+	//vf0 = vi1;
+	//vf1.x = 1.5;
+	//vf0 = vf1;
 	//vi0 = vf0;
 }
 
@@ -29,28 +29,28 @@ __global__ void kernel()
 //	~Person() {}
 //};
 
-__duel__ CUM::vec4<Float>&& reR()
-{
-	return CUM::vec4<Float>();
-}
+//__duel__ CUM::vec4<Float>&& reR()
+//{
+//	return CUM::vec4<Float>();
+//}
 
 int main()
 {
-	CUM::vec2i vi0;
-	CUM::vec2i vi1;
-	CUM::vec2f vf0;
-	CUM::vec2f vf1;
+	//CUM::vec2i vi0;
+	//CUM::vec2i vi1;
+	//CUM::vec2f vf0;
+	//CUM::vec2f vf1;
 	//vi0 = vi1;
-	vf0 = vi1;
-	vf1.x = 1.5;
-	vf0 = vf1;
-	vi0.x = 1.5;
+	//vf0 = vi1;
+	//vf1.x = 1.5;
+	//vf0 = vf1;
+	//vi0.x = 1.5;
 	//vi0 = (CUM::vec2i)vf0;
 	//vi0 = vf0;
-	vf0 = vi0;
-	vf1 = vf1 + vf1;
-	vf1 = vf1 - vf1;
-	vf1 = vf1 * vf1;
+	//vf0 = vi0;
+	//vf1 = vf1 + vf1;
+	//vf1 = vf1 - vf1;
+	//vf1 = vf1 * vf1;
 	//vf1 = vf1 / vf1;
 	//CUM::dot(vf0, vf1);
 	//vf1 = vi0 + vf1;
