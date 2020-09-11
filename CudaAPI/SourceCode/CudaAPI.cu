@@ -44,10 +44,15 @@ int main()
 	vf0 = vi1;
 	vf1.x = 1.5;
 	vf0 = vf1;
+	vi0.x = 1.5;
 	//vi0 = (CUM::vec2i)vf0;
 	//vi0 = vf0;
 	vf0 = vi0;
-	//vf1 = vf1 + vf1;
+	vf1 = vf1 + vf1;
+	vf1 = vf1 - vf1;
+	vf1 = vf1 * vf1;
+	//vf1 = vf1 / vf1;
+	//CUM::dot(vf0, vf1);
 	//vf1 = vi0 + vf1;
 	//vf0 = 1.0 + vi0;
 }
