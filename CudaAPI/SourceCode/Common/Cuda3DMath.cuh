@@ -1524,6 +1524,20 @@ namespace CUM
 	//#define Mat4x4_identity Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 #pragma endregion
 
+	template<typename T>
+	__duel__ void logData(const Mat4x4<T>& mat)
+	{
+		const custd::Ostream os;
+		for (Int i = 0; i < 4; i++)
+		{
+			for (Int j = 0; j < 4; j++)
+			{
+				os << mat.m[i][j] << "\t";
+			}
+		}
+		os << custd::endl;
+	}
+
 #pragma endregion
 }
 
