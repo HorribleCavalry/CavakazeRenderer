@@ -316,7 +316,7 @@ namespace CUM
 	template<typename T>
 	__duel__ void logData(const vec2<T>& v)
 	{
-		const custd::Ostream os;
+		const custd::OStream os;
 		os << v.x << "\t" << v.y << custd::endl;
 	}
 
@@ -665,7 +665,7 @@ namespace CUM
 	template<typename T>
 	__duel__ void logData(const vec3<T>& v)
 	{
-		const custd::Ostream os;
+		const custd::OStream os;
 		os << v.x << "\t" << v.y << "\t" << v.z << custd::endl;
 	}
 
@@ -1015,7 +1015,7 @@ namespace CUM
 	template<typename T>
 	__duel__ void logData(const vec4<T>& v)
 	{
-		const custd::Ostream os;
+		const custd::OStream os;
 		os << v.x << "\t" << v.y << "\t" << v.z << "\t" << v.w << custd::endl;
 	}
 
@@ -1361,7 +1361,7 @@ namespace CUM
 	template<typename T>
 	__duel__ void logData(const Color3<T>& v)
 	{
-		const custd::Ostream os;
+		const custd::OStream os;
 		os << v.r << "\t" << v.g << "\t" << v.b << custd::endl;
 	}
 
@@ -1846,7 +1846,7 @@ namespace CUM
 	template<typename T>
 	__duel__ void logData(const Mat3x3<T>& mat)
 	{
-		const custd::Ostream os;
+		const custd::OStream os;
 		for (Int i = 0; i < 3; i++)
 		{
 			for (Int j = 0; j < 3; j++)
@@ -2365,7 +2365,7 @@ namespace CUM
 	template<typename T>
 	__duel__ void logData(const Mat4x4<T>& mat)
 	{
-		const custd::Ostream os;
+		const custd::OStream os;
 		for (Int i = 0; i < 4; i++)
 		{
 			for (Int j = 0; j < 4; j++)

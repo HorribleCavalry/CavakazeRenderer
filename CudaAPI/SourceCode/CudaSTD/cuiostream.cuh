@@ -7,33 +7,33 @@ namespace custd
 	template<typename T>
 	__duel__ void print(const T& para);
 
-	class Ostream
+	class OStream
 	{
 	public:
-		__duel__ Ostream();
-		__duel__ ~Ostream();
-		__duel__ const Ostream& operator<<(const short& val) const;
-		__duel__ const Ostream& operator<<(const unsigned short& val) const;
+		__duel__ OStream();
+		__duel__ ~OStream();
+		__duel__ const OStream& operator<<(const short& val) const;
+		__duel__ const OStream& operator<<(const unsigned short& val) const;
 
-		__duel__ const Ostream& operator<<(const int& val) const;
-		__duel__ const Ostream& operator<<(const unsigned int& val) const;
+		__duel__ const OStream& operator<<(const int& val) const;
+		__duel__ const OStream& operator<<(const unsigned int& val) const;
 
-		__duel__ const Ostream& operator<<(const long& val) const;
-		__duel__ const Ostream& operator<<(const unsigned long& val) const;
+		__duel__ const OStream& operator<<(const long& val) const;
+		__duel__ const OStream& operator<<(const unsigned long& val) const;
 
-		__duel__ const Ostream& operator<<(const long long& val) const;
-		__duel__ const Ostream& operator<<(const unsigned long long& val) const;
+		__duel__ const OStream& operator<<(const long long& val) const;
+		__duel__ const OStream& operator<<(const unsigned long long& val) const;
 
-		__duel__ const Ostream& operator<<(const float& val) const;
-		__duel__ const Ostream& operator<<(const double& val) const;
+		__duel__ const OStream& operator<<(const float& val) const;
+		__duel__ const OStream& operator<<(const double& val) const;
 
-		__duel__ const Ostream& operator<<(const char& val) const;
-		__duel__ const Ostream& operator<<(const char* val) const;
+		__duel__ const OStream& operator<<(const char& val) const;
+		__duel__ const OStream& operator<<(const char* val) const;
 
-		__duel__ const Ostream& operator<<(void(*edl)()) const;
+		__duel__ const OStream& operator<<(void(*edl)()) const;
 	};
 
-	const Ostream cout;
+	const OStream cout;
 
 	//template<typename T>
 	__device__ void kout(const int& val);
@@ -42,7 +42,7 @@ namespace custd
 	//__device__ float deviceTest;
 	namespace
 	{
-		const Ostream cout;
+		const OStream cout;
 		class InitKernelResource
 		{
 		public:

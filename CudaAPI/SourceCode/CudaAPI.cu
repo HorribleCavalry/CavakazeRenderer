@@ -5,79 +5,87 @@
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
-__global__ void kernel()
-{
-	//CUM::vec2i vi0;
-	//CUM::vec2i vi1;
-	//CUM::vec2f vf0;
-	//CUM::vec2f vf1;
-	//vi0 = vi1;
-	//vf0 = vi1;
-	//vf1.x = 1.5;
-	//vf0 = vf1;
-	//vi0 = vf0;
-	auto mat = CUM::Mat4x4_identity;
-	CUM::Mat4x4i mati(5);
-	mati += mat;
-	CUM::Color3f color;
-	CUM::calculateGammaColor(color, 2.2);
-}
 
 
 class Person
 {
 public:
-	virtual void callType()
+	__duel__ virtual void callType()
 	{
-		custd::cout << "I'm a person!" << custd::endl;
+		custd::OStream os;
+		os << "I'm a person!" << custd::endl;
 	}
 };
 
 class Student : public Person
 {
 public:
-	virtual void callType() override
+	__duel__ virtual void callType() override
 	{
-		custd::cout << "I'm a student!" << custd::endl;
+		custd::OStream os;
+		os<<"I'm a student!" << custd::endl;
 	}
 };
 
 class Teacher : public Person
 {
 public:
-	virtual void callType() override
+	__duel__ virtual void callType() override
 	{
-		custd::cout << "I'm a teacher!" << custd::endl;
+		custd::OStream os;
+		os << "I'm a teacher!" << custd::endl;
 	}
 };
 
 class Farmer : public Person
 {
 public:
-	virtual void callType() override
+	__duel__ virtual void callType() override
 	{
-		custd::cout << "I'm a Farmer!" << custd::endl;
+		custd::OStream os;
+		os << "I'm a Farmer!" << custd::endl;
 	}
 };
 
 class Heacker : public Person
 {
 public:
-	virtual void callType() override
+	__duel__ virtual void callType() override
 	{
-		custd::cout << "I'm a Heacker!" << custd::endl;
+		custd::OStream os;
+		os << "I'm a Heacker!" << custd::endl;
 	}
 };
 
 class Worker : public Person
 {
 public:
-	virtual void callType() override
+	__duel__ virtual void callType() override
 	{
-		custd::cout << "I'm a Worker!" << custd::endl;
+		custd::OStream os;
+		os << "I'm a Worker!" << custd::endl;
 	}
 };
 
+__global__ void kernel()
+{
+	Person per0;
+	Student stu;
+	Farmer far;
+	Heacker hea;
+	Worker wor;
+
+	CUM::PrimitiveVector<Person> list;
+	list.push_back(per0);
+	list.push_back(stu);
+	list.push_back(far);
+	list.push_back(hea);
+	list.push_back(wor);
+	for (Int i = 0; i < 5; i++)
+	{
+		list[i].callType();
+	}
+}
 
 //__duel__ CUM::vec4<Float>&& reR()
 //{
@@ -86,10 +94,41 @@ public:
 
 int main()
 {
+	//Person** prList = new Person*[5];
+
+	//Person per0;
+	//Student stu;
+	//Farmer far;
+	//Heacker hea;
+	//Worker wor;
+	//prList[0] = &per0;
+	//prList[1] = &stu;
+	//prList[2] = &far;
+	//prList[3] = &hea;
+	//prList[4] = &wor;
+	//
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	prList[i]->callType();
+	//}
+
+	//CUM::PrimitiveVector<Person> list;
+	//list.push_back(per0);
+	//list.push_back(stu);
+	//list.push_back(far);
+	//list.push_back(hea);
+	//list.push_back(wor);
+	//for (Int i = 0; i < 5; i++)
+	//{
+	//	list[i].callType();
+	//}
+
+	kernel << <1, 1 >> > ();
+
 	//CUM::vec2i vi0;
-	//CUM::vec2i vi1(1.0f,2.0f);
+	//CUM::vec2i vi1(1.0f, 2.0f);
 	//CUM::vec2f vf0;
-	//CUM::vec2f vf1(1.0f,2.0f);
+	//CUM::vec2f vf1(1.0f, 2.0f);
 
 	//Int ni = 4;
 	//Float nf = 4.0;
@@ -106,33 +145,4 @@ int main()
 	//mati / mat;
 	//CUM::Mat4x4f matf;
 	//matf /= mat;
-
-	Person** prList = new Person*[5];
-
-	Person per0;
-	Student stu;
-	Farmer far;
-	Heacker hea;
-	Worker wor;
-	prList[0] = &per0;
-	prList[1] = &stu;
-	prList[2] = &far;
-	prList[3] = &hea;
-	prList[4] = &wor;
-	
-	for (int i = 0; i < 5; i++)
-	{
-		prList[i]->callType();
-	}
-
-	CUM::PrimitiveVector<Person> list;
-	list.push_back(per0);
-	list.push_back(stu);
-	list.push_back(far);
-	list.push_back(hea);
-	list.push_back(wor);
-	for (Int i = 0; i < 5; i++)
-	{
-		list[i].callType();
-	}
 }

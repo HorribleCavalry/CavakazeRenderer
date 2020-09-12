@@ -20,74 +20,74 @@ namespace custd
 		printf("Nothing");
 	}
 
-	Ostream::Ostream()
+	OStream::OStream()
 	{
 	}
 
-	Ostream::~Ostream()
+	OStream::~OStream()
 	{
 	}
-	const Ostream & Ostream::operator<<(const short & val) const
+	const OStream & OStream::operator<<(const short & val) const
 	{
 		printf("%d", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const unsigned short & val) const
+	const OStream & OStream::operator<<(const unsigned short & val) const
 	{
 		printf("%u", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const int & val) const
+	const OStream & OStream::operator<<(const int & val) const
 	{
 		printf("%i", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const unsigned int & val) const
+	const OStream & OStream::operator<<(const unsigned int & val) const
 	{
 		printf("%u", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const long & val) const
+	const OStream & OStream::operator<<(const long & val) const
 	{
 		printf("%ld", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const unsigned long & val) const
+	const OStream & OStream::operator<<(const unsigned long & val) const
 	{
 		printf("%lu", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const long long & val) const
+	const OStream & OStream::operator<<(const long long & val) const
 	{
 		printf("%lld", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const unsigned long long & val) const
+	const OStream & OStream::operator<<(const unsigned long long & val) const
 	{
 		printf("%llu", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const float & val) const
+	const OStream & OStream::operator<<(const float & val) const
 	{
 		printf("%f", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const double & val) const
+	const OStream & OStream::operator<<(const double & val) const
 	{
 		printf("%f", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const char & val) const
+	const OStream & OStream::operator<<(const char & val) const
 	{
 		printf("%c", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(const char * val) const
+	const OStream & OStream::operator<<(const char * val) const
 	{
 		printf("%s", val);
 		return *this;
 	}
-	const Ostream & Ostream::operator<<(void(*edl)()) const
+	const OStream & OStream::operator<<(void(*edl)()) const
 	{
 		(*edl)();
 		return *this;

@@ -43,7 +43,7 @@ namespace CUM
 		}
 
 	public:
-		T& operator[](const Int& idx)
+		__duel__ T& operator[](const Int& idx)
 		{
 			CHECK(idx >= 0 && idx < size, "PrimitiveVector::operator[](Int idx) error: idx is out of range!");
 			return *(ptrList[idx]);
