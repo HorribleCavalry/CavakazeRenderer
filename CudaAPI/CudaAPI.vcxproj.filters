@@ -34,6 +34,9 @@
       <Filter>SourceCode\CudaSTD</Filter>
     </ClInclude>
     <ClInclude Include="SourceCode\CudaAPI.h" />
+    <ClInclude Include="SourceCode\Common\CudaPrimitivesVector.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">
@@ -53,6 +56,9 @@
     </CudaCompile>
     <CudaCompile Include="SourceCode\CudaSTD\cuvector.cu">
       <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu">
+      <Filter>SourceCode\Common</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>

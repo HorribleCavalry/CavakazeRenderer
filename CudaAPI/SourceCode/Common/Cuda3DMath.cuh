@@ -1367,7 +1367,6 @@ namespace CUM
 
 #pragma endregion
 
-
 #pragma region Mat3x3
 	template<typename T>
 	class Mat3x3
