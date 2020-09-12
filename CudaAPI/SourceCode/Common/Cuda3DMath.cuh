@@ -1021,6 +1021,498 @@ namespace CUM
 
 #pragma endregion
 
+#pragma region Mat3x3
+	template<typename T>
+	class Mat3x3
+	{
+	public:
+		T m[3][3];
+	public:
+		__duel__ Mat3x3()
+		{
+			for (Int i = 0; i < 3; i++)
+			{
+				for (Int j = 0; j < 3; j++)
+				{
+					m[i][j] = 0;
+				}
+			}
+		}
+		__duel__ Mat3x3(
+			const T& m00, const T& m01, const T& m02,
+			const T& m10, const T& m11, const T& m12,
+			const T& m20, const T& m21, const T& m22
+		)
+		{
+			m[0][0] = m00; m[0][1] = m01; m[0][2] = m02;
+			m[1][0] = m10; m[1][1] = m11; m[1][2] = m12;
+			m[2][0] = m20; m[2][1] = m21; m[2][2] = m22;
+		}
+		__duel__ Mat3x3(const T& n)
+		{
+			for (Int i = 0; i < 3; i++)
+			{
+				for (Int j = 0; j < 3; j++)
+				{
+					m[i][j] = n;
+				}
+			}
+		}
+		__duel__ Mat3x3(const Mat3x3<T>& mat)
+		{
+			for (Int i = 0; i < 3; i++)
+			{
+				for (Int j = 0; j < 3; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+		template<typename U>
+		__duel__ explicit Mat3x3(const Mat3x3<U>& mat)
+		{
+			for (Int i = 0; i < 3; i++)
+			{
+				for (Int j = 0; j < 3; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+		__duel__ ~Mat3x3()
+		{
+
+		}
+	public:
+		__duel__ const Mat3x3& operator=(const Mat3x3<Int>& mat)
+		{
+			for (Int i = 0; i < 3; i++)
+			{
+				for (Int j = 0; j < 3; j++)
+				{
+					m[i][j] = mat.m[i][j];
+				}
+			}
+		}
+	public:
+		const vec3<T> GetRow(const Int& idx)
+		{
+			CHECK(idx >= 0 && idx <= 2, "Mat3x3::GetRow(idx) error: idx is out of range!");
+			return vec3<T>(m[idx][0], m[idx][1], m[idx][2]);
+		}
+		const vec3<T> GetColumn(const Int& idx)
+		{
+			CHECK(idx >= 0 && idx <= 2, "Mat3x3::GetColumn(idx) error: idx is out of range!");
+			return vec3<T>(m[0][idx], m[1][idx], m[2][idx]);
+		}
+		const vec3<T> GetDiag()
+		{
+			return vec3<T>(m[0][0], m[1][1], m[2][2]);
+		}
+	};
+
+	typedef Mat3x3<Int> Mat3x3i;
+	typedef Mat3x3<Float> Mat3x3f;
+
+#pragma region Mat3x3 same type operation
+
+#pragma region Mat3x3 same type operation +
+	template<typename T>
+	__duel__ const Mat3x3<T> operator+(const T&n, const Mat3x3<T>& mat)
+	{
+		return Mat3x3<T>(
+			n + mat.m[0][0], n + mat.m[0][1], n + mat.m[0][2],
+			n + mat.m[1][0], n + mat.m[1][1], n + mat.m[1][2],
+			n + mat.m[2][0], n + mat.m[2][1], n + mat.m[2][2]);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator+(const Mat3x3<T>& mat, const T&n)
+	{
+		return Mat3x3<T>(
+			mat.m[0][0] + n, mat.m[0][1] + n, mat.m[0][2] + n,
+			mat.m[1][0] + n, mat.m[1][1] + n, mat.m[1][2] + n,
+			mat.m[2][0] + n, mat.m[2][1] + n, mat.m[2][2] + n);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator+(const Mat3x3<T>& mat0, const Mat3x3<T>& mat1)
+	{
+		return Mat3x3<T>(
+			mat0.m[0][0] + mat1.m[0][0], mat0.m[0][1] + mat1.m[0][1], mat0.m[0][2] + mat1.m[0][2],
+			mat0.m[1][0] + mat1.m[1][0], mat0.m[1][1] + mat1.m[1][1], mat0.m[1][2] + mat1.m[1][2],
+			mat0.m[2][0] + mat1.m[2][0], mat0.m[2][1] + mat1.m[2][1], mat0.m[2][2] + mat1.m[2][2]);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator+=(Mat3x3<T>& mat, const U& n)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat.m[i][j] += n;
+			}
+		}
+		return mat;
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator+=(Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat0.m[i][j] += mat1.m[i][j];
+			}
+		}
+		return mat0;
+	}
+
+	__duel__ const Mat3x3<Int>& operator+=(Mat3x3<Int>& mat, const Float& n) = delete;
+	__duel__ const Mat3x3<Int>& operator+=(Mat3x3<Int>& mat0, const Mat3x3<Float>& mat1) = delete;
+
+#pragma endregion
+
+#pragma region Mat3x3 same type operation -
+	template<typename T>
+	__duel__ const Mat3x3<T> operator-(const T&n, const Mat3x3<T>& mat)
+	{
+		return Mat3x3<T>(
+			n - mat.m[0][0], n - mat.m[0][1], n - mat.m[0][2],
+			n - mat.m[1][0], n - mat.m[1][1], n - mat.m[1][2],
+			n - mat.m[2][0], n - mat.m[2][1], n - mat.m[2][2]);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator-(const Mat3x3<T>& mat, const T&n)
+	{
+		return Mat3x3<T>(
+			mat.m[0][0] - n, mat.m[0][1] - n, mat.m[0][2] - n,
+			mat.m[1][0] - n, mat.m[1][1] - n, mat.m[1][2] - n,
+			mat.m[2][0] - n, mat.m[2][1] - n, mat.m[2][2] - n);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator-(const Mat3x3<T>& mat0, const Mat3x3<T>& mat1)
+	{
+		return Mat3x3<T>(
+			mat0.m[0][0] - mat1.m[0][0], mat0.m[0][1] - mat1.m[0][1], mat0.m[0][2] - mat1.m[0][2],
+			mat0.m[1][0] - mat1.m[1][0], mat0.m[1][1] - mat1.m[1][1], mat0.m[1][2] - mat1.m[1][2],
+			mat0.m[2][0] - mat1.m[2][0], mat0.m[2][1] - mat1.m[2][1], mat0.m[2][2] - mat1.m[2][2]);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator-=(Mat3x3<T>& mat, const U& n)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat.m[i][j] -= n;
+			}
+		}
+		return mat;
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator-=(Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat0.m[i][j] -= mat1.m[i][j];
+			}
+		}
+		return mat0;
+	}
+
+	__duel__ const Mat3x3<Int>& operator-=(Mat3x3<Int>& mat, const Float& n) = delete;
+	__duel__ const Mat3x3<Int>& operator-=(Mat3x3<Int>& mat0, const Mat3x3<Float>& mat1) = delete;
+
+#pragma endregion
+
+#pragma region Mat3x3 same type operation *
+	template<typename T>
+	__duel__ const Mat3x3<T> operator*(const T&n, const Mat3x3<T>& mat)
+	{
+		return Mat3x3<T>(
+			n * mat.m[0][0], n * mat.m[0][1], n * mat.m[0][2],
+			n * mat.m[1][0], n * mat.m[1][1], n * mat.m[1][2],
+			n * mat.m[2][0], n * mat.m[2][1], n * mat.m[2][2]);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator*(const Mat3x3<T>& mat, const T&n)
+	{
+		return Mat3x3<T>(
+			mat.m[0][0] * n, mat.m[0][1] * n, mat.m[0][2] * n,
+			mat.m[1][0] * n, mat.m[1][1] * n, mat.m[1][2] * n,
+			mat.m[2][0] * n, mat.m[2][1] * n, mat.m[2][2] * n);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator*(const Mat3x3<T>& mat0, const Mat3x3<T>& mat1)
+	{
+		return Mat3x3<T>(
+			mat0.m[0][0] * mat1.m[0][0], mat0.m[0][1] * mat1.m[0][1], mat0.m[0][2] * mat1.m[0][2],
+			mat0.m[1][0] * mat1.m[1][0], mat0.m[1][1] * mat1.m[1][1], mat0.m[1][2] * mat1.m[1][2],
+			mat0.m[2][0] * mat1.m[2][0], mat0.m[2][1] * mat1.m[2][1], mat0.m[2][2] * mat1.m[2][2]);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator*=(Mat3x3<T>& mat, const U& n)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat.m[i][j] *= n;
+			}
+		}
+		return mat;
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator*=(Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat0.m[i][j] *= mat1.m[i][j];
+			}
+		}
+		return mat0;
+	}
+
+	__duel__ const Mat3x3<Int>& operator*=(Mat3x3<Int>& mat, const Float& n) = delete;
+	__duel__ const Mat3x3<Int>& operator*=(Mat3x3<Int>& mat0, const Mat3x3<Float>& mat1) = delete;
+
+#pragma endregion
+
+#pragma region Mat3x3 same type operation /
+	template<typename T>
+	__duel__ const Mat3x3<T> operator/(const T&n, const Mat3x3<T>& mat)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				CHECK(mat.m[i][j] != 0, "Same type Mat3x3 operation /(n, Mat3x3 mat) error: one component of the mat can not be 0!");
+			}
+		}
+		return Mat3x3<T>(
+			n / mat.m[0][0], n / mat.m[0][1], n / mat.m[0][2],
+			n / mat.m[1][0], n / mat.m[1][1], n / mat.m[1][2],
+			n / mat.m[2][0], n / mat.m[2][1], n / mat.m[2][2]);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator/(const Mat3x3<T>& mat, const T&n)
+	{
+		CHECK(n != 0, "Same type Mat3x3 operation /(Mat3x3 mat, n) error: n can not be 0!");
+		return Mat3x3<T>(
+			mat.m[0][0] / n, mat.m[0][1] / n, mat.m[0][2] / n,
+			mat.m[1][0] / n, mat.m[1][1] / n, mat.m[1][2] / n,
+			mat.m[2][0] / n, mat.m[2][1] / n, mat.m[2][2] / n);
+	}
+	template<typename T>
+	__duel__ const Mat3x3<T> operator/(const Mat3x3<T>& mat0, const Mat3x3<T>& mat1)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				CHECK(mat1.m[i][j] != 0, "Same type Mat3x3 operation /(n, Mat3x3 mat) error: one component of the mat1 can not be 0!");
+			}
+		}
+		return Mat3x3<T>(
+			mat0.m[0][0] / mat1.m[0][0], mat0.m[0][1] / mat1.m[0][1], mat0.m[0][2] / mat1.m[0][2],
+			mat0.m[1][0] / mat1.m[1][0], mat0.m[1][1] / mat1.m[1][1], mat0.m[1][2] / mat1.m[1][2],
+			mat0.m[2][0] / mat1.m[2][0], mat0.m[2][1] / mat1.m[2][1], mat0.m[2][2] / mat1.m[2][2]);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator/=(Mat3x3<T>& mat, const U& n)
+	{
+		CHECK(n != 0, "Same type Mat3x3 operation /=(Mat3x3 mat, n) error: n can not be 0!");
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat.m[i][j] /= n;
+			}
+		}
+		return mat;
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<T>& operator/=(Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				CHECK(mat1.m[i][j] != 0, "Same type Mat3x3 operation /=(n, Mat3x3 mat) error: one component of the mat1 can not be 0!");
+			}
+		}
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				mat0.m[i][j] /= mat1.m[i][j];
+			}
+		}
+		return mat0;
+	}
+
+	__duel__ const Mat3x3<Int>& operator/=(Mat3x3<Int>& mat, const Float& n) = delete;
+	__duel__ const Mat3x3<Int>& operator/=(Mat3x3<Int>& mat0, const Mat3x3<Float>& mat1) = delete;
+
+#pragma endregion
+
+#pragma endregion
+
+#pragma region Mat3x3 different type operation
+
+#pragma region Mat3x3 different type operation +
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator+(const T&n, const Mat3x3<U>& mat)
+	{
+		return Mat3x3<Float>(
+			n + mat.m[0][0], n + mat.m[0][1], n + mat.m[0][2],
+			n + mat.m[1][0], n + mat.m[1][1], n + mat.m[1][2],
+			n + mat.m[2][0], n + mat.m[2][1], n + mat.m[2][2]);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator+(const Mat3x3<U>& mat, const T&n)
+	{
+		return Mat3x3<Float>(
+			mat.m[0][0] + n, mat.m[0][1] + n, mat.m[0][2] + n,
+			mat.m[1][0] + n, mat.m[1][1] + n, mat.m[1][2] + n,
+			mat.m[2][0] + n, mat.m[2][1] + n, mat.m[2][2] + n);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator+(const Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		return Mat3x3<Float>(
+			mat0.m[0][0] + mat1.m[0][0], mat0.m[0][1] + mat1.m[0][1], mat0.m[0][2] + mat1.m[0][2],
+			mat0.m[1][0] + mat1.m[1][0], mat0.m[1][1] + mat1.m[1][1], mat0.m[1][2] + mat1.m[1][2],
+			mat0.m[2][0] + mat1.m[2][0], mat0.m[2][1] + mat1.m[2][1], mat0.m[2][2] + mat1.m[2][2]);
+	}
+#pragma endregion
+
+#pragma region Mat3x3 different type operation -
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator-(const T&n, const Mat3x3<U>& mat)
+	{
+		return Mat3x3<Float>(
+			n - mat.m[0][0], n - mat.m[0][1], n - mat.m[0][2],
+			n - mat.m[1][0], n - mat.m[1][1], n - mat.m[1][2],
+			n - mat.m[2][0], n - mat.m[2][1], n - mat.m[2][2]);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator-(const Mat3x3<U>& mat, const T&n)
+	{
+		return Mat3x3<Float>(
+			mat.m[0][0] - n, mat.m[0][1] - n, mat.m[0][2] - n,
+			mat.m[1][0] - n, mat.m[1][1] - n, mat.m[1][2] - n,
+			mat.m[2][0] - n, mat.m[2][1] - n, mat.m[2][2] - n);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator-(const Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		return Mat3x3<Float>(
+			mat0.m[0][0] - mat1.m[0][0], mat0.m[0][1] - mat1.m[0][1], mat0.m[0][2] - mat1.m[0][2],
+			mat0.m[1][0] - mat1.m[1][0], mat0.m[1][1] - mat1.m[1][1], mat0.m[1][2] - mat1.m[1][2],
+			mat0.m[2][0] - mat1.m[2][0], mat0.m[2][1] - mat1.m[2][1], mat0.m[2][2] - mat1.m[2][2]);
+	}
+#pragma endregion
+
+#pragma region Mat3x3 different type operation *
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator*(const T&n, const Mat3x3<U>& mat)
+	{
+		return Mat3x3<Float>(
+			n * mat.m[0][0], n * mat.m[0][1], n * mat.m[0][2],
+			n * mat.m[1][0], n * mat.m[1][1], n * mat.m[1][2],
+			n * mat.m[2][0], n * mat.m[2][1], n * mat.m[2][2]);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator*(const Mat3x3<U>& mat, const T&n)
+	{
+		return Mat3x3<Float>(
+			mat.m[0][0] * n, mat.m[0][1] * n, mat.m[0][2] * n,
+			mat.m[1][0] * n, mat.m[1][1] * n, mat.m[1][2] * n,
+			mat.m[2][0] * n, mat.m[2][1] * n, mat.m[2][2] * n);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator*(const Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		return Mat3x3<Float>(
+			mat0.m[0][0] * mat1.m[0][0], mat0.m[0][1] * mat1.m[0][1], mat0.m[0][2] * mat1.m[0][2],
+			mat0.m[1][0] * mat1.m[1][0], mat0.m[1][1] * mat1.m[1][1], mat0.m[1][2] * mat1.m[1][2],
+			mat0.m[2][0] * mat1.m[2][0], mat0.m[2][1] * mat1.m[2][1], mat0.m[2][2] * mat1.m[2][2]);
+	}
+#pragma endregion
+
+#pragma region Mat3x3 different type operation /
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator/(const T&n, const Mat3x3<U>& mat)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				CHECK(mat.m[i][j] != 0, "Different type Mat3x3 operation /(n, Mat3x3 mat) error: one component of the mat can not be 0!");
+			}
+		}
+		return Mat3x3<Float>(
+			n / mat.m[0][0], n / mat.m[0][1], n / mat.m[0][2],
+			n / mat.m[1][0], n / mat.m[1][1], n / mat.m[1][2],
+			n / mat.m[2][0], n / mat.m[2][1], n / mat.m[2][2]);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator/(const Mat3x3<U>& mat, const T&n)
+	{
+		CHECK(n != 0, "Different type Mat3x3 operation /=(Mat3x3 mat, n) error: n can not be 0!");
+		return Mat3x3<Float>(
+			mat.m[0][0] / n, mat.m[0][1] / n, mat.m[0][2] / n,
+			mat.m[1][0] / n, mat.m[1][1] / n, mat.m[1][2] / n,
+			mat.m[2][0] / n, mat.m[2][1] / n, mat.m[2][2] / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Mat3x3<Float> operator/(const Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				CHECK(mat1.m[i][j] != 0, "Different type Mat3x3 operation /(Mat3x3 mat0, Mat3x3 mat1) error: one component of the mat can not be 0!");
+			}
+		}
+		return Mat3x3<Float>(
+			mat0.m[0][0] / mat1.m[0][0], mat0.m[0][1] / mat1.m[0][1], mat0.m[0][2] / mat1.m[0][2],
+			mat0.m[1][0] / mat1.m[1][0], mat0.m[1][1] / mat1.m[1][1], mat0.m[1][2] / mat1.m[1][2],
+			mat0.m[2][0] / mat1.m[2][0], mat0.m[2][1] / mat1.m[2][1], mat0.m[2][2] / mat1.m[2][2]);
+	}
+#pragma endregion
+
+#pragma endregion
+
+#pragma region Mat3x3 marco
+#define Mat3x3_identity Mat3x3<Int>(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+	//#define Mat3x3_identity Mat3x3(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+#pragma endregion
+
+	template<typename T>
+	__duel__ void logData(const Mat3x3<T>& mat)
+	{
+		const custd::Ostream os;
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				os << mat.m[i][j] << "\t";
+			}
+			os << custd::endl;
+		}
+	}
+
+#pragma endregion
+
 #pragma region Mat4x4
 	template<typename T>
 	class Mat4x4
@@ -1534,8 +2026,8 @@ namespace CUM
 			{
 				os << mat.m[i][j] << "\t";
 			}
+			os << custd::endl;
 		}
-		os << custd::endl;
 	}
 
 #pragma endregion
