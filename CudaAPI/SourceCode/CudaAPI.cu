@@ -15,6 +15,9 @@ __global__ void kernel()
 	//vf1.x = 1.5;
 	//vf0 = vf1;
 	//vi0 = vf0;
+	auto mat = CUM::Mat4x4_identity;
+	CUM::Mat4x4i mati(5);
+	mati += mat;
 }
 
 
@@ -49,5 +52,7 @@ int main()
 	auto tempvi3 = nf + vi0;
 	auto tempvi4 = vi0 + vi1;
 	auto tempvi5 = vi0 + vf1;
-
+	auto mat = CUM::Mat4x4_identity;
+	CUM::Mat4x4i mati(5);
+	mati += mat;
 }

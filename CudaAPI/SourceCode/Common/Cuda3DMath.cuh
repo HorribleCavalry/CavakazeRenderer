@@ -17,6 +17,7 @@ namespace CUM
 		T x, y;
 	public:
 		__duel__ vec2() :x(0), y(0) {}
+		__duel__ vec2(const T& n) :x(n), y(n) {}
 		__duel__ vec2(const T& _x, const T& _y) :x(_x), y(_y) {}
 		__duel__ vec2(const vec2<T>& v) : x(v.x), y(v.y) {}
 		template<typename U>
@@ -330,6 +331,7 @@ namespace CUM
 	public:
 		__duel__ vec3() :x(0), y(0), z(0) {}
 		__duel__ vec3(const T& _x, const T& _y, const T& _z) : x(_x), y(_y), z(_z) {}
+		__duel__ vec3(const T& n) : x(n), y(n), z(n) {}
 		__duel__ vec3(const vec3<T>& v) : x(v.x), y(v.y), z(v.z) {}
 		template<typename U>
 		__duel__ explicit vec3(const vec3<U>& v) : x(v.x), y(v.y), z(v.z) {}
@@ -372,6 +374,18 @@ namespace CUM
 	__duel__ Float dot(const vec3<T>& v0, const vec3<U>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z;
+	}
+
+	template<typename T>
+	__duel__ const vec3<T> cross(const vec3<T>& v0, const vec3<T>& v1)
+	{
+		return vec3<T>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
+	}
+
+	template<typename T, typename U>
+	__duel__ const vec3<Float> cross(const vec3<T>& v0, const vec3<U>& v1)
+	{
+		return vec3<Float>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
 	}
 
 #pragma endregion
@@ -666,6 +680,7 @@ namespace CUM
 	public:
 		__duel__ vec4() :x(0), y(0), z(0), w(0) {}
 		__duel__ vec4(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
+		__duel__ vec4(const T& n) : x(n), y(n), z(n), w(n) {}
 		__duel__ vec4(const vec4<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 		template<typename U>
 		__duel__ explicit vec4(const vec4<U>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
@@ -1035,6 +1050,16 @@ namespace CUM
 			m[2][0] = m20; m[2][1] = m21; m[2][2] = m22; m[2][3] = m23;
 			m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
 		}
+		__duel__ Mat4x4(const T& n)
+		{
+			for (Int i = 0; i < 4; i++)
+			{
+				for (Int j= 0; j < 4; j++)
+				{
+					m[i][j] = n;
+				}
+			}
+		}
 		__duel__ Mat4x4(const Mat4x4<T>& mat)
 		{
 			for (Int i = 0; i < 4; i++)
@@ -1090,15 +1115,76 @@ namespace CUM
 
 	typedef Mat4x4<Int> Mat4x4i;
 	typedef Mat4x4<Float> Mat4x4f;
+
+#pragma region Mat4x4 same type operation
+
+	#pragma region Mat4x4 same type operation +
+	template<typename T>
+	__duel__ const Mat4x4<T> operator+(const T&n, const Mat4x4<T>& mat)
+	{
+		return Mat4x4<T>(
+			n + mat.m[0][0], n + mat.m[0][1], n + mat.m[0][2], n + mat.m[0][3],
+			n + mat.m[1][0], n + mat.m[1][1], n + mat.m[1][2], n + mat.m[1][3],
+			n + mat.m[2][0], n + mat.m[2][1], n + mat.m[2][2], n + mat.m[2][3],
+			n + mat.m[3][0], n + mat.m[3][1], n + mat.m[3][2], n + mat.m[3][3]);
+	}
+	template<typename T>
+	__duel__ const Mat4x4<T> operator+(const Mat4x4<T>& mat, const T&n)
+	{
+		return Mat4x4<T>(
+			mat.m[0][0] + n, mat.m[0][1] + n, mat.m[0][2] + n, mat.m[0][3] + n,
+			mat.m[1][0] + n, mat.m[1][1] + n, mat.m[1][2] + n, mat.m[1][3] + n,
+			mat.m[2][0] + n, mat.m[2][1] + n, mat.m[2][2] + n, mat.m[2][3] + n,
+			mat.m[3][0] + n, mat.m[3][1] + n, mat.m[3][2] + n, mat.m[3][3] + n);
+	}
+	template<typename T>
+	__duel__ const Mat4x4<T> operator+(const Mat4x4<T>& mat0, const Mat4x4<T>& mat1)
+	{
+		return Mat4x4<T>(
+			mat0.m[0][0] + mat1.m[0][0], mat0.m[0][1] + mat1.m[0][1], mat0.m[0][2] + mat1.m[0][2], mat0.m[0][3] + mat1.m[0][3],
+			mat0.m[1][0] + mat1.m[1][0], mat0.m[1][1] + mat1.m[1][1], mat0.m[1][2] + mat1.m[1][2], mat0.m[1][3] + mat1.m[1][3],
+			mat0.m[2][0] + mat1.m[2][0], mat0.m[2][1] + mat1.m[2][1], mat0.m[2][2] + mat1.m[2][2], mat0.m[2][3] + mat1.m[2][3],
+			mat0.m[3][0] + mat1.m[3][0], mat0.m[3][1] + mat1.m[3][1], mat0.m[3][2] + mat1.m[3][2], mat0.m[3][3] + mat1.m[3][3]);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Mat4x4<T>& operator+=(Mat4x4<T>& mat, const U& n)
+	{
+		for (Int i = 0; i < 4; i++)
+		{
+			for (Int j = 0; j < 4; j++)
+			{
+				mat.m[i][j] += n;
+			}
+		}
+	}
+	template<typename T, typename U>
+	__duel__ const Mat4x4<T>& operator+=(Mat4x4<T>& mat0, const Mat4x4<U>& mat1)
+	{
+		for (Int i = 0; i < 4; i++)
+		{
+			for (Int j = 0; j < 4; j++)
+			{
+				mat0.m[i][j] += mat1.m[i][j];
+			}
+		}
+		return mat0;
+	}
+
+	__duel__ const Mat4x4<Int>& operator+=(Mat4x4<Int>& mat, const Float& n) = delete;
+	__duel__ const Mat4x4<Int>& operator+=(Mat4x4<Int>& mat0, const Mat4x4<Float>& mat1) = delete;
+
+	#pragma endregion
+
 #pragma endregion
-}
-
-
 
 #pragma region mat4x4 marco
-#define Mat4x4_identity Mat4x4<Float>(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
-//#define Mat4x4_identity Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+#define Mat4x4_identity Mat4x4<Int>(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+	//#define Mat4x4_identity Mat4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 #pragma endregion
+
+#pragma endregion
+}
 
 #endif // !__CUDA3DMATH__CUH__
 
