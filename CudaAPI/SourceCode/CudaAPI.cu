@@ -55,4 +55,5 @@ int main()
 	auto mat = CUM::Mat4x4_identity;
 	CUM::Mat4x4i mati(5);
 	mati += mat;
+	mati -= mat;
 }
