@@ -56,4 +56,7 @@ int main()
 	CUM::Mat4x4i mati(5);
 	mati += mat;
 	mati -= mat;
+	mati / mat;
+	CUM::Mat4x4f matf;
+	matf /= mat;
 }
