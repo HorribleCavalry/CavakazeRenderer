@@ -18,6 +18,8 @@ __global__ void kernel()
 	auto mat = CUM::Mat4x4_identity;
 	CUM::Mat4x4i mati(5);
 	mati += mat;
+	CUM::Color3f color;
+	CUM::calculateGammaColor(color, 2.2);
 }
 
 

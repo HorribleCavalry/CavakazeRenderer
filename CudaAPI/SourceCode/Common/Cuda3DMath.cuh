@@ -1021,6 +1021,353 @@ namespace CUM
 
 #pragma endregion
 
+#pragma region Color3
+	template<typename T>
+	class Color3
+	{
+	public:
+		T r, g, b;
+	public:
+		__duel__ Color3() :r(0), g(0), b(0) {}
+		__duel__ Color3(const T& _x, const T& _y, const T& _z) : r(_x), g(_y), b(_z) {}
+		__duel__ Color3(const T& n) : r(n), g(n), b(n) {}
+		__duel__ Color3(const Color3<T>& v) : r(v.r), g(v.g), b(v.b) {}
+		template<typename U>
+		__duel__ explicit Color3(const Color3<U>& v) : r(v.r), g(v.g), b(v.b) {}
+		__duel__ ~Color3() {}
+	public:
+		__duel__ const Color3& operator=(const Color3<int>& v)
+		{
+			r = v.r;
+			g = v.g;
+			b = v.b;
+			return *this;
+		}
+
+	public:
+		__duel__ T& operator[](const Int& idx)
+		{
+			CHECK(idx >= 0 && idx <= 2, "The <idx> in Color3<T>::operator[idx] is illegal!");
+			switch (idx)
+			{
+			case 0: return r; break;
+			case 1: return g; break;
+			case 2: return b; break;
+			default: CHECK(false, "Can not run Color3::operator[idx]: switch::default."); break;
+			}
+		}
+	};
+
+	typedef Color3<Int> Color3i;
+	typedef Color3<Float> Color3f;
+
+#pragma region Color process function
+
+	template<typename T>
+	__duel__ const Color3<Float> calculateGammaColor(const Color3<T>& color, const Float& gamma)
+	{
+		CHECK(gamma >= 1.0&&gamma <= 100.0, "The input gamma is out of range!");
+		Float power = 1.0 / gamma;
+		return Color3<Float>(pow(color.r, power), pow(color.g, power), pow(color.b, power));
+	}
+	template<typename T>
+	__duel__ const Color3<Int> calculateGradeColor(const Color3<T>& color, const Float& maxVal)
+	{
+		CHECK(maxVal > 1.0, "The input maxVal can not less than 1.0!");
+		const Float epcilon = 0.5f;
+		Float inv = 1.0 / maxVal;
+		Float rf = inv * color.r;
+		Float gf = inv * color.g;
+		Float bf = inv * color.b;
+		Int ri = Int(round(r) + epcilon);
+		Int gi = Int(round(g) + epcilon);
+		Int bi = Int(round(b) + epcilon);
+		return Color3<Int>(ri, gi, bi);
+	}
+
+#pragma endregion
+
+#pragma region Color3 same type operation
+
+#pragma region Color3 same type operation +
+
+	template<typename T>
+	__duel__ const Color3<T> operator+(const T& n, const Color3<T>& v)
+	{
+		return Color3<T>(n + v.r, n + v.g, n + v.b);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator+(const Color3<T>& v, const T& n)
+	{
+		return Color3<T>(v.r + n, v.g + n, v.b + n);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator+(const Color3<T>& v0, const Color3<T>& v1)
+	{
+		return Color3<T>(v0.r + v1.r, v0.g + v1.g, v0.b + v1.b);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator+=(Color3<T>& v, const U& n)
+	{
+		v.r += n;
+		v.g += n;
+		v.b += n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator+=(Color3<T>& v0, const Color3<U>& v1)
+	{
+		v0.r += v1.r;
+		v0.g += v1.g;
+		v0.b += v1.b;
+		return v0;
+	}
+
+	__duel__ const Color3<Int>& operator+=(Color3<Int>& v, const Float& n) = delete;
+	__duel__ const Color3<Int>& operator+=(Color3<Int>& v0, const Color3<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma region Color3 same type operation -
+
+	template<typename T>
+	__duel__ const Color3<T> operator-(const T& n, const Color3<T>& v)
+	{
+		return Color3<T>(n - v.r, n - v.g, n - v.b);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator-(const Color3<T>& v, const T& n)
+	{
+		return Color3<T>(v.r - n, v.g - n, v.b - n);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator-(const Color3<T>& v0, const Color3<T>& v1)
+	{
+		return Color3<T>(v0.r - v1.r, v0.g - v1.g, v0.b - v1.b);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator-=(Color3<T>& v, const U& n)
+	{
+		v.r -= n;
+		v.g -= n;
+		v.b -= n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator-=(Color3<T>& v0, const Color3<U>& v1)
+	{
+		v0.r -= v1.r;
+		v0.g -= v1.g;
+		v0.b -= v1.b;
+		return v0;
+	}
+
+	__duel__ const Color3<Int>& operator-=(Color3<Int>& v, const Float& n) = delete;
+	__duel__ const Color3<Int>& operator-=(Color3<Int>& v0, const Color3<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma region Color3 same type operation *
+
+	template<typename T>
+	__duel__ const Color3<T> operator*(const T& n, const Color3<T>& v)
+	{
+		return Color3<T>(n * v.r, n * v.g, n * v.b);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator*(const Color3<T>& v, const T& n)
+	{
+		return Color3<T>(v.r * n, v.g * n, v.b * n);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator*(const Color3<T>& v0, const Color3<T>& v1)
+	{
+		return Color3<T>(v0.r * v1.r, v0.g * v1.g, v0.b * v1.b);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator*=(Color3<T>& v, const U& n)
+	{
+		v.r *= n;
+		v.g *= n;
+		v.b *= n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator*=(Color3<T>& v0, const Color3<U>& v1)
+	{
+		v0.r *= v1.r;
+		v0.g *= v1.g;
+		v0.b *= v1.b;
+		return v0;
+	}
+
+	__duel__ const Color3<Int>& operator*=(Color3<Int>& v, const Float& n) = delete;
+	__duel__ const Color3<Int>& operator*=(Color3<Int>& v0, const Color3<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma region Color3 same type operation /
+
+	template<typename T>
+	__duel__ const Color3<T> operator/(const T& n, const Color3<T>& v)
+	{
+		CHECK(v.r != 0, "Same type Color3 operator/(n,Color3 v) error: v.x can not be 0!");
+		CHECK(v.g != 0, "Same type Color3 operator/(n,Color3 v) error: v.y can not be 0!");
+		CHECK(v.b != 0, "Same type Color3 operator/(n,Color3 v) error: v.z can not be 0!");
+		return Color3<T>(n / v.r, n / v.g, n / v.b);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator/(const Color3<T>& v, const T& n)
+	{
+		CHECK(n != 0, "Same type Color3 operator/(Color3 v, n) error: n can not be 0!");
+		return Color3<T>(v.r / n, v.g / n, v.b / n);
+	}
+	template<typename T>
+	__duel__ const Color3<T> operator/(const Color3<T>& v0, const Color3<T>& v1)
+	{
+		CHECK(v1.r != 0, "Same type Color3 operator/(n,Color3 v) error: v1.x can not be 0!");
+		CHECK(v1.g != 0, "Same type Color3 operator/(n,Color3 v) error: v1.y can not be 0!");
+		CHECK(v1.b != 0, "Same type Color3 operator/(n,Color3 v) error: v1.z can not be 0!");
+		return Color3<T>(v0.r / v1.r, v0.g / v1.g, v0.b / v1.b);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator/=(Color3<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Same type Color3 operator/=(Color3 v, n) error: n can not be 0!");
+		v.r /= n;
+		v.g /= n;
+		v.b /= n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<T>& operator/=(Color3<T>& v0, const Color3<U>& v1)
+	{
+		CHECK(v1.r != 0, "Same type Color3 operator/=(Color3 v0,Color3 v1) error: v1.x can not be 0!");
+		CHECK(v1.g != 0, "Same type Color3 operator/=(Color3 v0,Color3 v1) error: v1.y can not be 0!");
+		CHECK(v1.b != 0, "Same type Color3 operator/=(Color3 v0,Color3 v1) error: v1.z can not be 0!");
+		v0.r /= v1.r;
+		v0.g /= v1.g;
+		v0.b /= v1.b;
+		return v0;
+	}
+
+	__duel__ const Color3<Int>& operator/=(Color3<Int>& v, const Float& n) = delete;
+	__duel__ const Color3<Int>& operator/=(Color3<Int>& v0, const Color3<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma endregion
+
+#pragma region Color3 different type operation
+
+#pragma region Color3 different type operation +
+
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator+(const T& n, const Color3<U>& v)
+	{
+		return Color3<Float>(n + v.r, n + v.g);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator+(const Color3<T>& v, const U& n)
+	{
+		return Color3<Float>(v.r + n, v.g + n);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator+(const Color3<T>& v0, const Color3<U>& v1)
+	{
+		return Color3<Float>(v0.r + v1.r, v0.g + v1.g);
+	}
+
+#pragma endregion
+
+#pragma region Color3 different type operation -
+
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator-(const T& n, const Color3<U>& v)
+	{
+		return Color3<Float>(n - v.r, n - v.g);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator-(const Color3<T>& v, const U& n)
+	{
+		return Color3<Float>(v.r - n, v.g - n);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator-(const Color3<T>& v0, const Color3<U>& v1)
+	{
+		return Color3<Float>(v0.r - v1.r, v0.g - v1.g);
+	}
+
+#pragma endregion
+
+#pragma region Color3 different type operation *
+
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator*(const T& n, const Color3<U>& v)
+	{
+		return Color3<Float>(n * v.r, n * v.g);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator*(const Color3<T>& v, const U& n)
+	{
+		return Color3<Float>(v.r * n, v.g * n);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator*(const Color3<T>& v0, const Color3<U>& v1)
+	{
+		return Color3<Float>(v0.r * v1.r, v0.g * v1.g);
+	}
+
+#pragma endregion
+
+#pragma region Color3 different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator/(const T& n, const Color3<U>& v)
+	{
+		CHECK(v.r != 0, "Color3<Float> operation /(n, Color3 v1): v1.x can not be zero.");
+		CHECK(v.g != 0, "Color3<Float> operation /(n, Color3 v1): v1.y can not be zero.");
+		CHECK(v.b != 0, "Color3<Float> operation /(n, Color3 v1): v1.z can not be zero.");
+		return Color3<Float>(n / v.r, n / v.g);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator/(const Color3<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Color3<Float> operation /(Color3 v, n): n can not be zero.");
+		return Color3<Float>(v.r / n, v.g / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Color3<Float> operator/(const Color3<T>& v0, const Color3<U>& v1)
+	{
+		CHECK(v1.r != 0, "Color3<Float> operation /(Color3 v0, Color3 v1): v1.x can not be zero.");
+		CHECK(v1.g != 0, "Color3<Float> operation /(Color3 v0, Color3 v1): v1.y can not be zero.");
+		CHECK(v1.b != 0, "Color3<Float> operation /(Color3 v0, Color3 v1): v1.z can not be zero.");
+		return Color3<Float>(v0.r / v1.r, v0.g / v1.g);
+	}
+
+#pragma endregion
+
+
+#pragma endregion
+
+	template<typename T>
+	__duel__ void logData(const Color3<T>& v)
+	{
+		const custd::Ostream os;
+		os << v.r << "\t" << v.g << "\t" << v.b << custd::endl;
+	}
+
+#pragma endregion
+
+
 #pragma region Mat3x3
 	template<typename T>
 	class Mat3x3
