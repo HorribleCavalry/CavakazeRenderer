@@ -77,20 +77,24 @@ namespace CUM
 		return vec2<T>(v0.x + v1.x, v0.y + v1.y);
 	}
 
-	template<typename T>
-	__duel__ const vec2<T>& operator+=(vec2<T>& v, const T& n)
+	template<typename T, typename U>
+	__duel__ const vec2<T>& operator+=(vec2<T>& v, const U& n)
 	{
 		v.x += n;
 		v.y += n;
 		return v;
 	}
-	template<typename T>
-	__duel__ const vec2<T>& operator+=(vec2<T>& v0, const vec2<T>& v1)
+	template<typename T, typename U>
+	__duel__ const vec2<T>& operator+=(vec2<T>& v0, const vec2<U>& v1)
 	{
 		v0.x += v1.x;
 		v0.y += v1.y;
 		return v0;
 	}
+
+	__duel__ const vec2<Int>& operator+=(vec2<Int>& v, const Float& n) = delete;
+	__duel__ const vec2<Int>& operator+=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
+
 
 #pragma endregion
 
@@ -127,6 +131,9 @@ namespace CUM
 		return v0;
 	}
 
+	__duel__ const vec2<Int>& operator-=(vec2<Int>& v, const Float& n) = delete;
+	__duel__ const vec2<Int>& operator-=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
+
 #pragma endregion
 
 #pragma region vec2 same type operation *
@@ -161,6 +168,9 @@ namespace CUM
 		v0.y *= v1.y;
 		return v0;
 	}
+
+	__duel__ const vec2<Int>& operator*=(vec2<Int>& v, const Float& n) = delete;
+	__duel__ const vec2<Int>& operator*=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
 
 #pragma endregion
 
@@ -200,11 +210,13 @@ namespace CUM
 	{
 		CHECK(v1.x != 0, "Same type vec2 operator/= error: v1.x can not be 0!");
 		CHECK(v1.y != 0, "Same type vec2 operator/= error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type vec2 operator/= error: v1.z can not be 0!");
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		return v0;
 	}
+
+	__duel__ const vec2<Int>& operator/=(vec2<Int>& v, const Float& n) = delete;
+	__duel__ const vec2<Int>& operator/=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
 
 #pragma endregion
 

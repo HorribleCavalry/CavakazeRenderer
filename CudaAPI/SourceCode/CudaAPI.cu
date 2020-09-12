@@ -36,23 +36,18 @@ __global__ void kernel()
 
 int main()
 {
-	//CUM::vec2i vi0;
-	//CUM::vec2i vi1;
-	//CUM::vec2f vf0;
-	//CUM::vec2f vf1;
-	//vi0 = vi1;
-	//vf0 = vi1;
-	//vf1.x = 1.5;
-	//vf0 = vf1;
-	//vi0.x = 1.5;
-	//vi0 = (CUM::vec2i)vf0;
-	//vi0 = vf0;
-	//vf0 = vi0;
-	//vf1 = vf1 + vf1;
-	//vf1 = vf1 - vf1;
-	//vf1 = vf1 * vf1;
-	//vf1 = vf1 / vf1;
-	//CUM::dot(vf0, vf1);
-	//vf1 = vi0 + vf1;
-	//vf0 = 1.0 + vi0;
+	CUM::vec2i vi0;
+	CUM::vec2i vi1(1.0f,2.0f);
+	CUM::vec2f vf0;
+	CUM::vec2f vf1(1.0f,2.0f);
+
+	Int ni = 4;
+	Float nf = 4.0;
+	auto tempvi0 = vi0 + ni;
+	auto tempvi1 = ni + vi0;
+	auto tempvi2 = vi0 + nf;
+	auto tempvi3 = nf + vi0;
+	auto tempvi4 = vi0 + vi1;
+	auto tempvi5 = vi0 + vf1;
+
 }
