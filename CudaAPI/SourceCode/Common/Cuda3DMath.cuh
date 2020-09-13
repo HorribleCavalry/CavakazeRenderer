@@ -2513,6 +2513,30 @@ namespace CUM
 
 		}
 	public:
+
+		Mat3x3(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2, const Bool& isColumn = false)
+		{
+			if (isColumn)
+			{
+				for (Int i = 0; i < 3; i++)
+				{
+					m[i][0] = v0[i];
+					m[i][1] = v1[i];
+					m[i][2] = v2[i];
+				}
+			}
+			else
+			{
+				for (Int i = 0; i < 3; i++)
+				{
+					m[0][i] = v0[i];
+					m[1][i] = v1[i];
+					m[2][i] = v2[i];
+				}
+			}
+		}
+
+	public:
 		__duel__ const Mat3x3& operator=(const Mat3x3<Int>& mat)
 		{
 			for (Int i = 0; i < 3; i++)
@@ -3015,6 +3039,30 @@ namespace CUM
 		__duel__ ~Mat4x4()
 		{
 
+		}
+	public:
+		Mat4x4(const vec4<T>& v0, const vec4<T>& v1, const vec4<T>& v2, const vec4<T>& v3, const Bool& isColumn = false)
+		{
+			if (isColumn)
+			{
+				for (Int i = 0; i < 4; i++)
+				{
+					m[i][0] = v0[i];
+					m[i][1] = v1[i];
+					m[i][2] = v2[i];
+					m[i][3] = v3[i];
+				}
+			}
+			else
+			{
+				for (Int i = 0; i < 4; i++)
+				{
+					m[0][i] = v0[i];
+					m[1][i] = v1[i];
+					m[2][i] = v2[i];
+					m[3][i] = v3[i];
+				}
+			}
 		}
 	public:
 		__duel__ const Mat4x4& operator=(const Mat4x4<Int>& mat)
