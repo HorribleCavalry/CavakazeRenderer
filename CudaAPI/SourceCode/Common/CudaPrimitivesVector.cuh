@@ -8,11 +8,11 @@ namespace CUM
 	{
 	private:
 		T** ptrList = nullptr;
+		Int capacity = 0;
 		Int size = 0;
-		Int endIdx = -1;
 	public:
-		__duel__ PrimitiveVector() : ptrList(nullptr), size(0), endIdx(-1) {}
-		__duel__ PrimitiveVector(const T& val) : ptrList(new T*), size(1), endIdx(0) { ptrList[0] = &val; }
+		__duel__ PrimitiveVector() : ptrList(nullptr), capacity(0), size(0) {}
+		__duel__ PrimitiveVector(const T& val) : ptrList(new T*[1]), capacity(1), size(1) { ptrList[0] = &val; }
 		__duel__ ~PrimitiveVector()
 		{
 			if (ptrList)
@@ -22,24 +22,24 @@ namespace CUM
 	public:
 		__duel__ void push_back(T& val)
 		{
-			++endIdx;
-			CHECK(endIdx <= size, "PrimitiveVector:endIdx can not greater than size!");
+			++size;
+			CHECK(size <= capacity + 1, "PrimitiveVector:endIdx can not greater than size!");
 
-			if (endIdx == size)
+			if (size == capacity + 1)
 			{
-				Int newSize = size <= 0 ? 1 : 2 * size;
-				T** newList = new T*[newSize];
+				Int newCapacity = capacity <= 0 ? 1 : 2 * capacity;
+				T** newList = new T*[newCapacity];
 
-				for (Int i = 0; i < size; i++)
+				for (Int i = 0; i < capacity; i++)
 				{
 					newList[i] = ptrList[i];
 				}
 				if (ptrList)
 					delete[] ptrList;
 				ptrList = newList;
-				size = newSize;
+				capacity = newCapacity;
 			}
-			ptrList[endIdx] = &val;
+			ptrList[size - 1] = &val;
 		}
 
 	public:

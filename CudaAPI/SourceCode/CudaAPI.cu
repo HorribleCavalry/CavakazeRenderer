@@ -137,6 +137,24 @@ int main()
 	auto test =CUM::normalize(vf4);
 	CUM::vec3f vf41(2.0f);
 	auto test1 = CUM::normalize(vf41);
+
+	Person per0;
+	Student stu;
+	Farmer far;
+	Heacker hea;
+	Worker wor;
+
+	CUM::PrimitiveVector<Person> list;
+	list.push_back(per0);
+	list.push_back(stu);
+	list.push_back(far);
+	list.push_back(hea);
+	list.push_back(wor);
+	for (Int i = 0; i < 5; i++)
+	{
+		list[i].callType();
+	}
+
 	//Int ni = 4;
 	//Float nf = 4.0;
 	//auto tempvi0 = vi0 + ni;
