@@ -1719,6 +1719,21 @@ namespace CUM
 		__duel__ Quaternion(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
 		__duel__ Quaternion(const T& n) : x(n), y(n), z(n), w(n) {}
 		__duel__ Quaternion(const Quaternion<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+		__duel__ Quaternion(const vec3<T>& v, const T& _w, const Bool& isRotate = false) : x(v.x), y(v.y), z(v.z), w(_w)
+		{
+			if (isRotate)
+			{
+				vec3<T> axis = normalize(vec3<T>(v.x, v.y, v.z));
+				T theta = _w;
+				T sinThetaDi2 = sin(0.5 * theta);
+				T cosThetaDi2 = cos(0.5 * theta);
+				axis = sinThetaDi2 * axis;
+				x = axis.x;
+				y = axis.y;
+				z = axis.z;
+				w = cosThetaDi2;
+			}
+		}
 		template<typename U>
 		__duel__ explicit Quaternion(const Quaternion<U>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 		__duel__ ~Quaternion() {}
@@ -1749,20 +1764,6 @@ namespace CUM
 
 	typedef Quaternion<Int> Quaternioni;
 	typedef Quaternion<Float> Quaternionf;
-
-#pragma region Quaternion vector operation
-
-	template<typename T>
-	__duel__ const Quaternion<Float> normalize(const Quaternion<T>& vec)
-	{
-		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z + vec.w*vec.w;
-		CHECK(square > 0.0, "Quaternion normalize error: square can not less than 0.0!");
-		Float norm = sqrt(square);
-		Float inv = 1.0 / norm;
-		return inv * vec;
-	}
-
-#pragma endregion
 
 #pragma region Quaternion same type operation
 
@@ -1857,6 +1858,7 @@ namespace CUM
 	template<typename T>
 	__duel__ const Quaternion<T> operator*(const T& n, const Quaternion<T>& v)
 	{
+
 		return Quaternion<T>(n * v.x, n * v.y, n * v.z, n * v.w);
 	}
 	template<typename T>
@@ -1867,32 +1869,14 @@ namespace CUM
 	template<typename T>
 	__duel__ const Quaternion<T> operator*(const Quaternion<T>& v0, const Quaternion<T>& v1)
 	{
-		return Quaternion<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
+		T a = v0.w;
+		T b = v1.w;
+		vec3<T> u(v0.x, v0.y, v0.z);
+		vec3<T> v(v1.x, v1.y, v1.z);
+		auto ur = a * v + b * u + cross(u, v);
+		T w = a * b - dot(u, v);
+		return Quaternion<T>(ur, w);
 	}
-
-	template<typename T, typename U>
-	__duel__ const Quaternion<T>& operator*=(Quaternion<T>& v, const U& n)
-	{
-		v.x *= n;
-		v.y *= n;
-		v.z *= n;
-		v.w *= n;
-		return v;
-	}
-	template<typename T, typename U>
-	__duel__ const Quaternion<T>& operator*=(Quaternion<T>& v0, const Quaternion<U>& v1)
-	{
-		v0.x *= v1.x;
-		v0.y *= v1.y;
-		v0.z *= v1.z;
-		v0.w *= v1.w;
-		return v0;
-	}
-
-	__duel__ const Quaternion<Int>& operator*=(Quaternion<Int>& v, const Float& n) = delete;
-	__duel__ const Quaternion<Int>& operator*=(Quaternion<Int>& v0, const Quaternion<Float>& v1) = delete;
-
-
 #pragma endregion
 
 #pragma region Quaternion same type operation /
@@ -2012,7 +1996,13 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator*(const Quaternion<T>& v0, const Quaternion<U>& v1)
 	{
-		return Quaternion<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
+		Float a = v0.w;
+		Float b = v1.w;
+		vec3<Float> u(v0.x, v0.y, v0.z);
+		vec3<Float> v(v1.x, v1.y, v1.z);
+		auto ur = a * v + b * u + cross(u, v);
+		Float w = a * b - dot(u, v);
+		return Quaternion<Float>(ur, w);
 	}
 
 #pragma endregion
@@ -2046,6 +2036,44 @@ namespace CUM
 
 #pragma endregion
 
+
+#pragma endregion
+
+#pragma region Quaternion operation
+
+	template<typename T>
+	__duel__ const Float norm(const Quaternion<T>& qua)
+	{
+		Float square = qua.x*qua.x + qua.y*qua.y + qua.z*qua.z + qua.w*qua.w;
+		return sqrt(square);
+	}
+
+	template<typename T>
+	__duel__ const Quaternion<Float> normalize(const Quaternion<T>& vec)
+	{
+		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z + vec.w*vec.w;
+		CHECK(square > 0.0, "Quaternion normalize error: square can not less than 0.0!");
+		Float norm = sqrt(square);
+		Float inv = 1.0 / norm;
+		return inv * vec;
+	}
+
+	template<typename T>
+	__duel__ const Quaternion<T> conjugate(const Quaternion<T>& qua)
+	{
+		return Quaternion<T>(-qua.x, -qua.y, -qua.z, qua.w);
+	}
+
+	template<typename T>
+	__duel__ const Quaternion<Float> inverse(const Quaternion<T>& qua)
+	{
+		Quaternion<Float> qConj = conjugate(qua);
+		Float nor = norm(qua);
+		Float nor2 = nor * nor;
+		CHECK(nor2 != 0.0, "Quaternion inverse error: nor2 can not equal to 0!");
+		Float inv = 1.0 / nor2;
+		return inv * qConj;
+	}
 
 #pragma endregion
 
@@ -3417,13 +3445,46 @@ namespace CUM
 
 #pragma region different class math operation
 
-#pragma region vec2-vec3
-
+#pragma region Mat3x3-vec3
+	template<typename T>
+	const vec3<T> operator*(const Mat3x3<T>& mat, const vec3<T>& v)
+	{
+		vec3<T> result;
+		for (Int i = 0; i < 3; i++)
+		{
+			result[i] = dot(mat.GetRow(i), v);
+		}
+		return result;
+	}
 #pragma endregion
 
-#pragma region vec3-Mat3x3
-
+#pragma region Mat4x4-vec4
+	template<typename T>
+	const vec4<T> operator*(const Mat4x4<T>& mat, const vec4<T>& v)
+	{
+		vec4<T> result;
+		for (Int i = 0; i < 4; i++)
+		{
+			result[i] = dot(mat.GetRow(i), v);
+		}
+		return result;
+	}
 #pragma endregion
+
+#pragma region Quaternion-vec4
+	//template<typename T>
+	//const vec4<T> operator*(const Mat4x4<T>& mat, const vec4<T>& v)
+	//{
+	//	vec4<T> result;
+	//	for (Int i = 0; i < 4; i++)
+	//	{
+	//		result[i] = dot(mat.GetRow(i), v);
+	//	}
+	//	return result;
+	//}
+#pragma endregion
+
+#pragma region 
 }
 
 #endif // !__CUDA3DMATH__CUH__
