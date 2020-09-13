@@ -3556,16 +3556,16 @@ namespace CUM
 #pragma endregion
 
 #pragma region Quaternion-vec4
-	//template<typename T>
-	//const vec4<T> operator*(const Mat4x4<T>& mat, const vec4<T>& v)
-	//{
-	//	vec4<T> result;
-	//	for (Int i = 0; i < 4; i++)
-	//	{
-	//		result[i] = dot(mat.GetRow(i), v);
-	//	}
-	//	return result;
-	//}
+	template<typename T>
+	const vec4<T> applyQuaTransform(const Quaternion<T>& qua, const vec4<T>& v)
+	{
+		vec4<T> result;
+		for (Int i = 0; i < 4; i++)
+		{
+			result[i] = dot(mat.GetRow(i), v);
+		}
+		return result;
+	}
 #pragma endregion
 
 #pragma region 
