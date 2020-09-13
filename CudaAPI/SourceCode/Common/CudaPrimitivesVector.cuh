@@ -48,5 +48,8 @@ namespace CUM
 			CHECK(idx >= 0 && idx < size, "PrimitiveVector::operator[](Int idx) error: idx is out of range!");
 			return *(ptrList[idx]);
 		}
+
+	public:
+
 	};
 }

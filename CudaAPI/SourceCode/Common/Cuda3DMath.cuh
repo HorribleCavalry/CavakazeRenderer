@@ -596,17 +596,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator+(const T& n, const vec3<U>& v)
 	{
-		return vec3<Float>(n + v.x, n + v.y);
+		return vec3<Float>(n + v.x, n + v.y, n + v.z);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator+(const vec3<T>& v, const U& n)
 	{
-		return vec3<Float>(v.x + n, v.y + n);
+		return vec3<Float>(v.x + n, v.y + n, v.z + n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator+(const vec3<T>& v0, const vec3<U>& v1)
 	{
-		return vec3<Float>(v0.x + v1.x, v0.y + v1.y);
+		return vec3<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
 	}
 
 #pragma endregion
@@ -616,17 +616,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator-(const T& n, const vec3<U>& v)
 	{
-		return vec3<Float>(n - v.x, n - v.y);
+		return vec3<Float>(n - v.x, n - v.y, n - v.z);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator-(const vec3<T>& v, const U& n)
 	{
-		return vec3<Float>(v.x - n, v.y - n);
+		return vec3<Float>(v.x - n, v.y - n, v.z - n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator-(const vec3<T>& v0, const vec3<U>& v1)
 	{
-		return vec3<Float>(v0.x - v1.x, v0.y - v1.y);
+		return vec3<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
 	}
 
 #pragma endregion
@@ -636,17 +636,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator*(const T& n, const vec3<U>& v)
 	{
-		return vec3<Float>(n * v.x, n * v.y);
+		return vec3<Float>(n * v.x, n * v.y, n * v.z);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator*(const vec3<T>& v, const U& n)
 	{
-		return vec3<Float>(v.x * n, v.y * n);
+		return vec3<Float>(v.x * n, v.y * n, v.z * n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator*(const vec3<T>& v0, const vec3<U>& v1)
 	{
-		return vec3<Float>(v0.x * v1.x, v0.y * v1.y);
+		return vec3<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
 	}
 
 #pragma endregion
@@ -659,13 +659,13 @@ namespace CUM
 		CHECK(v.x != 0, "vec3<Float> operation /(n, vec3 v1): v1.x can not be zero.");
 		CHECK(v.y != 0, "vec3<Float> operation /(n, vec3 v1): v1.y can not be zero.");
 		CHECK(v.z != 0, "vec3<Float> operation /(n, vec3 v1): v1.z can not be zero.");
-		return vec3<Float>(n / v.x, n / v.y);
+		return vec3<Float>(n / v.x, n / v.y, n / v.z);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator/(const vec3<T>& v, const U& n)
 	{
 		CHECK(n != 0, "vec3<Float> operation /(vec3 v, n): n can not be zero.");
-		return vec3<Float>(v.x / n, v.y / n);
+		return vec3<Float>(v.x / n, v.y / n, v.z / n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec3<Float> operator/(const vec3<T>& v0, const vec3<U>& v1)
@@ -673,7 +673,7 @@ namespace CUM
 		CHECK(v1.x != 0, "vec3<Float> operation /(vec3 v0, vec3 v1): v1.x can not be zero.");
 		CHECK(v1.y != 0, "vec3<Float> operation /(vec3 v0, vec3 v1): v1.y can not be zero.");
 		CHECK(v1.z != 0, "vec3<Float> operation /(vec3 v0, vec3 v1): v1.z can not be zero.");
-		return vec3<Float>(v0.x / v1.x, v0.y / v1.y);
+		return vec3<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
 	}
 
 #pragma endregion
@@ -898,13 +898,13 @@ namespace CUM
 		CHECK(v.y != 0, "Same type vec4 operator/(n,vec4 v) error: v.y can not be 0!");
 		CHECK(v.z != 0, "Same type vec4 operator/(n,vec4 v) error: v.z can not be 0!");
 		CHECK(v.w != 0, "Same type vec4 operator/(n,vec4 v) error: v.w can not be 0!");
-		return vec4<T>(n / v.x, n / v.y, n / v.z);
+		return vec4<T>(n / v.x, n / v.y, n / v.z, n / v.w);
 	}
 	template<typename T>
 	__duel__ const vec4<T> operator/(const vec4<T>& v, const T& n)
 	{
 		CHECK(n != 0, "Same type vec4 operator/(vec4 v, n) error: n can not be 0!");
-		return vec4<T>(v.x / n, v.y / n, v.z / n);
+		return vec4<T>(v.x / n, v.y / n, v.z / n, v.w / n);
 	}
 	template<typename T>
 	__duel__ const vec4<T> operator/(const vec4<T>& v0, const vec4<T>& v1)
@@ -923,6 +923,7 @@ namespace CUM
 		v.x /= n;
 		v.y /= n;
 		v.z /= n;
+		v.w /= n;
 		return v;
 	}
 	template<typename T, typename U>
@@ -935,6 +936,7 @@ namespace CUM
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		v0.z /= v1.z;
+		v0.w /= v1.w;
 		return v0;
 	}
 
@@ -954,17 +956,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator+(const T& n, const vec4<U>& v)
 	{
-		return vec4<Float>(n + v.x, n + v.y);
+		return vec4<Float>(n + v.x, n + v.y, n+ v.z, n + v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator+(const vec4<T>& v, const U& n)
 	{
-		return vec4<Float>(v.x + n, v.y + n);
+		return vec4<Float>(v.x + n, v.y + n, v.z + n, v.w + n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator+(const vec4<T>& v0, const vec4<U>& v1)
 	{
-		return vec4<Float>(v0.x + v1.x, v0.y + v1.y);
+		return vec4<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
 	}
 
 #pragma endregion
@@ -974,17 +976,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator-(const T& n, const vec4<U>& v)
 	{
-		return vec4<Float>(n - v.x, n - v.y);
+		return vec4<Float>(n - v.x, n - v.y, n - v.z, n - v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator-(const vec4<T>& v, const U& n)
 	{
-		return vec4<Float>(v.x - n, v.y - n);
+		return vec4<Float>(v.x - n, v.y - n, v.z - n, v.w - n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator-(const vec4<T>& v0, const vec4<U>& v1)
 	{
-		return vec4<Float>(v0.x - v1.x, v0.y - v1.y);
+		return vec4<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
 	}
 
 #pragma endregion
@@ -994,17 +996,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator*(const T& n, const vec4<U>& v)
 	{
-		return vec4<Float>(n * v.x, n * v.y);
+		return vec4<Float>(n * v.x, n * v.y, n * v.z, n * v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator*(const vec4<T>& v, const U& n)
 	{
-		return vec4<Float>(v.x * n, v.y * n);
+		return vec4<Float>(v.x * n, v.y * n, v.z * n, v.w * n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator*(const vec4<T>& v0, const vec4<U>& v1)
 	{
-		return vec4<Float>(v0.x * v1.x, v0.y * v1.y);
+		return vec4<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
 	}
 
 #pragma endregion
@@ -1018,13 +1020,13 @@ namespace CUM
 		CHECK(v.y != 0, "vec4<Float> operation /(n, vec4 v1): v1.y can not be zero.");
 		CHECK(v.z != 0, "vec4<Float> operation /(n, vec4 v1): v1.z can not be zero.");
 		CHECK(v.w != 0, "vec4<Float> operation /(n, vec4 v1): v1.w can not be zero.");
-		return vec4<Float>(n / v.x, n / v.y);
+		return vec4<Float>(n / v.x, n / v.y, n / v.z, n / v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator/(const vec4<T>& v, const U& n)
 	{
 		CHECK(n != 0, "vec4<Float> operation /(vec4 v, n): n can not be zero.");
-		return vec4<Float>(v.x / n, v.y / n);
+		return vec4<Float>(v.x / n, v.y / n, v.z / n, v.w / n);
 	}
 	template<typename T, typename U>
 	__duel__ const vec4<Float> operator/(const vec4<T>& v0, const vec4<U>& v1)
@@ -1033,7 +1035,7 @@ namespace CUM
 		CHECK(v1.y != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.y can not be zero.");
 		CHECK(v1.z != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.z can not be zero.");
 		CHECK(v1.w != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.w can not be zero.");
-		return vec4<Float>(v0.x / v1.x, v0.y / v1.y);
+		return vec4<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z, v0.w / v1.w);
 	}
 
 #pragma endregion
@@ -1095,15 +1097,13 @@ namespace CUM
 #pragma region Quaternion vector operation
 
 	template<typename T>
-	__duel__ const T dot(const Quaternion<T>& v0, const Quaternion<T>& v1)
+	__duel__ const Quaternion<Float> normalize(const Quaternion<T>& vec)
 	{
-		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w * v1.w;
-	}
-
-	template<typename T, typename U>
-	__duel__ Float dot(const Quaternion<T>& v0, const Quaternion<U>& v1)
-	{
-		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w*v1.w;
+		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z + vec.w*vec.w;
+		CHECK(square > 0.0, "Quaternion normalize error: square can not less than 0.0!");
+		Float norm = sqrt(square);
+		Float inv = 1.0 / norm;
+		return inv * vec;
 	}
 
 #pragma endregion
@@ -1248,13 +1248,13 @@ namespace CUM
 		CHECK(v.y != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.y can not be 0!");
 		CHECK(v.z != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.z can not be 0!");
 		CHECK(v.w != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.w can not be 0!");
-		return Quaternion<T>(n / v.x, n / v.y, n / v.z);
+		return Quaternion<T>(n / v.x, n / v.y, n / v.z, n / v.w);
 	}
 	template<typename T>
 	__duel__ const Quaternion<T> operator/(const Quaternion<T>& v, const T& n)
 	{
 		CHECK(n != 0, "Same type Quaternion operator/(Quaternion v, n) error: n can not be 0!");
-		return Quaternion<T>(v.x / n, v.y / n, v.z / n);
+		return Quaternion<T>(v.x / n, v.y / n, v.z / n, v.w / n);
 	}
 	template<typename T>
 	__duel__ const Quaternion<T> operator/(const Quaternion<T>& v0, const Quaternion<T>& v1)
@@ -1273,6 +1273,7 @@ namespace CUM
 		v.x /= n;
 		v.y /= n;
 		v.z /= n;
+		v.w /= n;
 		return v;
 	}
 	template<typename T, typename U>
@@ -1285,6 +1286,7 @@ namespace CUM
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		v0.z /= v1.z;
+		v0.w /= v1.w;
 		return v0;
 	}
 
@@ -1304,17 +1306,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator+(const T& n, const Quaternion<U>& v)
 	{
-		return Quaternion<Float>(n + v.x, n + v.y);
+		return Quaternion<Float>(n + v.x, n + v.y, n + v.z, n + v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator+(const Quaternion<T>& v, const U& n)
 	{
-		return Quaternion<Float>(v.x + n, v.y + n);
+		return Quaternion<Float>(v.x + n, v.y + n, v.z + n, v.w + n);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator+(const Quaternion<T>& v0, const Quaternion<U>& v1)
 	{
-		return Quaternion<Float>(v0.x + v1.x, v0.y + v1.y);
+		return Quaternion<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
 	}
 
 #pragma endregion
@@ -1324,17 +1326,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator-(const T& n, const Quaternion<U>& v)
 	{
-		return Quaternion<Float>(n - v.x, n - v.y);
+		return Quaternion<Float>(n - v.x, n - v.y, n - v.z, n - v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator-(const Quaternion<T>& v, const U& n)
 	{
-		return Quaternion<Float>(v.x - n, v.y - n);
+		return Quaternion<Float>(v.x - n, v.y - n, v.z - n, v.w - n);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator-(const Quaternion<T>& v0, const Quaternion<U>& v1)
 	{
-		return Quaternion<Float>(v0.x - v1.x, v0.y - v1.y);
+		return Quaternion<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
 	}
 
 #pragma endregion
@@ -1344,17 +1346,17 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator*(const T& n, const Quaternion<U>& v)
 	{
-		return Quaternion<Float>(n * v.x, n * v.y);
+		return Quaternion<Float>(n * v.x, n * v.y, n * v.z, n * v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator*(const Quaternion<T>& v, const U& n)
 	{
-		return Quaternion<Float>(v.x * n, v.y * n);
+		return Quaternion<Float>(v.x * n, v.y * n, v.z * n, v.w * n);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator*(const Quaternion<T>& v0, const Quaternion<U>& v1)
 	{
-		return Quaternion<Float>(v0.x * v1.x, v0.y * v1.y);
+		return Quaternion<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
 	}
 
 #pragma endregion
@@ -1368,13 +1370,13 @@ namespace CUM
 		CHECK(v.y != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.y can not be zero.");
 		CHECK(v.z != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.z can not be zero.");
 		CHECK(v.w != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.w can not be zero.");
-		return Quaternion<Float>(n / v.x, n / v.y);
+		return Quaternion<Float>(n / v.x, n / v.y, n / v.z, n / v.w);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator/(const Quaternion<T>& v, const U& n)
 	{
 		CHECK(n != 0, "Quaternion<Float> operation /(Quaternion v, n): n can not be zero.");
-		return Quaternion<Float>(v.x / n, v.y / n);
+		return Quaternion<Float>(v.x / n, v.y / n, v.z / n, v.w / n);
 	}
 	template<typename T, typename U>
 	__duel__ const Quaternion<Float> operator/(const Quaternion<T>& v0, const Quaternion<U>& v1)
@@ -1383,7 +1385,7 @@ namespace CUM
 		CHECK(v1.y != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.y can not be zero.");
 		CHECK(v1.z != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.z can not be zero.");
 		CHECK(v1.w != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.w can not be zero.");
-		return Quaternion<Float>(v0.x / v1.x, v0.y / v1.y);
+		return Quaternion<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z, v0.w / v1.w);
 	}
 
 #pragma endregion
