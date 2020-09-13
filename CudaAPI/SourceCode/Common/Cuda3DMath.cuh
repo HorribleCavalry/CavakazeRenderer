@@ -386,6 +386,13 @@ namespace CUM
 	}
 
 	template<typename T>
+	__duel__ const Float norm(const vec3<T>& v)
+	{
+		Float square = v.x*v.x + v.y*v.y + v.z*v.z;
+		return sqrt(square);
+	}
+
+	template<typename T>
 	__duel__ const vec3<T> cross(const vec3<T>& v0, const vec3<T>& v1)
 	{
 		return vec3<T>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
@@ -1400,6 +1407,17 @@ namespace CUM
 	__duel__ Float dot(const vec4<T>& v0, const vec4<U>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w*v1.w;
+	}
+
+	template<typename T>
+	const Float norm(const vec4<T>& v)
+	{
+		Float square = 0.0;
+		for (Int i = 0; i < 4; i++)
+		{
+			square += v[i] * v[i];
+		}
+		return sqrt(square);
 	}
 
 	template<typename T>
@@ -2659,10 +2677,15 @@ namespace CUM
 	template<typename T>
 	__duel__ const Mat3x3<T> operator*(const Mat3x3<T>& mat0, const Mat3x3<T>& mat1)
 	{
-		return Mat3x3<T>(
-			mat0.m[0][0] * mat1.m[0][0], mat0.m[0][1] * mat1.m[0][1], mat0.m[0][2] * mat1.m[0][2],
-			mat0.m[1][0] * mat1.m[1][0], mat0.m[1][1] * mat1.m[1][1], mat0.m[1][2] * mat1.m[1][2],
-			mat0.m[2][0] * mat1.m[2][0], mat0.m[2][1] * mat1.m[2][1], mat0.m[2][2] * mat1.m[2][2]);
+		Mat3x3<T> result;
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				result.m[i][j] = dot(mat0.GetRow(i), mat1.GetColumn(j));
+			}
+		}
+		return result;
 	}
 
 	template<typename T, typename U>
@@ -2852,10 +2875,15 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const Mat3x3<Float> operator*(const Mat3x3<T>& mat0, const Mat3x3<U>& mat1)
 	{
-		return Mat3x3<Float>(
-			mat0.m[0][0] * mat1.m[0][0], mat0.m[0][1] * mat1.m[0][1], mat0.m[0][2] * mat1.m[0][2],
-			mat0.m[1][0] * mat1.m[1][0], mat0.m[1][1] * mat1.m[1][1], mat0.m[1][2] * mat1.m[1][2],
-			mat0.m[2][0] * mat1.m[2][0], mat0.m[2][1] * mat1.m[2][1], mat0.m[2][2] * mat1.m[2][2]);
+		Mat3x3<Float> result;
+		for (Int i = 0; i < 3; i++)
+		{
+			for (Int j = 0; j < 3; j++)
+			{
+				result.m[i][j] = dot(mat0.GetRow(i), mat1.GetColumn(j));
+			}
+		}
+		return result;
 	}
 #pragma endregion
 
@@ -3161,11 +3189,15 @@ namespace CUM
 	template<typename T>
 	__duel__ const Mat4x4<T> operator*(const Mat4x4<T>& mat0, const Mat4x4<T>& mat1)
 	{
-		return Mat4x4<T>(
-			mat0.m[0][0] * mat1.m[0][0], mat0.m[0][1] * mat1.m[0][1], mat0.m[0][2] * mat1.m[0][2], mat0.m[0][3] * mat1.m[0][3],
-			mat0.m[1][0] * mat1.m[1][0], mat0.m[1][1] * mat1.m[1][1], mat0.m[1][2] * mat1.m[1][2], mat0.m[1][3] * mat1.m[1][3],
-			mat0.m[2][0] * mat1.m[2][0], mat0.m[2][1] * mat1.m[2][1], mat0.m[2][2] * mat1.m[2][2], mat0.m[2][3] * mat1.m[2][3],
-			mat0.m[3][0] * mat1.m[3][0], mat0.m[3][1] * mat1.m[3][1], mat0.m[3][2] * mat1.m[3][2], mat0.m[3][3] * mat1.m[3][3]);
+		Mat4x4<T> result;
+		for (Int i = 0; i < 4; i++)
+		{
+			for (Int j = 0; j < 4; j++)
+			{
+				result.m[i][j] = dot(mat0.GetRow(i), mat1.GetColumn(j));
+			}
+		}
+		return result;
 	}
 
 	template<typename T, typename U>
@@ -3367,11 +3399,15 @@ namespace CUM
 	template<typename T, typename U>
 	__duel__ const Mat4x4<Float> operator*(const Mat4x4<T>& mat0, const Mat4x4<U>& mat1)
 	{
-		return Mat4x4<Float>(
-			mat0.m[0][0] * mat1.m[0][0], mat0.m[0][1] * mat1.m[0][1], mat0.m[0][2] * mat1.m[0][2], mat0.m[0][3] * mat1.m[0][3],
-			mat0.m[1][0] * mat1.m[1][0], mat0.m[1][1] * mat1.m[1][1], mat0.m[1][2] * mat1.m[1][2], mat0.m[1][3] * mat1.m[1][3],
-			mat0.m[2][0] * mat1.m[2][0], mat0.m[2][1] * mat1.m[2][1], mat0.m[2][2] * mat1.m[2][2], mat0.m[2][3] * mat1.m[2][3],
-			mat0.m[3][0] * mat1.m[3][0], mat0.m[3][1] * mat1.m[3][1], mat0.m[3][2] * mat1.m[3][2], mat0.m[3][3] * mat1.m[3][3]);
+		Mat4x4<Float> result;
+		for (Int i = 0; i < 4; i++)
+		{
+			for (Int j = 0; j < 4; j++)
+			{
+				result.m[i][j] = dot(mat0.GetRow(i), mat1.GetColumn(j));
+			}
+		}
+		return result;
 	}
 #pragma endregion
 
