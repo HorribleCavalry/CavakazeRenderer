@@ -56,6 +56,15 @@ namespace CUM
 		return v0.x*v1.x + v0.y * v1.y;
 	}
 
+	template<typename T>
+	__duel__ const vec2<Float> normalize(const vec2<T>& vec)
+	{
+		Float square = vec.x*vec.x + vec.y*vec.y;
+		CHECK(square > 0.0, "vec2 normalize error: square can not less than 0.0!");
+		Float norm = sqrt(square);
+		Float inv = 1.0 / norm;
+		return inv * vec;
+	}
 #pragma endregion
 
 #pragma region vec2 same type operation
@@ -386,6 +395,16 @@ namespace CUM
 	__duel__ const vec3<Float> cross(const vec3<T>& v0, const vec3<U>& v1)
 	{
 		return vec3<Float>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
+	}
+
+	template<typename T>
+	__duel__ const vec3<Float> normalize(const vec3<T>& vec)
+	{
+		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z;
+		CHECK(square > 0.0, "vec3 normalize error: square can not less than 0.0!");
+		Float norm = sqrt(square);
+		Float inv = 1.0 / norm;
+		return inv * vec;
 	}
 
 #pragma endregion
@@ -727,6 +746,16 @@ namespace CUM
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w*v1.w;
 	}
 
+	template<typename T>
+	__duel__ const vec4<Float> normalize(const vec4<T>& vec)
+	{
+		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z + vec.w*vec.w;
+		CHECK(square > 0.0, "vec4 normalize error: square can not less than 0.0!");
+		Float norm = sqrt(square);
+		Float inv = 1.0 / norm;
+		return inv * vec;
+	}
+
 #pragma endregion
 
 #pragma region vec4 same type operation
@@ -1020,6 +1049,357 @@ namespace CUM
 	}
 
 #pragma endregion
+
+#pragma region Quaternion
+	template<typename T>
+	class Quaternion
+	{
+	public:
+		T x, y, z, w;
+	public:
+		__duel__ Quaternion() :x(0), y(0), z(0), w(0) {}
+		__duel__ Quaternion(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
+		__duel__ Quaternion(const T& n) : x(n), y(n), z(n), w(n) {}
+		__duel__ Quaternion(const Quaternion<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+		template<typename U>
+		__duel__ explicit Quaternion(const Quaternion<U>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+		__duel__ ~Quaternion() {}
+	public:
+		__duel__ const Quaternion& operator=(const Quaternion<int>& v)
+		{
+			x = v.x;
+			y = v.y;
+			z = v.z;
+			w = v.w;
+			return *this;
+		}
+
+	public:
+		__duel__ T& operator[](const Int& idx)
+		{
+			CHECK(idx >= 0 && idx <= 3, "The <idx> in Quaternion<T>::operator[idx] is illegal!");
+			switch (idx)
+			{
+			case 0: return x; break;
+			case 1: return y; break;
+			case 2: return z; break;
+			case 3: return w; break;
+			default: CHECK(false, "Can not run Quaternion::operator[idx]: switch::default."); break;
+			}
+		}
+	};
+
+	typedef Quaternion<Int> Quaternioni;
+	typedef Quaternion<Float> Quaternionf;
+
+#pragma region Quaternion vector operation
+
+	template<typename T>
+	__duel__ const T dot(const Quaternion<T>& v0, const Quaternion<T>& v1)
+	{
+		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w * v1.w;
+	}
+
+	template<typename T, typename U>
+	__duel__ Float dot(const Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w*v1.w;
+	}
+
+#pragma endregion
+
+#pragma region Quaternion same type operation
+
+#pragma region Quaternion same type operation +
+
+	template<typename T>
+	__duel__ const Quaternion<T> operator+(const T& n, const Quaternion<T>& v)
+	{
+		return Quaternion<T>(n + v.x, n + v.y, n + v.z, n + v.w);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator+(const Quaternion<T>& v, const T& n)
+	{
+		return Quaternion<T>(v.x + n, v.y + n, v.z + n, v.w + n);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator+(const Quaternion<T>& v0, const Quaternion<T>& v1)
+	{
+		return Quaternion<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator+=(Quaternion<T>& v, const U& n)
+	{
+		v.x += n;
+		v.y += n;
+		v.z += n;
+		v.w += n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator+=(Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		v0.x += v1.x;
+		v0.y += v1.y;
+		v0.z += v1.z;
+		v0.w += v1.w;
+		return v0;
+	}
+
+	__duel__ const Quaternion<Int>& operator+=(Quaternion<Int>& v, const Float& n) = delete;
+	__duel__ const Quaternion<Int>& operator+=(Quaternion<Int>& v0, const Quaternion<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma region Quaternion same type operation -
+
+	template<typename T>
+	__duel__ const Quaternion<T> operator-(const T& n, const Quaternion<T>& v)
+	{
+		return Quaternion<T>(n - v.x, n - v.y, n - v.z, n - v.w);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator-(const Quaternion<T>& v, const T& n)
+	{
+		return Quaternion<T>(v.x - n, v.y - n, v.z - n, v.w - n);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator-(const Quaternion<T>& v0, const Quaternion<T>& v1)
+	{
+		return Quaternion<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator-=(Quaternion<T>& v, const U& n)
+	{
+		v.x -= n;
+		v.y -= n;
+		v.z -= n;
+		v.w -= n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator-=(Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		v0.x -= v1.x;
+		v0.y -= v1.y;
+		v0.z -= v1.z;
+		v0.w -= v1.w;
+		return v0;
+	}
+
+	__duel__ const Quaternion<Int>& operator-=(Quaternion<Int>& v, const Float& n) = delete;
+	__duel__ const Quaternion<Int>& operator-=(Quaternion<Int>& v0, const Quaternion<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma region Quaternion same type operation *
+
+	template<typename T>
+	__duel__ const Quaternion<T> operator*(const T& n, const Quaternion<T>& v)
+	{
+		return Quaternion<T>(n * v.x, n * v.y, n * v.z, n * v.w);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator*(const Quaternion<T>& v, const T& n)
+	{
+		return Quaternion<T>(v.x * n, v.y * n, v.z * n, v.w * n);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator*(const Quaternion<T>& v0, const Quaternion<T>& v1)
+	{
+		return Quaternion<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator*=(Quaternion<T>& v, const U& n)
+	{
+		v.x *= n;
+		v.y *= n;
+		v.z *= n;
+		v.w *= n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator*=(Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		v0.x *= v1.x;
+		v0.y *= v1.y;
+		v0.z *= v1.z;
+		v0.w *= v1.w;
+		return v0;
+	}
+
+	__duel__ const Quaternion<Int>& operator*=(Quaternion<Int>& v, const Float& n) = delete;
+	__duel__ const Quaternion<Int>& operator*=(Quaternion<Int>& v0, const Quaternion<Float>& v1) = delete;
+
+
+#pragma endregion
+
+#pragma region Quaternion same type operation /
+
+	template<typename T>
+	__duel__ const Quaternion<T> operator/(const T& n, const Quaternion<T>& v)
+	{
+		CHECK(v.x != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.x can not be 0!");
+		CHECK(v.y != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.y can not be 0!");
+		CHECK(v.z != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.z can not be 0!");
+		CHECK(v.w != 0, "Same type Quaternion operator/(n,Quaternion v) error: v.w can not be 0!");
+		return Quaternion<T>(n / v.x, n / v.y, n / v.z);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator/(const Quaternion<T>& v, const T& n)
+	{
+		CHECK(n != 0, "Same type Quaternion operator/(Quaternion v, n) error: n can not be 0!");
+		return Quaternion<T>(v.x / n, v.y / n, v.z / n);
+	}
+	template<typename T>
+	__duel__ const Quaternion<T> operator/(const Quaternion<T>& v0, const Quaternion<T>& v1)
+	{
+		CHECK(v1.x != 0, "Same type Quaternion operator/(n,Quaternion v) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Quaternion operator/(n,Quaternion v) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Quaternion operator/(n,Quaternion v) error: v1.z can not be 0!");
+		CHECK(v1.w != 0, "Same type Quaternion operator/(n,Quaternion v) error: v1.w can not be 0!");
+		return Quaternion<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
+	}
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator/=(Quaternion<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Same type Quaternion operator/=(Quaternion v, n) error: n can not be 0!");
+		v.x /= n;
+		v.y /= n;
+		v.z /= n;
+		return v;
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<T>& operator/=(Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		CHECK(v1.x != 0, "Same type Quaternion operator/=(Quaternion v0,Quaternion v1) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Quaternion operator/=(Quaternion v0,Quaternion v1) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Quaternion operator/=(Quaternion v0,Quaternion v1) error: v1.z can not be 0!");
+		CHECK(v1.w != 0, "Same type Quaternion operator/=(Quaternion v0,Quaternion v1) error: v1.w can not be 0!");
+		v0.x /= v1.x;
+		v0.y /= v1.y;
+		v0.z /= v1.z;
+		return v0;
+	}
+
+	__duel__ const Quaternion<Int>& operator/=(Quaternion<Int>& v, const Float& n) = delete;
+	__duel__ const Quaternion<Int>& operator/=(Quaternion<Int>& v0, const Quaternion<Float>& v1) = delete;
+
+
+#pragma endregion
+
+
+#pragma endregion
+
+#pragma region Quaternion different type operation
+
+#pragma region Quaternion different type operation +
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator+(const T& n, const Quaternion<U>& v)
+	{
+		return Quaternion<Float>(n + v.x, n + v.y);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator+(const Quaternion<T>& v, const U& n)
+	{
+		return Quaternion<Float>(v.x + n, v.y + n);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator+(const Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		return Quaternion<Float>(v0.x + v1.x, v0.y + v1.y);
+	}
+
+#pragma endregion
+
+#pragma region Quaternion different type operation -
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator-(const T& n, const Quaternion<U>& v)
+	{
+		return Quaternion<Float>(n - v.x, n - v.y);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator-(const Quaternion<T>& v, const U& n)
+	{
+		return Quaternion<Float>(v.x - n, v.y - n);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator-(const Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		return Quaternion<Float>(v0.x - v1.x, v0.y - v1.y);
+	}
+
+#pragma endregion
+
+#pragma region Quaternion different type operation *
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator*(const T& n, const Quaternion<U>& v)
+	{
+		return Quaternion<Float>(n * v.x, n * v.y);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator*(const Quaternion<T>& v, const U& n)
+	{
+		return Quaternion<Float>(v.x * n, v.y * n);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator*(const Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		return Quaternion<Float>(v0.x * v1.x, v0.y * v1.y);
+	}
+
+#pragma endregion
+
+#pragma region Quaternion different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator/(const T& n, const Quaternion<U>& v)
+	{
+		CHECK(v.x != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.x can not be zero.");
+		CHECK(v.y != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.y can not be zero.");
+		CHECK(v.z != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.z can not be zero.");
+		CHECK(v.w != 0, "Quaternion<Float> operation /(n, Quaternion v1): v1.w can not be zero.");
+		return Quaternion<Float>(n / v.x, n / v.y);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator/(const Quaternion<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Quaternion<Float> operation /(Quaternion v, n): n can not be zero.");
+		return Quaternion<Float>(v.x / n, v.y / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Quaternion<Float> operator/(const Quaternion<T>& v0, const Quaternion<U>& v1)
+	{
+		CHECK(v1.x != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.x can not be zero.");
+		CHECK(v1.y != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.y can not be zero.");
+		CHECK(v1.z != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.z can not be zero.");
+		CHECK(v1.w != 0, "Quaternion<Float> operation /(Quaternion v0, Quaternion v1): v1.w can not be zero.");
+		return Quaternion<Float>(v0.x / v1.x, v0.y / v1.y);
+	}
+
+#pragma endregion
+
+
+#pragma endregion
+
+	template<typename T>
+	__duel__ void logData(const Quaternion<T>& v)
+	{
+		const custd::OStream os;
+		os << v.x << "\t" << v.y << "\t" << v.z << "\t" << v.w << custd::endl;
+	}
+
+#pragma endregion
+
 
 #pragma region Color3
 	template<typename T>
@@ -2375,6 +2755,16 @@ namespace CUM
 			os << custd::endl;
 		}
 	}
+
+#pragma endregion
+
+#pragma region different class math operation
+
+#pragma region vec2-vec3
+
+#pragma endregion
+
+#pragma region vec3-Mat3x3
 
 #pragma endregion
 }

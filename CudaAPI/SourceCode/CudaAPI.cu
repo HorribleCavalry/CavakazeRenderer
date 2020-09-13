@@ -85,6 +85,11 @@ __global__ void kernel()
 	{
 		list[i].callType();
 	}
+
+	CUM::vec4f vf4(2.0f);
+	auto test = CUM::normalize(vf4);
+	CUM::vec3f vf41(2.0f);
+	auto test1 = CUM::normalize(vf41);
 }
 
 //__duel__ CUM::vec4<Float>&& reR()
@@ -125,11 +130,14 @@ int main()
 
 	kernel << <1, 1 >> > ();
 
-	//CUM::vec2i vi0;
-	//CUM::vec2i vi1(1.0f, 2.0f);
-	//CUM::vec2f vf0;
-	//CUM::vec2f vf1(1.0f, 2.0f);
-
+	CUM::vec2i vi0;
+	CUM::vec2i vi1(1.0f, 2.0f);
+	CUM::vec2f vf0;
+	CUM::vec2f vf1(1.0f, 2.0f);
+	CUM::vec4f vf4(2.0f);
+	auto test =CUM::normalize(vf4);
+	CUM::vec3f vf41(2.0f);
+	auto test1 = CUM::normalize(vf41);
 	//Int ni = 4;
 	//Float nf = 4.0;
 	//auto tempvi0 = vi0 + ni;
