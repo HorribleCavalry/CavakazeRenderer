@@ -414,6 +414,17 @@ namespace CUM
 		return inv * vec;
 	}
 
+	template<typename T>
+	const vec3<T> RodriguesRotate(const vec3<T>& axis,const Float& theta, const vec3<T>& v)
+	{
+		if (norm(v) == 0)
+			return v;
+		auto k = normalize(axis);
+		Float sinTheta = sin(theta);
+		Float cosTheta = cos(theta);
+		return v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
+	}
+
 #pragma endregion
 
 #pragma region vec3 same type operation
