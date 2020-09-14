@@ -1,5 +1,6 @@
 ﻿#include "Common/Cuda3DMath.cuh"
 #include "Common/CudaPrimitivesVector.cuh"
+#include <chrono>
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
@@ -96,6 +97,8 @@ __global__ void kernel()
 //	return CUM::vec4<Float>();
 //}
 
+const Float PI = 3.1415926535898;
+
 int main()
 {
 	//Person** prList = new Person*[5];
@@ -154,6 +157,25 @@ int main()
 	{
 		list[i].callType();
 	}
+
+	CUM::Quaternion<Float> rotatePositive(CUM::vec3f(0, 1, 0), 0.25*PI, true);
+	CUM::vec4f trans(1.0, 1.0, 1.0, 0.0);
+	CUM::vec4f origin(1.0, 1.0, 1.0, 0.0);
+	
+	auto start = std::chrono::steady_clock::now();
+
+	for (Int i = 0; i < 1048576; i++)
+	{
+		auto temp = CUM::applyQuaTransform(rotatePositive, origin);
+		temp *= 2.0;
+		temp /= 2.0;
+		temp += trans;
+		temp -= trans;
+	}
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<Float> duration = end - start;
+
+	//1.0078199999999999 second in battery mode.
 
 	//Int ni = 4;
 	//Float nf = 4.0;

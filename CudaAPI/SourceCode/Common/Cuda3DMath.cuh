@@ -3560,12 +3560,16 @@ namespace CUM
 	const vec4<T> applyQuaTransform(const Quaternion<T>& qua, const vec4<T>& v)
 	{
 		vec4<T> result;
-		for (Int i = 0; i < 4; i++)
-		{
-			result[i] = dot(mat.GetRow(i), v);
-		}
+		Quaternion<T> pQua(v.x, v.y, v.z, v.w);
+		Quaternion<T> quaConj = conjugate(qua);
+		Quaternion<T> pRes = qua * pQua * quaConj;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		result.w = pRes.w;
 		return result;
 	}
+
 #pragma endregion
 
 #pragma region 
