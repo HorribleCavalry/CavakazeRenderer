@@ -5,7 +5,7 @@
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
 
-
+#define PI 3.1415926535898
 
 class Person
 {
@@ -69,35 +69,24 @@ public:
 
 __global__ void kernel()
 {
-	Person per0;
-	Student stu;
-	Farmer far;
-	Heacker hea;
-	Worker wor;
-
-	CUM::PrimitiveVector<Person> list;
-	list.push_back(per0);
-	list.push_back(stu);
-	list.push_back(far);
-	list.push_back(hea);
-	list.push_back(wor);
-	for (Int i = 0; i < 5; i++)
+	CUM::Quaternion<Float> rotatePositive(CUM::Vec3f(0, 1, 0), 0.25*PI, true);
+	CUM::Vec4f trans(1.0, 1.0, 1.0, 0.0);
+	CUM::Vec4f origin(1.0, 1.0, 1.0, 0.0);
+	for (Int i = 0; i < 1048576; i++)
 	{
-		list[i].callType();
+		auto temp = CUM::applyQuaTransform(rotatePositive, origin);
+		temp *= 2.0;
+		temp /= 2.0;
+		temp += trans;
+		temp -= trans;
 	}
-
-	CUM::vec4f vf4(2.0f);
-	auto test = CUM::normalize(vf4);
-	CUM::vec3f vf41(2.0f);
-	auto test1 = CUM::normalize(vf41);
 }
 
-//__duel__ CUM::vec4<Float>&& reR()
+//__duel__ CUM::Vec4<Float>&& reR()
 //{
-//	return CUM::vec4<Float>();
+//	return CUM::Vec4<Float>();
 //}
 
-const Float PI = 3.1415926535898;
 
 int main()
 {
@@ -130,15 +119,13 @@ int main()
 	//	list[i].callType();
 	//}
 
-	kernel << <1, 1 >> > ();
-
-	CUM::vec2i vi0;
-	CUM::vec2i vi1(1.0f, 2.0f);
-	CUM::vec2f vf0;
-	CUM::vec2f vf1(1.0f, 2.0f);
-	CUM::vec4f vf4(2.0f);
+	CUM::Vec2i vi0;
+	CUM::Vec2i vi1(1.0f, 2.0f);
+	CUM::Vec2f vf0;
+	CUM::Vec2f vf1(1.0f, 2.0f);
+	CUM::Vec4f vf4(2.0f);
 	auto test =CUM::normalize(vf4);
-	CUM::vec3f vf41(2.0f);
+	CUM::Vec3f vf41(2.0f);
 	auto test1 = CUM::normalize(vf41);
 
 	Person per0;
@@ -158,9 +145,9 @@ int main()
 		list[i].callType();
 	}
 
-	CUM::Quaternion<Float> rotatePositive(CUM::vec3f(0, 1, 0), 0.25*PI, true);
-	CUM::vec4f trans(1.0, 1.0, 1.0, 0.0);
-	CUM::vec4f origin(1.0, 1.0, 1.0, 0.0);
+	CUM::Quaternion<Float> rotatePositive(CUM::Vec3f(0, 1, 0), 0.25*PI, true);
+	CUM::Vec4f trans(1.0, 1.0, 1.0, 0.0);
+	CUM::Vec4f origin(1.0, 1.0, 1.0, 0.0);
 	
 	auto start = std::chrono::steady_clock::now();
 
@@ -174,22 +161,11 @@ int main()
 	}
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<Float> duration = end - start;
+	//0.41030820000000001 second
 
-	//1.0078199999999999 second in battery mode.
-
-	//Int ni = 4;
-	//Float nf = 4.0;
-	//auto tempvi0 = vi0 + ni;
-	//auto tempvi1 = ni + vi0;
-	//auto tempvi2 = vi0 + nf;
-	//auto tempvi3 = nf + vi0;
-	//auto tempvi4 = vi0 + vi1;
-	//auto tempvi5 = vi0 + vf1;
-	//auto mat = CUM::Mat4x4_identity;
-	//CUM::Mat4x4i mati(5);
-	//mati += mat;
-	//mati -= mat;
-	//mati / mat;
-	//CUM::Mat4x4f matf;
-	//matf /= mat;
+	start = std::chrono::steady_clock::now();
+	kernel << <1, 1 >> > ();
+	end = std::chrono::steady_clock::now();
+	duration = end - start;
+	//0.41093520000000000 second
 }

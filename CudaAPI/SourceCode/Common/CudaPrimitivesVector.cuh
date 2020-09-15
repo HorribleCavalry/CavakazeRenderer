@@ -1,5 +1,7 @@
-#include "../CudaSTD/CudaUtility.cuh"
+﻿#ifndef __CUDAPRIMITIVESVECTOR__CUH__
+#define __CUDAPRIMITIVESVECTOR__CUH__
 
+#include "../CudaSTD/CudaUtility.cuh"
 
 namespace CUM
 {
@@ -53,3 +55,5 @@ namespace CUM
 
 	};
 }
+
+#endif // !__CUDAPRIMITIVESVECTOR__CUH__

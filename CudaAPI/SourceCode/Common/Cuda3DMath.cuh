@@ -9,22 +9,22 @@ namespace CUM
 {
 #define LogData(data) logData(data)
 
-#pragma region vec2
+#pragma region Vec2
 	template<typename T>
-	class vec2
+	class Vec2
 	{
 	public:
 		T x, y;
 	public:
-		__duel__ vec2() :x(0), y(0) {}
-		__duel__ vec2(const T& n) :x(n), y(n) {}
-		__duel__ vec2(const T& _x, const T& _y) :x(_x), y(_y) {}
-		__duel__ vec2(const vec2<T>& v) : x(v.x), y(v.y) {}
+		__duel__ Vec2() :x(0), y(0) {}
+		__duel__ Vec2(const T& n) :x(n), y(n) {}
+		__duel__ Vec2(const T& _x, const T& _y) :x(_x), y(_y) {}
+		__duel__ Vec2(const Vec2<T>& v) : x(v.x), y(v.y) {}
 		template<typename U>
-		__duel__ explicit vec2(const vec2<U>& v) : x(v.x), y(v.y) {}
-		__duel__ ~vec2() {}
+		__duel__ explicit Vec2(const Vec2<U>& v) : x(v.x), y(v.y) {}
+		__duel__ ~Vec2() {}
 	public:
-		__duel__ const vec2& operator=(const vec2<int>& v)
+		__duel__ const Vec2& operator=(const Vec2<int>& v)
 		{
 			x = v.x;
 			y = v.y;
@@ -34,287 +34,287 @@ namespace CUM
 	public:
 		__duel__ T& operator[](const Int& idx)
 		{
-			CHECK(idx >= 0 && idx <= 1, "The <idx> in vec2<T>::operator[idx] is illegal!");
+			CHECK(idx >= 0 && idx <= 1, "The <idx> in Vec2<T>::operator[idx] is illegal!");
 			return idx == 0 ? x : y;
 		}
 	};
 
-	typedef vec2<Int> vec2i;
-	typedef vec2<Float> vec2f;
+	typedef Vec2<Int> Vec2i;
+	typedef Vec2<Float> Vec2f;
 
-#pragma region vec2 vector operation
+#pragma region Vec2 vector operation
 
 	template<typename T>
-	__duel__ const T dot(const vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const T dot(const Vec2<T>& v0, const Vec2<T>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y;
 	}
 
 	template<typename T, typename U>
-	__duel__ Float dot(const vec2<T>& v0, const vec2<U>& v1)
+	__duel__ Float dot(const Vec2<T>& v0, const Vec2<U>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y;
 	}
 
 	template<typename T>
-	__duel__ const vec2<Float> normalize(const vec2<T>& vec)
+	__duel__ const Vec2<Float> normalize(const Vec2<T>& vec)
 	{
 		Float square = vec.x*vec.x + vec.y*vec.y;
-		CHECK(square > 0.0, "vec2 normalize error: square can not less than 0.0!");
+		CHECK(square > 0.0, "Vec2 normalize error: square can not less than 0.0!");
 		Float norm = sqrt(square);
 		Float inv = 1.0 / norm;
 		return inv * vec;
 	}
 #pragma endregion
 
-#pragma region vec2 same type operation
+#pragma region Vec2 same type operation
 
-#pragma region vec2 same type operation +
+#pragma region Vec2 same type operation +
 
 	template<typename T>
-	__duel__ const vec2<T> operator+(const T& n, const vec2<T>& v)
+	__duel__ const Vec2<T> operator+(const T& n, const Vec2<T>& v)
 	{
-		return vec2<T>(n + v.x, n + v.y);
+		return Vec2<T>(n + v.x, n + v.y);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator+(const vec2<T>& v, const T& n)
+	__duel__ const Vec2<T> operator+(const Vec2<T>& v, const T& n)
 	{
-		return vec2<T>(v.x + n, v.y + n);
+		return Vec2<T>(v.x + n, v.y + n);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator+(const vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T> operator+(const Vec2<T>& v0, const Vec2<T>& v1)
 	{
-		return vec2<T>(v0.x + v1.x, v0.y + v1.y);
+		return Vec2<T>(v0.x + v1.x, v0.y + v1.y);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec2<T>& operator+=(vec2<T>& v, const U& n)
+	__duel__ const Vec2<T>& operator+=(Vec2<T>& v, const U& n)
 	{
 		v.x += n;
 		v.y += n;
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<T>& operator+=(vec2<T>& v0, const vec2<U>& v1)
+	__duel__ const Vec2<T>& operator+=(Vec2<T>& v0, const Vec2<U>& v1)
 	{
 		v0.x += v1.x;
 		v0.y += v1.y;
 		return v0;
 	}
 
-	__duel__ const vec2<Int>& operator+=(vec2<Int>& v, const Float& n) = delete;
-	__duel__ const vec2<Int>& operator+=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
+	__duel__ const Vec2<Int>& operator+=(Vec2<Int>& v, const Float& n) = delete;
+	__duel__ const Vec2<Int>& operator+=(Vec2<Int>& v0, const Vec2<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec2 same type operation -
+#pragma region Vec2 same type operation -
 
 	template<typename T>
-	__duel__ const vec2<T> operator-(const T& n, const vec2<T>& v)
+	__duel__ const Vec2<T> operator-(const T& n, const Vec2<T>& v)
 	{
-		return vec2<T>(n - v.x, n - v.y);
+		return Vec2<T>(n - v.x, n - v.y);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator-(const vec2<T>& v, const T& n)
+	__duel__ const Vec2<T> operator-(const Vec2<T>& v, const T& n)
 	{
-		return vec2<T>(v.x - n, v.y - n);
+		return Vec2<T>(v.x - n, v.y - n);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator-(const vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T> operator-(const Vec2<T>& v0, const Vec2<T>& v1)
 	{
-		return vec2<T>(v0.x - v1.x, v0.y - v1.y);
+		return Vec2<T>(v0.x - v1.x, v0.y - v1.y);
 	}
 
 	template<typename T>
-	__duel__ const vec2<T>& operator-=(vec2<T>& v, const T& n)
+	__duel__ const Vec2<T>& operator-=(Vec2<T>& v, const T& n)
 	{
 		v.x -= n;
 		v.y -= n;
 		return v;
 	}
 	template<typename T>
-	__duel__ const vec2<T>& operator-=(vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T>& operator-=(Vec2<T>& v0, const Vec2<T>& v1)
 	{
 		v0.x -= v1.x;
 		v0.y -= v1.y;
 		return v0;
 	}
 
-	__duel__ const vec2<Int>& operator-=(vec2<Int>& v, const Float& n) = delete;
-	__duel__ const vec2<Int>& operator-=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
+	__duel__ const Vec2<Int>& operator-=(Vec2<Int>& v, const Float& n) = delete;
+	__duel__ const Vec2<Int>& operator-=(Vec2<Int>& v0, const Vec2<Float>& v1) = delete;
 
 #pragma endregion
 
-#pragma region vec2 same type operation *
+#pragma region Vec2 same type operation *
 
 	template<typename T>
-	__duel__ const vec2<T> operator*(const T& n, const vec2<T>& v)
+	__duel__ const Vec2<T> operator*(const T& n, const Vec2<T>& v)
 	{
-		return vec2<T>(n * v.x, n * v.y);
+		return Vec2<T>(n * v.x, n * v.y);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator*(const vec2<T>& v, const T& n)
+	__duel__ const Vec2<T> operator*(const Vec2<T>& v, const T& n)
 	{
-		return vec2<T>(v.x * n, v.y * n);
+		return Vec2<T>(v.x * n, v.y * n);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator*(const vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T> operator*(const Vec2<T>& v0, const Vec2<T>& v1)
 	{
-		return vec2<T>(v0.x * v1.x, v0.y * v1.y);
+		return Vec2<T>(v0.x * v1.x, v0.y * v1.y);
 	}
 
 	template<typename T>
-	__duel__ const vec2<T>& operator*=(vec2<T>& v, const T& n)
+	__duel__ const Vec2<T>& operator*=(Vec2<T>& v, const T& n)
 	{
 		v.x *= n;
 		v.y *= n;
 		return v;
 	}
 	template<typename T>
-	__duel__ const vec2<T>& operator*=(vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T>& operator*=(Vec2<T>& v0, const Vec2<T>& v1)
 	{
 		v0.x *= v1.x;
 		v0.y *= v1.y;
 		return v0;
 	}
 
-	__duel__ const vec2<Int>& operator*=(vec2<Int>& v, const Float& n) = delete;
-	__duel__ const vec2<Int>& operator*=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
+	__duel__ const Vec2<Int>& operator*=(Vec2<Int>& v, const Float& n) = delete;
+	__duel__ const Vec2<Int>& operator*=(Vec2<Int>& v0, const Vec2<Float>& v1) = delete;
 
 #pragma endregion
 
-#pragma region vec2 same type operation /
+#pragma region Vec2 same type operation /
 
 	template<typename T>
-	__duel__ const vec2<T> operator/(const T& n, const vec2<T>& v)
+	__duel__ const Vec2<T> operator/(const T& n, const Vec2<T>& v)
 	{
-		CHECK(v.x != 0, "Same type vec2 operator/ error: v.x can not be 0!");
-		CHECK(v.y != 0, "Same type vec2 operator/ error: v.y can not be 0!");
-		return vec2<T>(n / v.x, n / v.y);
+		CHECK(v.x != 0, "Same type Vec2 operator/ error: v.x can not be 0!");
+		CHECK(v.y != 0, "Same type Vec2 operator/ error: v.y can not be 0!");
+		return Vec2<T>(n / v.x, n / v.y);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator/(const vec2<T>& v, const T& n)
+	__duel__ const Vec2<T> operator/(const Vec2<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type vec2 operator/ error: n can not be 0!");
-		return vec2<T>(v.x / n, v.y / n);
+		CHECK(n != 0, "Same type Vec2 operator/ error: n can not be 0!");
+		return Vec2<T>(v.x / n, v.y / n);
 	}
 	template<typename T>
-	__duel__ const vec2<T> operator/(const vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T> operator/(const Vec2<T>& v0, const Vec2<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type vec2 operator/ error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type vec2 operator/ error: v1.y can not be 0!");
-		return vec2<T>(v0.x / v1.x, v0.y / v1.y);
+		CHECK(v1.x != 0, "Same type Vec2 operator/ error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Vec2 operator/ error: v1.y can not be 0!");
+		return Vec2<T>(v0.x / v1.x, v0.y / v1.y);
 	}
 
 	template<typename T>
-	__duel__ const vec2<T>& operator/=(vec2<T>& v, const T& n)
+	__duel__ const Vec2<T>& operator/=(Vec2<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type vec2 operator/= error: n can not be 0!");
+		CHECK(n != 0, "Same type Vec2 operator/= error: n can not be 0!");
 		v.x /= n;
 		v.y /= n;
 		return v;
 	}
 	template<typename T>
-	__duel__ const vec2<T>& operator/=(vec2<T>& v0, const vec2<T>& v1)
+	__duel__ const Vec2<T>& operator/=(Vec2<T>& v0, const Vec2<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type vec2 operator/= error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type vec2 operator/= error: v1.y can not be 0!");
+		CHECK(v1.x != 0, "Same type Vec2 operator/= error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Vec2 operator/= error: v1.y can not be 0!");
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		return v0;
 	}
 
-	__duel__ const vec2<Int>& operator/=(vec2<Int>& v, const Float& n) = delete;
-	__duel__ const vec2<Int>& operator/=(vec2<Int>& v0, const vec2<Float>& v1) = delete;
+	__duel__ const Vec2<Int>& operator/=(Vec2<Int>& v, const Float& n) = delete;
+	__duel__ const Vec2<Int>& operator/=(Vec2<Int>& v0, const Vec2<Float>& v1) = delete;
 
 #pragma endregion
 
 #pragma endregion
 
-#pragma region vec2 different type operation
+#pragma region Vec2 different type operation
 
-#pragma region vec2 different type operation +
-
-	template<typename T, typename U>
-	__duel__ const vec2<Float> operator+(const T& n, const vec2<U>& v)
-	{
-		return vec2<Float>(n + v.x, n + v.y);
-	}
-	template<typename T, typename U>
-	__duel__ const vec2<Float> operator+(const vec2<T>& v, const U& n)
-	{
-		return vec2<Float>(v.x + n, v.y + n);
-	}
-	template<typename T, typename U>
-	__duel__ const vec2<Float> operator+(const vec2<T>& v0, const vec2<U>& v1)
-	{
-		return vec2<Float>(v0.x + v1.x, v0.y + v1.y);
-	}
-
-#pragma endregion
-
-#pragma region vec2 different type operation -
+#pragma region Vec2 different type operation +
 
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator-(const T& n, const vec2<U>& v)
+	__duel__ const Vec2<Float> operator+(const T& n, const Vec2<U>& v)
 	{
-		return vec2<Float>(n - v.x, n - v.y);
+		return Vec2<Float>(n + v.x, n + v.y);
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator-(const vec2<T>& v, const U& n)
+	__duel__ const Vec2<Float> operator+(const Vec2<T>& v, const U& n)
 	{
-		return vec2<Float>(v.x - n, v.y - n);
+		return Vec2<Float>(v.x + n, v.y + n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator-(const vec2<T>& v0, const vec2<U>& v1)
+	__duel__ const Vec2<Float> operator+(const Vec2<T>& v0, const Vec2<U>& v1)
 	{
-		return vec2<Float>(v0.x - v1.x, v0.y - v1.y);
+		return Vec2<Float>(v0.x + v1.x, v0.y + v1.y);
 	}
 
 #pragma endregion
 
-#pragma region vec2 different type operation *
+#pragma region Vec2 different type operation -
 
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator*(const T& n, const vec2<U>& v)
+	__duel__ const Vec2<Float> operator-(const T& n, const Vec2<U>& v)
 	{
-		return vec2<Float>(n * v.x, n * v.y);
+		return Vec2<Float>(n - v.x, n - v.y);
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator*(const vec2<T>& v, const U& n)
+	__duel__ const Vec2<Float> operator-(const Vec2<T>& v, const U& n)
 	{
-		return vec2<Float>(v.x * n, v.y * n);
+		return Vec2<Float>(v.x - n, v.y - n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator*(const vec2<T>& v0, const vec2<U>& v1)
+	__duel__ const Vec2<Float> operator-(const Vec2<T>& v0, const Vec2<U>& v1)
 	{
-		return vec2<Float>(v0.x * v1.x, v0.y * v1.y);
+		return Vec2<Float>(v0.x - v1.x, v0.y - v1.y);
 	}
 
 #pragma endregion
 
-#pragma region vec2 different type operation /
+#pragma region Vec2 different type operation *
 
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator/(const T& n, const vec2<U>& v)
+	__duel__ const Vec2<Float> operator*(const T& n, const Vec2<U>& v)
 	{
-		CHECK(v.x != 0, "vec2<Float> operation /(n,vec2 v): v.x can not be zero.");
-		CHECK(v.y != 0, "vec2<Float> operation /(n,vec2 v): v.y can not be zero.");
-		return vec2<Float>(n / v.x, n / v.y);
+		return Vec2<Float>(n * v.x, n * v.y);
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator/(const vec2<T>& v, const U& n)
+	__duel__ const Vec2<Float> operator*(const Vec2<T>& v, const U& n)
 	{
-		CHECK(v.y != 0, "vec2<Float> operation /(vec2 v,n): n can not be zero.");
-		return vec2<Float>(v.x / n, v.y / n);
+		return Vec2<Float>(v.x * n, v.y * n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec2<Float> operator/(const vec2<T>& v0, const vec2<U>& v1)
+	__duel__ const Vec2<Float> operator*(const Vec2<T>& v0, const Vec2<U>& v1)
 	{
-		CHECK(v1.x != 0, "vec2<Float> operation /(vec2 v0,vec2 v1): v1.x can not be zero.");
-		CHECK(v1.y != 0, "vec2<Float> operation /(vec2 v0,vec2 v1): v1.y can not be zero.");
-		return vec2<Float>(v0.x / v1.x, v0.y / v1.y);
+		return Vec2<Float>(v0.x * v1.x, v0.y * v1.y);
+	}
+
+#pragma endregion
+
+#pragma region Vec2 different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Vec2<Float> operator/(const T& n, const Vec2<U>& v)
+	{
+		CHECK(v.x != 0, "Vec2<Float> operation /(n,Vec2 v): v.x can not be zero.");
+		CHECK(v.y != 0, "Vec2<Float> operation /(n,Vec2 v): v.y can not be zero.");
+		return Vec2<Float>(n / v.x, n / v.y);
+	}
+	template<typename T, typename U>
+	__duel__ const Vec2<Float> operator/(const Vec2<T>& v, const U& n)
+	{
+		CHECK(v.y != 0, "Vec2<Float> operation /(Vec2 v,n): n can not be zero.");
+		return Vec2<Float>(v.x / n, v.y / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Vec2<Float> operator/(const Vec2<T>& v0, const Vec2<U>& v1)
+	{
+		CHECK(v1.x != 0, "Vec2<Float> operation /(Vec2 v0,Vec2 v1): v1.x can not be zero.");
+		CHECK(v1.y != 0, "Vec2<Float> operation /(Vec2 v0,Vec2 v1): v1.y can not be zero.");
+		return Vec2<Float>(v0.x / v1.x, v0.y / v1.y);
 	}
 
 #pragma endregion
@@ -323,7 +323,7 @@ namespace CUM
 #pragma endregion
 
 	template<typename T>
-	__duel__ void logData(const vec2<T>& v)
+	__duel__ void logData(const Vec2<T>& v)
 	{
 		const custd::OStream os;
 		os << v.x << "\t" << v.y << custd::endl;
@@ -331,22 +331,22 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region vec3
+#pragma region Vec3
 	template<typename T>
-	class vec3
+	class Vec3
 	{
 	public:
 		T x, y, z;
 	public:
-		__duel__ vec3() :x(0), y(0), z(0) {}
-		__duel__ vec3(const T& _x, const T& _y, const T& _z) : x(_x), y(_y), z(_z) {}
-		__duel__ vec3(const T& n) : x(n), y(n), z(n) {}
-		__duel__ vec3(const vec3<T>& v) : x(v.x), y(v.y), z(v.z) {}
+		__duel__ Vec3() :x(0), y(0), z(0) {}
+		__duel__ Vec3(const T& _x, const T& _y, const T& _z) : x(_x), y(_y), z(_z) {}
+		__duel__ Vec3(const T& n) : x(n), y(n), z(n) {}
+		__duel__ Vec3(const Vec3<T>& v) : x(v.x), y(v.y), z(v.z) {}
 		template<typename U>
-		__duel__ explicit vec3(const vec3<U>& v) : x(v.x), y(v.y), z(v.z) {}
-		__duel__ ~vec3() {}
+		__duel__ explicit Vec3(const Vec3<U>& v) : x(v.x), y(v.y), z(v.z) {}
+		__duel__ ~Vec3() {}
 	public:
-		__duel__ const vec3& operator=(const vec3<int>& v)
+		__duel__ const Vec3& operator=(const Vec3<int>& v)
 		{
 			x = v.x;
 			y = v.y;
@@ -357,65 +357,65 @@ namespace CUM
 	public:
 		__duel__ T& operator[](const Int& idx)
 		{
-			CHECK(idx >= 0 && idx <= 2, "The <idx> in vec3<T>::operator[idx] is illegal!");
+			CHECK(idx >= 0 && idx <= 2, "The <idx> in Vec3<T>::operator[idx] is illegal!");
 			switch (idx)
 			{
 			case 0: return x; break;
 			case 1: return y; break;
 			case 2: return z; break;
-			default: CHECK(false, "Can not run vec3::operator[idx]: switch::default."); break;
+			default: CHECK(false, "Can not run Vec3::operator[idx]: switch::default."); break;
 			}
 		}
 	};
 
-	typedef vec3<Int> vec3i;
-	typedef vec3<Float> vec3f;
+	typedef Vec3<Int> Vec3i;
+	typedef Vec3<Float> Vec3f;
 
-#pragma region vec3 vector operation
+#pragma region Vec3 vector operation
 
 	template<typename T>
-	__duel__ const T dot(const vec3<T>& v0, const vec3<T>& v1)
+	__duel__ const T dot(const Vec3<T>& v0, const Vec3<T>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z;
 	}
 
 	template<typename T, typename U>
-	__duel__ Float dot(const vec3<T>& v0, const vec3<U>& v1)
+	__duel__ Float dot(const Vec3<T>& v0, const Vec3<U>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z;
 	}
 
 	template<typename T>
-	__duel__ const Float norm(const vec3<T>& v)
+	__duel__ const Float norm(const Vec3<T>& v)
 	{
 		Float square = v.x*v.x + v.y*v.y + v.z*v.z;
 		return sqrt(square);
 	}
 
 	template<typename T>
-	__duel__ const vec3<T> cross(const vec3<T>& v0, const vec3<T>& v1)
+	__duel__ const Vec3<T> cross(const Vec3<T>& v0, const Vec3<T>& v1)
 	{
-		return vec3<T>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
+		return Vec3<T>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec3<Float> cross(const vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<Float> cross(const Vec3<T>& v0, const Vec3<U>& v1)
 	{
-		return vec3<Float>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
+		return Vec3<Float>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
 	}
 
 	template<typename T>
-	__duel__ const vec3<Float> normalize(const vec3<T>& vec)
+	__duel__ const Vec3<Float> normalize(const Vec3<T>& vec)
 	{
 		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z;
-		CHECK(square > 0.0, "vec3 normalize error: square can not less than 0.0!");
+		CHECK(square > 0.0, "Vec3 normalize error: square can not less than 0.0!");
 		Float norm = sqrt(square);
 		Float inv = 1.0 / norm;
 		return inv * vec;
 	}
 
 	template<typename T>
-	const vec3<T> RodriguesRotate(const vec3<T>& axis,const Float& theta, const vec3<T>& v)
+	const Vec3<T> RodriguesRotate(const Vec3<T>& axis,const Float& theta, const Vec3<T>& v)
 	{
 		if (norm(v) == 0)
 			return v;
@@ -427,28 +427,28 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region vec3 same type operation
+#pragma region Vec3 same type operation
 
-#pragma region vec3 same type operation +
+#pragma region Vec3 same type operation +
 
 	template<typename T>
-	__duel__ const vec3<T> operator+(const T& n, const vec3<T>& v)
+	__duel__ const Vec3<T> operator+(const T& n, const Vec3<T>& v)
 	{
-		return vec3<T>(n + v.x, n + v.y, n + v.z);
+		return Vec3<T>(n + v.x, n + v.y, n + v.z);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator+(const vec3<T>& v, const T& n)
+	__duel__ const Vec3<T> operator+(const Vec3<T>& v, const T& n)
 	{
-		return vec3<T>(v.x + n, v.y + n, v.z + n);
+		return Vec3<T>(v.x + n, v.y + n, v.z + n);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator+(const vec3<T>& v0, const vec3<T>& v1)
+	__duel__ const Vec3<T> operator+(const Vec3<T>& v0, const Vec3<T>& v1)
 	{
-		return vec3<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
+		return Vec3<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator+=(vec3<T>& v, const U& n)
+	__duel__ const Vec3<T>& operator+=(Vec3<T>& v, const U& n)
 	{
 		v.x += n;
 		v.y += n;
@@ -456,7 +456,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator+=(vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<T>& operator+=(Vec3<T>& v0, const Vec3<U>& v1)
 	{
 		v0.x += v1.x;
 		v0.y += v1.y;
@@ -464,32 +464,32 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec3<Int>& operator+=(vec3<Int>& v, const Float& n) = delete;
-	__duel__ const vec3<Int>& operator+=(vec3<Int>& v0, const vec3<Float>& v1) = delete;
+	__duel__ const Vec3<Int>& operator+=(Vec3<Int>& v, const Float& n) = delete;
+	__duel__ const Vec3<Int>& operator+=(Vec3<Int>& v0, const Vec3<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec3 same type operation -
+#pragma region Vec3 same type operation -
 
 	template<typename T>
-	__duel__ const vec3<T> operator-(const T& n, const vec3<T>& v)
+	__duel__ const Vec3<T> operator-(const T& n, const Vec3<T>& v)
 	{
-		return vec3<T>(n - v.x, n - v.y, n - v.z);
+		return Vec3<T>(n - v.x, n - v.y, n - v.z);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator-(const vec3<T>& v, const T& n)
+	__duel__ const Vec3<T> operator-(const Vec3<T>& v, const T& n)
 	{
-		return vec3<T>(v.x - n, v.y - n, v.z - n);
+		return Vec3<T>(v.x - n, v.y - n, v.z - n);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator-(const vec3<T>& v0, const vec3<T>& v1)
+	__duel__ const Vec3<T> operator-(const Vec3<T>& v0, const Vec3<T>& v1)
 	{
-		return vec3<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
+		return Vec3<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator-=(vec3<T>& v, const U& n)
+	__duel__ const Vec3<T>& operator-=(Vec3<T>& v, const U& n)
 	{
 		v.x -= n;
 		v.y -= n;
@@ -497,7 +497,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator-=(vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<T>& operator-=(Vec3<T>& v0, const Vec3<U>& v1)
 	{
 		v0.x -= v1.x;
 		v0.y -= v1.y;
@@ -505,32 +505,32 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec3<Int>& operator-=(vec3<Int>& v, const Float& n) = delete;
-	__duel__ const vec3<Int>& operator-=(vec3<Int>& v0, const vec3<Float>& v1) = delete;
+	__duel__ const Vec3<Int>& operator-=(Vec3<Int>& v, const Float& n) = delete;
+	__duel__ const Vec3<Int>& operator-=(Vec3<Int>& v0, const Vec3<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec3 same type operation *
+#pragma region Vec3 same type operation *
 
 	template<typename T>
-	__duel__ const vec3<T> operator*(const T& n, const vec3<T>& v)
+	__duel__ const Vec3<T> operator*(const T& n, const Vec3<T>& v)
 	{
-		return vec3<T>(n * v.x, n * v.y, n * v.z);
+		return Vec3<T>(n * v.x, n * v.y, n * v.z);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator*(const vec3<T>& v, const T& n)
+	__duel__ const Vec3<T> operator*(const Vec3<T>& v, const T& n)
 	{
-		return vec3<T>(v.x * n, v.y * n, v.z * n);
+		return Vec3<T>(v.x * n, v.y * n, v.z * n);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator*(const vec3<T>& v0, const vec3<T>& v1)
+	__duel__ const Vec3<T> operator*(const Vec3<T>& v0, const Vec3<T>& v1)
 	{
-		return vec3<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
+		return Vec3<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator*=(vec3<T>& v, const U& n)
+	__duel__ const Vec3<T>& operator*=(Vec3<T>& v, const U& n)
 	{
 		v.x *= n;
 		v.y *= n;
@@ -538,7 +538,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator*=(vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<T>& operator*=(Vec3<T>& v0, const Vec3<U>& v1)
 	{
 		v0.x *= v1.x;
 		v0.y *= v1.y;
@@ -546,60 +546,60 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec3<Int>& operator*=(vec3<Int>& v, const Float& n) = delete;
-	__duel__ const vec3<Int>& operator*=(vec3<Int>& v0, const vec3<Float>& v1) = delete;
+	__duel__ const Vec3<Int>& operator*=(Vec3<Int>& v, const Float& n) = delete;
+	__duel__ const Vec3<Int>& operator*=(Vec3<Int>& v0, const Vec3<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec3 same type operation /
+#pragma region Vec3 same type operation /
 
 	template<typename T>
-	__duel__ const vec3<T> operator/(const T& n, const vec3<T>& v)
+	__duel__ const Vec3<T> operator/(const T& n, const Vec3<T>& v)
 	{
-		CHECK(v.x != 0, "Same type vec3 operator/(n,vec3 v) error: v.x can not be 0!");
-		CHECK(v.y != 0, "Same type vec3 operator/(n,vec3 v) error: v.y can not be 0!");
-		CHECK(v.z != 0, "Same type vec3 operator/(n,vec3 v) error: v.z can not be 0!");
-		return vec3<T>(n / v.x, n / v.y, n / v.z);
+		CHECK(v.x != 0, "Same type Vec3 operator/(n,Vec3 v) error: v.x can not be 0!");
+		CHECK(v.y != 0, "Same type Vec3 operator/(n,Vec3 v) error: v.y can not be 0!");
+		CHECK(v.z != 0, "Same type Vec3 operator/(n,Vec3 v) error: v.z can not be 0!");
+		return Vec3<T>(n / v.x, n / v.y, n / v.z);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator/(const vec3<T>& v, const T& n)
+	__duel__ const Vec3<T> operator/(const Vec3<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type vec3 operator/(vec3 v, n) error: n can not be 0!");
-		return vec3<T>(v.x / n, v.y / n, v.z / n);
+		CHECK(n != 0, "Same type Vec3 operator/(Vec3 v, n) error: n can not be 0!");
+		return Vec3<T>(v.x / n, v.y / n, v.z / n);
 	}
 	template<typename T>
-	__duel__ const vec3<T> operator/(const vec3<T>& v0, const vec3<T>& v1)
+	__duel__ const Vec3<T> operator/(const Vec3<T>& v0, const Vec3<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type vec3 operator/(n,vec3 v) error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type vec3 operator/(n,vec3 v) error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type vec3 operator/(n,vec3 v) error: v1.z can not be 0!");
-		return vec3<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
+		CHECK(v1.x != 0, "Same type Vec3 operator/(n,Vec3 v) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Vec3 operator/(n,Vec3 v) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Vec3 operator/(n,Vec3 v) error: v1.z can not be 0!");
+		return Vec3<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator/=(vec3<T>& v, const U& n)
+	__duel__ const Vec3<T>& operator/=(Vec3<T>& v, const U& n)
 	{
-		CHECK(n != 0, "Same type vec3 operator/=(vec3 v, n) error: n can not be 0!");
+		CHECK(n != 0, "Same type Vec3 operator/=(Vec3 v, n) error: n can not be 0!");
 		v.x /= n;
 		v.y /= n;
 		v.z /= n;
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<T>& operator/=(vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<T>& operator/=(Vec3<T>& v0, const Vec3<U>& v1)
 	{
-		CHECK(v1.x != 0, "Same type vec3 operator/=(vec3 v0,vec3 v1) error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type vec3 operator/=(vec3 v0,vec3 v1) error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type vec3 operator/=(vec3 v0,vec3 v1) error: v1.z can not be 0!");
+		CHECK(v1.x != 0, "Same type Vec3 operator/=(Vec3 v0,Vec3 v1) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Vec3 operator/=(Vec3 v0,Vec3 v1) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Vec3 operator/=(Vec3 v0,Vec3 v1) error: v1.z can not be 0!");
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		v0.z /= v1.z;
 		return v0;
 	}
 
-	__duel__ const vec3<Int>& operator/=(vec3<Int>& v, const Float& n) = delete;
-	__duel__ const vec3<Int>& operator/=(vec3<Int>& v0, const vec3<Float>& v1) = delete;
+	__duel__ const Vec3<Int>& operator/=(Vec3<Int>& v, const Float& n) = delete;
+	__duel__ const Vec3<Int>& operator/=(Vec3<Int>& v0, const Vec3<Float>& v1) = delete;
 
 
 #pragma endregion
@@ -607,91 +607,91 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region vec3 different type operation
+#pragma region Vec3 different type operation
 
-#pragma region vec3 different type operation +
-
-	template<typename T, typename U>
-	__duel__ const vec3<Float> operator+(const T& n, const vec3<U>& v)
-	{
-		return vec3<Float>(n + v.x, n + v.y, n + v.z);
-	}
-	template<typename T, typename U>
-	__duel__ const vec3<Float> operator+(const vec3<T>& v, const U& n)
-	{
-		return vec3<Float>(v.x + n, v.y + n, v.z + n);
-	}
-	template<typename T, typename U>
-	__duel__ const vec3<Float> operator+(const vec3<T>& v0, const vec3<U>& v1)
-	{
-		return vec3<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
-	}
-
-#pragma endregion
-
-#pragma region vec3 different type operation -
+#pragma region Vec3 different type operation +
 
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator-(const T& n, const vec3<U>& v)
+	__duel__ const Vec3<Float> operator+(const T& n, const Vec3<U>& v)
 	{
-		return vec3<Float>(n - v.x, n - v.y, n - v.z);
+		return Vec3<Float>(n + v.x, n + v.y, n + v.z);
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator-(const vec3<T>& v, const U& n)
+	__duel__ const Vec3<Float> operator+(const Vec3<T>& v, const U& n)
 	{
-		return vec3<Float>(v.x - n, v.y - n, v.z - n);
+		return Vec3<Float>(v.x + n, v.y + n, v.z + n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator-(const vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<Float> operator+(const Vec3<T>& v0, const Vec3<U>& v1)
 	{
-		return vec3<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
+		return Vec3<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
 	}
 
 #pragma endregion
 
-#pragma region vec3 different type operation *
+#pragma region Vec3 different type operation -
 
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator*(const T& n, const vec3<U>& v)
+	__duel__ const Vec3<Float> operator-(const T& n, const Vec3<U>& v)
 	{
-		return vec3<Float>(n * v.x, n * v.y, n * v.z);
+		return Vec3<Float>(n - v.x, n - v.y, n - v.z);
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator*(const vec3<T>& v, const U& n)
+	__duel__ const Vec3<Float> operator-(const Vec3<T>& v, const U& n)
 	{
-		return vec3<Float>(v.x * n, v.y * n, v.z * n);
+		return Vec3<Float>(v.x - n, v.y - n, v.z - n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator*(const vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<Float> operator-(const Vec3<T>& v0, const Vec3<U>& v1)
 	{
-		return vec3<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
+		return Vec3<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
 	}
 
 #pragma endregion
 
-#pragma region vec3 different type operation /
+#pragma region Vec3 different type operation *
 
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator/(const T& n, const vec3<U>& v)
+	__duel__ const Vec3<Float> operator*(const T& n, const Vec3<U>& v)
 	{
-		CHECK(v.x != 0, "vec3<Float> operation /(n, vec3 v1): v1.x can not be zero.");
-		CHECK(v.y != 0, "vec3<Float> operation /(n, vec3 v1): v1.y can not be zero.");
-		CHECK(v.z != 0, "vec3<Float> operation /(n, vec3 v1): v1.z can not be zero.");
-		return vec3<Float>(n / v.x, n / v.y, n / v.z);
+		return Vec3<Float>(n * v.x, n * v.y, n * v.z);
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator/(const vec3<T>& v, const U& n)
+	__duel__ const Vec3<Float> operator*(const Vec3<T>& v, const U& n)
 	{
-		CHECK(n != 0, "vec3<Float> operation /(vec3 v, n): n can not be zero.");
-		return vec3<Float>(v.x / n, v.y / n, v.z / n);
+		return Vec3<Float>(v.x * n, v.y * n, v.z * n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec3<Float> operator/(const vec3<T>& v0, const vec3<U>& v1)
+	__duel__ const Vec3<Float> operator*(const Vec3<T>& v0, const Vec3<U>& v1)
 	{
-		CHECK(v1.x != 0, "vec3<Float> operation /(vec3 v0, vec3 v1): v1.x can not be zero.");
-		CHECK(v1.y != 0, "vec3<Float> operation /(vec3 v0, vec3 v1): v1.y can not be zero.");
-		CHECK(v1.z != 0, "vec3<Float> operation /(vec3 v0, vec3 v1): v1.z can not be zero.");
-		return vec3<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
+		return Vec3<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
+	}
+
+#pragma endregion
+
+#pragma region Vec3 different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Vec3<Float> operator/(const T& n, const Vec3<U>& v)
+	{
+		CHECK(v.x != 0, "Vec3<Float> operation /(n, Vec3 v1): v1.x can not be zero.");
+		CHECK(v.y != 0, "Vec3<Float> operation /(n, Vec3 v1): v1.y can not be zero.");
+		CHECK(v.z != 0, "Vec3<Float> operation /(n, Vec3 v1): v1.z can not be zero.");
+		return Vec3<Float>(n / v.x, n / v.y, n / v.z);
+	}
+	template<typename T, typename U>
+	__duel__ const Vec3<Float> operator/(const Vec3<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Vec3<Float> operation /(Vec3 v, n): n can not be zero.");
+		return Vec3<Float>(v.x / n, v.y / n, v.z / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Vec3<Float> operator/(const Vec3<T>& v0, const Vec3<U>& v1)
+	{
+		CHECK(v1.x != 0, "Vec3<Float> operation /(Vec3 v0, Vec3 v1): v1.x can not be zero.");
+		CHECK(v1.y != 0, "Vec3<Float> operation /(Vec3 v0, Vec3 v1): v1.y can not be zero.");
+		CHECK(v1.z != 0, "Vec3<Float> operation /(Vec3 v0, Vec3 v1): v1.z can not be zero.");
+		return Vec3<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
 	}
 
 #pragma endregion
@@ -700,7 +700,7 @@ namespace CUM
 #pragma endregion
 
 	template<typename T>
-	__duel__ void logData(const vec3<T>& v)
+	__duel__ void logData(const Vec3<T>& v)
 	{
 		const custd::OStream os;
 		os << v.x << "\t" << v.y << "\t" << v.z << custd::endl;
@@ -708,22 +708,22 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region point2
+#pragma region Point2
 	template<typename T>
-	class point2
+	class Point2
 	{
 	public:
 		T x, y;
 	public:
-		__duel__ point2() :x(0), y(0) {}
-		__duel__ point2(const T& n) : x(n), y(n) {}
-		__duel__ point2(const T& _x, const T& _y) : x(_x), y(_y) {}
-		__duel__ point2(const point2<T>& v) : x(v.x), y(v.y) {}
+		__duel__ Point2() :x(0), y(0) {}
+		__duel__ Point2(const T& n) : x(n), y(n) {}
+		__duel__ Point2(const T& _x, const T& _y) : x(_x), y(_y) {}
+		__duel__ Point2(const Point2<T>& v) : x(v.x), y(v.y) {}
 		template<typename U>
-		__duel__ explicit point2(const point2<U>& v) : x(v.x), y(v.y) {}
-		__duel__ ~point2() {}
+		__duel__ explicit Point2(const Point2<U>& v) : x(v.x), y(v.y) {}
+		__duel__ ~Point2() {}
 	public:
-		__duel__ const point2& operator=(const point2<int>& v)
+		__duel__ const Point2& operator=(const Point2<int>& v)
 		{
 			x = v.x;
 			y = v.y;
@@ -733,262 +733,262 @@ namespace CUM
 	public:
 		__duel__ T& operator[](const Int& idx)
 		{
-			CHECK(idx >= 0 && idx <= 1, "The <idx> in point2<T>::operator[idx] is illegal!");
+			CHECK(idx >= 0 && idx <= 1, "The <idx> in Point2<T>::operator[idx] is illegal!");
 			return idx == 0 ? x : y;
 		}
 	};
 
-	typedef point2<Int> point2i;
-	typedef point2<Float> point2f;
+	typedef Point2<Int> Point2i;
+	typedef Point2<Float> Point2f;
 
-#pragma region point2 same type operation
+#pragma region Point2 same type operation
 
-#pragma region point2 same type operation +
+#pragma region Point2 same type operation +
 
 	template<typename T>
-	__duel__ const point2<T> operator+(const T& n, const point2<T>& v)
+	__duel__ const Point2<T> operator+(const T& n, const Point2<T>& v)
 	{
-		return point2<T>(n + v.x, n + v.y);
+		return Point2<T>(n + v.x, n + v.y);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator+(const point2<T>& v, const T& n)
+	__duel__ const Point2<T> operator+(const Point2<T>& v, const T& n)
 	{
-		return point2<T>(v.x + n, v.y + n);
+		return Point2<T>(v.x + n, v.y + n);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator+(const point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T> operator+(const Point2<T>& v0, const Point2<T>& v1)
 	{
-		return point2<T>(v0.x + v1.x, v0.y + v1.y);
+		return Point2<T>(v0.x + v1.x, v0.y + v1.y);
 	}
 
 	template<typename T, typename U>
-	__duel__ const point2<T>& operator+=(point2<T>& v, const U& n)
+	__duel__ const Point2<T>& operator+=(Point2<T>& v, const U& n)
 	{
 		v.x += n;
 		v.y += n;
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const point2<T>& operator+=(point2<T>& v0, const point2<U>& v1)
+	__duel__ const Point2<T>& operator+=(Point2<T>& v0, const Point2<U>& v1)
 	{
 		v0.x += v1.x;
 		v0.y += v1.y;
 		return v0;
 	}
 
-	__duel__ const point2<Int>& operator+=(point2<Int>& v, const Float& n) = delete;
-	__duel__ const point2<Int>& operator+=(point2<Int>& v0, const point2<Float>& v1) = delete;
+	__duel__ const Point2<Int>& operator+=(Point2<Int>& v, const Float& n) = delete;
+	__duel__ const Point2<Int>& operator+=(Point2<Int>& v0, const Point2<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region point2 same type operation -
+#pragma region Point2 same type operation -
 
 	template<typename T>
-	__duel__ const point2<T> operator-(const T& n, const point2<T>& v)
+	__duel__ const Point2<T> operator-(const T& n, const Point2<T>& v)
 	{
-		return point2<T>(n - v.x, n - v.y);
+		return Point2<T>(n - v.x, n - v.y);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator-(const point2<T>& v, const T& n)
+	__duel__ const Point2<T> operator-(const Point2<T>& v, const T& n)
 	{
-		return point2<T>(v.x - n, v.y - n);
+		return Point2<T>(v.x - n, v.y - n);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator-(const point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T> operator-(const Point2<T>& v0, const Point2<T>& v1)
 	{
-		return point2<T>(v0.x - v1.x, v0.y - v1.y);
+		return Point2<T>(v0.x - v1.x, v0.y - v1.y);
 	}
 
 	template<typename T>
-	__duel__ const point2<T>& operator-=(point2<T>& v, const T& n)
+	__duel__ const Point2<T>& operator-=(Point2<T>& v, const T& n)
 	{
 		v.x -= n;
 		v.y -= n;
 		return v;
 	}
 	template<typename T>
-	__duel__ const point2<T>& operator-=(point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T>& operator-=(Point2<T>& v0, const Point2<T>& v1)
 	{
 		v0.x -= v1.x;
 		v0.y -= v1.y;
 		return v0;
 	}
 
-	__duel__ const point2<Int>& operator-=(point2<Int>& v, const Float& n) = delete;
-	__duel__ const point2<Int>& operator-=(point2<Int>& v0, const point2<Float>& v1) = delete;
+	__duel__ const Point2<Int>& operator-=(Point2<Int>& v, const Float& n) = delete;
+	__duel__ const Point2<Int>& operator-=(Point2<Int>& v0, const Point2<Float>& v1) = delete;
 
 #pragma endregion
 
-#pragma region point2 same type operation *
+#pragma region Point2 same type operation *
 
 	template<typename T>
-	__duel__ const point2<T> operator*(const T& n, const point2<T>& v)
+	__duel__ const Point2<T> operator*(const T& n, const Point2<T>& v)
 	{
-		return point2<T>(n * v.x, n * v.y);
+		return Point2<T>(n * v.x, n * v.y);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator*(const point2<T>& v, const T& n)
+	__duel__ const Point2<T> operator*(const Point2<T>& v, const T& n)
 	{
-		return point2<T>(v.x * n, v.y * n);
+		return Point2<T>(v.x * n, v.y * n);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator*(const point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T> operator*(const Point2<T>& v0, const Point2<T>& v1)
 	{
-		return point2<T>(v0.x * v1.x, v0.y * v1.y);
+		return Point2<T>(v0.x * v1.x, v0.y * v1.y);
 	}
 
 	template<typename T>
-	__duel__ const point2<T>& operator*=(point2<T>& v, const T& n)
+	__duel__ const Point2<T>& operator*=(Point2<T>& v, const T& n)
 	{
 		v.x *= n;
 		v.y *= n;
 		return v;
 	}
 	template<typename T>
-	__duel__ const point2<T>& operator*=(point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T>& operator*=(Point2<T>& v0, const Point2<T>& v1)
 	{
 		v0.x *= v1.x;
 		v0.y *= v1.y;
 		return v0;
 	}
 
-	__duel__ const point2<Int>& operator*=(point2<Int>& v, const Float& n) = delete;
-	__duel__ const point2<Int>& operator*=(point2<Int>& v0, const point2<Float>& v1) = delete;
+	__duel__ const Point2<Int>& operator*=(Point2<Int>& v, const Float& n) = delete;
+	__duel__ const Point2<Int>& operator*=(Point2<Int>& v0, const Point2<Float>& v1) = delete;
 
 #pragma endregion
 
-#pragma region point2 same type operation /
+#pragma region Point2 same type operation /
 
 	template<typename T>
-	__duel__ const point2<T> operator/(const T& n, const point2<T>& v)
+	__duel__ const Point2<T> operator/(const T& n, const Point2<T>& v)
 	{
-		CHECK(v.x != 0, "Same type point2 operator/ error: v.x can not be 0!");
-		CHECK(v.y != 0, "Same type point2 operator/ error: v.y can not be 0!");
-		return point2<T>(n / v.x, n / v.y);
+		CHECK(v.x != 0, "Same type Point2 operator/ error: v.x can not be 0!");
+		CHECK(v.y != 0, "Same type Point2 operator/ error: v.y can not be 0!");
+		return Point2<T>(n / v.x, n / v.y);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator/(const point2<T>& v, const T& n)
+	__duel__ const Point2<T> operator/(const Point2<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type point2 operator/ error: n can not be 0!");
-		return point2<T>(v.x / n, v.y / n);
+		CHECK(n != 0, "Same type Point2 operator/ error: n can not be 0!");
+		return Point2<T>(v.x / n, v.y / n);
 	}
 	template<typename T>
-	__duel__ const point2<T> operator/(const point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T> operator/(const Point2<T>& v0, const Point2<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type point2 operator/ error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type point2 operator/ error: v1.y can not be 0!");
-		return point2<T>(v0.x / v1.x, v0.y / v1.y);
+		CHECK(v1.x != 0, "Same type Point2 operator/ error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Point2 operator/ error: v1.y can not be 0!");
+		return Point2<T>(v0.x / v1.x, v0.y / v1.y);
 	}
 
 	template<typename T>
-	__duel__ const point2<T>& operator/=(point2<T>& v, const T& n)
+	__duel__ const Point2<T>& operator/=(Point2<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type point2 operator/= error: n can not be 0!");
+		CHECK(n != 0, "Same type Point2 operator/= error: n can not be 0!");
 		v.x /= n;
 		v.y /= n;
 		return v;
 	}
 	template<typename T>
-	__duel__ const point2<T>& operator/=(point2<T>& v0, const point2<T>& v1)
+	__duel__ const Point2<T>& operator/=(Point2<T>& v0, const Point2<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type point2 operator/= error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type point2 operator/= error: v1.y can not be 0!");
+		CHECK(v1.x != 0, "Same type Point2 operator/= error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Point2 operator/= error: v1.y can not be 0!");
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		return v0;
 	}
 
-	__duel__ const point2<Int>& operator/=(point2<Int>& v, const Float& n) = delete;
-	__duel__ const point2<Int>& operator/=(point2<Int>& v0, const point2<Float>& v1) = delete;
+	__duel__ const Point2<Int>& operator/=(Point2<Int>& v, const Float& n) = delete;
+	__duel__ const Point2<Int>& operator/=(Point2<Int>& v0, const Point2<Float>& v1) = delete;
 
 #pragma endregion
 
 #pragma endregion
 
-#pragma region point2 different type operation
+#pragma region Point2 different type operation
 
-#pragma region point2 different type operation +
-
-	template<typename T, typename U>
-	__duel__ const point2<Float> operator+(const T& n, const point2<U>& v)
-	{
-		return point2<Float>(n + v.x, n + v.y);
-	}
-	template<typename T, typename U>
-	__duel__ const point2<Float> operator+(const point2<T>& v, const U& n)
-	{
-		return point2<Float>(v.x + n, v.y + n);
-	}
-	template<typename T, typename U>
-	__duel__ const point2<Float> operator+(const point2<T>& v0, const point2<U>& v1)
-	{
-		return point2<Float>(v0.x + v1.x, v0.y + v1.y);
-	}
-
-#pragma endregion
-
-#pragma region point2 different type operation -
+#pragma region Point2 different type operation +
 
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator-(const T& n, const point2<U>& v)
+	__duel__ const Point2<Float> operator+(const T& n, const Point2<U>& v)
 	{
-		return point2<Float>(n - v.x, n - v.y);
+		return Point2<Float>(n + v.x, n + v.y);
 	}
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator-(const point2<T>& v, const U& n)
+	__duel__ const Point2<Float> operator+(const Point2<T>& v, const U& n)
 	{
-		return point2<Float>(v.x - n, v.y - n);
+		return Point2<Float>(v.x + n, v.y + n);
 	}
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator-(const point2<T>& v0, const point2<U>& v1)
+	__duel__ const Point2<Float> operator+(const Point2<T>& v0, const Point2<U>& v1)
 	{
-		return point2<Float>(v0.x - v1.x, v0.y - v1.y);
+		return Point2<Float>(v0.x + v1.x, v0.y + v1.y);
 	}
 
 #pragma endregion
 
-#pragma region point2 different type operation *
+#pragma region Point2 different type operation -
 
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator*(const T& n, const point2<U>& v)
+	__duel__ const Point2<Float> operator-(const T& n, const Point2<U>& v)
 	{
-		return point2<Float>(n * v.x, n * v.y);
+		return Point2<Float>(n - v.x, n - v.y);
 	}
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator*(const point2<T>& v, const U& n)
+	__duel__ const Point2<Float> operator-(const Point2<T>& v, const U& n)
 	{
-		return point2<Float>(v.x * n, v.y * n);
+		return Point2<Float>(v.x - n, v.y - n);
 	}
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator*(const point2<T>& v0, const point2<U>& v1)
+	__duel__ const Point2<Float> operator-(const Point2<T>& v0, const Point2<U>& v1)
 	{
-		return point2<Float>(v0.x * v1.x, v0.y * v1.y);
+		return Point2<Float>(v0.x - v1.x, v0.y - v1.y);
 	}
 
 #pragma endregion
 
-#pragma region point2 different type operation /
+#pragma region Point2 different type operation *
 
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator/(const T& n, const point2<U>& v)
+	__duel__ const Point2<Float> operator*(const T& n, const Point2<U>& v)
 	{
-		CHECK(v.x != 0, "point2<Float> operation /(n,point2 v): v.x can not be zero.");
-		CHECK(v.y != 0, "point2<Float> operation /(n,point2 v): v.y can not be zero.");
-		return point2<Float>(n / v.x, n / v.y);
+		return Point2<Float>(n * v.x, n * v.y);
 	}
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator/(const point2<T>& v, const U& n)
+	__duel__ const Point2<Float> operator*(const Point2<T>& v, const U& n)
 	{
-		CHECK(v.y != 0, "point2<Float> operation /(point2 v,n): n can not be zero.");
-		return point2<Float>(v.x / n, v.y / n);
+		return Point2<Float>(v.x * n, v.y * n);
 	}
 	template<typename T, typename U>
-	__duel__ const point2<Float> operator/(const point2<T>& v0, const point2<U>& v1)
+	__duel__ const Point2<Float> operator*(const Point2<T>& v0, const Point2<U>& v1)
 	{
-		CHECK(v1.x != 0, "point2<Float> operation /(point2 v0,point2 v1): v1.x can not be zero.");
-		CHECK(v1.y != 0, "point2<Float> operation /(point2 v0,point2 v1): v1.y can not be zero.");
-		return point2<Float>(v0.x / v1.x, v0.y / v1.y);
+		return Point2<Float>(v0.x * v1.x, v0.y * v1.y);
+	}
+
+#pragma endregion
+
+#pragma region Point2 different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Point2<Float> operator/(const T& n, const Point2<U>& v)
+	{
+		CHECK(v.x != 0, "Point2<Float> operation /(n,Point2 v): v.x can not be zero.");
+		CHECK(v.y != 0, "Point2<Float> operation /(n,Point2 v): v.y can not be zero.");
+		return Point2<Float>(n / v.x, n / v.y);
+	}
+	template<typename T, typename U>
+	__duel__ const Point2<Float> operator/(const Point2<T>& v, const U& n)
+	{
+		CHECK(v.y != 0, "Point2<Float> operation /(Point2 v,n): n can not be zero.");
+		return Point2<Float>(v.x / n, v.y / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Point2<Float> operator/(const Point2<T>& v0, const Point2<U>& v1)
+	{
+		CHECK(v1.x != 0, "Point2<Float> operation /(Point2 v0,Point2 v1): v1.x can not be zero.");
+		CHECK(v1.y != 0, "Point2<Float> operation /(Point2 v0,Point2 v1): v1.y can not be zero.");
+		return Point2<Float>(v0.x / v1.x, v0.y / v1.y);
 	}
 
 #pragma endregion
@@ -997,7 +997,7 @@ namespace CUM
 #pragma endregion
 
 	template<typename T>
-	__duel__ void logData(const point2<T>& v)
+	__duel__ void logData(const Point2<T>& v)
 	{
 		const custd::OStream os;
 		os << v.x << "\t" << v.y << custd::endl;
@@ -1005,22 +1005,22 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region point3
+#pragma region Point3
 	template<typename T>
-	class point3
+	class Point3
 	{
 	public:
 		T x, y, z;
 	public:
-		__duel__ point3() :x(0), y(0), z(0) {}
-		__duel__ point3(const T& _x, const T& _y, const T& _z) : x(_x), y(_y), z(_z) {}
-		__duel__ point3(const T& n) : x(n), y(n), z(n) {}
-		__duel__ point3(const point3<T>& v) : x(v.x), y(v.y), z(v.z) {}
+		__duel__ Point3() :x(0), y(0), z(0) {}
+		__duel__ Point3(const T& _x, const T& _y, const T& _z) : x(_x), y(_y), z(_z) {}
+		__duel__ Point3(const T& n) : x(n), y(n), z(n) {}
+		__duel__ Point3(const Point3<T>& v) : x(v.x), y(v.y), z(v.z) {}
 		template<typename U>
-		__duel__ explicit point3(const point3<U>& v) : x(v.x), y(v.y), z(v.z) {}
-		__duel__ ~point3() {}
+		__duel__ explicit Point3(const Point3<U>& v) : x(v.x), y(v.y), z(v.z) {}
+		__duel__ ~Point3() {}
 	public:
-		__duel__ const point3& operator=(const point3<int>& v)
+		__duel__ const Point3& operator=(const Point3<int>& v)
 		{
 			x = v.x;
 			y = v.y;
@@ -1031,51 +1031,51 @@ namespace CUM
 	public:
 		__duel__ T& operator[](const Int& idx)
 		{
-			CHECK(idx >= 0 && idx <= 2, "The <idx> in point3<T>::operator[idx] is illegal!");
+			CHECK(idx >= 0 && idx <= 2, "The <idx> in Point3<T>::operator[idx] is illegal!");
 			switch (idx)
 			{
 			case 0: return x; break;
 			case 1: return y; break;
 			case 2: return z; break;
-			default: CHECK(false, "Can not run point3::operator[idx]: switch::default."); break;
+			default: CHECK(false, "Can not run Point3::operator[idx]: switch::default."); break;
 			}
 		}
 	};
 
-	typedef point3<Int> point3i;
-	typedef point3<Float> point3f;
+	typedef Point3<Int> Point3i;
+	typedef Point3<Float> Point3f;
 
-#pragma region point3 vector operation
+#pragma region Point3 vector operation
 
 	template<typename T>
-	__duel__ const T dot(const point3<T>& v0, const point3<T>& v1)
+	__duel__ const T dot(const Point3<T>& v0, const Point3<T>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z;
 	}
 
 	template<typename T, typename U>
-	__duel__ Float dot(const point3<T>& v0, const point3<U>& v1)
+	__duel__ Float dot(const Point3<T>& v0, const Point3<U>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z;
 	}
 
 	template<typename T>
-	__duel__ const point3<T> cross(const point3<T>& v0, const point3<T>& v1)
+	__duel__ const Point3<T> cross(const Point3<T>& v0, const Point3<T>& v1)
 	{
-		return point3<T>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
+		return Point3<T>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
 	}
 
 	template<typename T, typename U>
-	__duel__ const point3<Float> cross(const point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<Float> cross(const Point3<T>& v0, const Point3<U>& v1)
 	{
-		return point3<Float>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
+		return Point3<Float>(v0.y*v1.z - v0.z*v1.y, v0.z*v1.x - v0.x*v1.z, v0.x*v1.y - v0.y*v1.x);
 	}
 
 	template<typename T>
-	__duel__ const point3<Float> normalize(const point3<T>& vec)
+	__duel__ const Point3<Float> normalize(const Point3<T>& vec)
 	{
 		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z;
-		CHECK(square > 0.0, "point3 normalize error: square can not less than 0.0!");
+		CHECK(square > 0.0, "Point3 normalize error: square can not less than 0.0!");
 		Float norm = sqrt(square);
 		Float inv = 1.0 / norm;
 		return inv * vec;
@@ -1083,28 +1083,28 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region point3 same type operation
+#pragma region Point3 same type operation
 
-#pragma region point3 same type operation +
+#pragma region Point3 same type operation +
 
 	template<typename T>
-	__duel__ const point3<T> operator+(const T& n, const point3<T>& v)
+	__duel__ const Point3<T> operator+(const T& n, const Point3<T>& v)
 	{
-		return point3<T>(n + v.x, n + v.y, n + v.z);
+		return Point3<T>(n + v.x, n + v.y, n + v.z);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator+(const point3<T>& v, const T& n)
+	__duel__ const Point3<T> operator+(const Point3<T>& v, const T& n)
 	{
-		return point3<T>(v.x + n, v.y + n, v.z + n);
+		return Point3<T>(v.x + n, v.y + n, v.z + n);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator+(const point3<T>& v0, const point3<T>& v1)
+	__duel__ const Point3<T> operator+(const Point3<T>& v0, const Point3<T>& v1)
 	{
-		return point3<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
+		return Point3<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator+=(point3<T>& v, const U& n)
+	__duel__ const Point3<T>& operator+=(Point3<T>& v, const U& n)
 	{
 		v.x += n;
 		v.y += n;
@@ -1112,7 +1112,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator+=(point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<T>& operator+=(Point3<T>& v0, const Point3<U>& v1)
 	{
 		v0.x += v1.x;
 		v0.y += v1.y;
@@ -1120,32 +1120,32 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const point3<Int>& operator+=(point3<Int>& v, const Float& n) = delete;
-	__duel__ const point3<Int>& operator+=(point3<Int>& v0, const point3<Float>& v1) = delete;
+	__duel__ const Point3<Int>& operator+=(Point3<Int>& v, const Float& n) = delete;
+	__duel__ const Point3<Int>& operator+=(Point3<Int>& v0, const Point3<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region point3 same type operation -
+#pragma region Point3 same type operation -
 
 	template<typename T>
-	__duel__ const point3<T> operator-(const T& n, const point3<T>& v)
+	__duel__ const Point3<T> operator-(const T& n, const Point3<T>& v)
 	{
-		return point3<T>(n - v.x, n - v.y, n - v.z);
+		return Point3<T>(n - v.x, n - v.y, n - v.z);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator-(const point3<T>& v, const T& n)
+	__duel__ const Point3<T> operator-(const Point3<T>& v, const T& n)
 	{
-		return point3<T>(v.x - n, v.y - n, v.z - n);
+		return Point3<T>(v.x - n, v.y - n, v.z - n);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator-(const point3<T>& v0, const point3<T>& v1)
+	__duel__ const Point3<T> operator-(const Point3<T>& v0, const Point3<T>& v1)
 	{
-		return point3<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
+		return Point3<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator-=(point3<T>& v, const U& n)
+	__duel__ const Point3<T>& operator-=(Point3<T>& v, const U& n)
 	{
 		v.x -= n;
 		v.y -= n;
@@ -1153,7 +1153,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator-=(point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<T>& operator-=(Point3<T>& v0, const Point3<U>& v1)
 	{
 		v0.x -= v1.x;
 		v0.y -= v1.y;
@@ -1161,32 +1161,32 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const point3<Int>& operator-=(point3<Int>& v, const Float& n) = delete;
-	__duel__ const point3<Int>& operator-=(point3<Int>& v0, const point3<Float>& v1) = delete;
+	__duel__ const Point3<Int>& operator-=(Point3<Int>& v, const Float& n) = delete;
+	__duel__ const Point3<Int>& operator-=(Point3<Int>& v0, const Point3<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region point3 same type operation *
+#pragma region Point3 same type operation *
 
 	template<typename T>
-	__duel__ const point3<T> operator*(const T& n, const point3<T>& v)
+	__duel__ const Point3<T> operator*(const T& n, const Point3<T>& v)
 	{
-		return point3<T>(n * v.x, n * v.y, n * v.z);
+		return Point3<T>(n * v.x, n * v.y, n * v.z);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator*(const point3<T>& v, const T& n)
+	__duel__ const Point3<T> operator*(const Point3<T>& v, const T& n)
 	{
-		return point3<T>(v.x * n, v.y * n, v.z * n);
+		return Point3<T>(v.x * n, v.y * n, v.z * n);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator*(const point3<T>& v0, const point3<T>& v1)
+	__duel__ const Point3<T> operator*(const Point3<T>& v0, const Point3<T>& v1)
 	{
-		return point3<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
+		return Point3<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator*=(point3<T>& v, const U& n)
+	__duel__ const Point3<T>& operator*=(Point3<T>& v, const U& n)
 	{
 		v.x *= n;
 		v.y *= n;
@@ -1194,7 +1194,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator*=(point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<T>& operator*=(Point3<T>& v0, const Point3<U>& v1)
 	{
 		v0.x *= v1.x;
 		v0.y *= v1.y;
@@ -1202,60 +1202,60 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const point3<Int>& operator*=(point3<Int>& v, const Float& n) = delete;
-	__duel__ const point3<Int>& operator*=(point3<Int>& v0, const point3<Float>& v1) = delete;
+	__duel__ const Point3<Int>& operator*=(Point3<Int>& v, const Float& n) = delete;
+	__duel__ const Point3<Int>& operator*=(Point3<Int>& v0, const Point3<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region point3 same type operation /
+#pragma region Point3 same type operation /
 
 	template<typename T>
-	__duel__ const point3<T> operator/(const T& n, const point3<T>& v)
+	__duel__ const Point3<T> operator/(const T& n, const Point3<T>& v)
 	{
-		CHECK(v.x != 0, "Same type point3 operator/(n,point3 v) error: v.x can not be 0!");
-		CHECK(v.y != 0, "Same type point3 operator/(n,point3 v) error: v.y can not be 0!");
-		CHECK(v.z != 0, "Same type point3 operator/(n,point3 v) error: v.z can not be 0!");
-		return point3<T>(n / v.x, n / v.y, n / v.z);
+		CHECK(v.x != 0, "Same type Point3 operator/(n,Point3 v) error: v.x can not be 0!");
+		CHECK(v.y != 0, "Same type Point3 operator/(n,Point3 v) error: v.y can not be 0!");
+		CHECK(v.z != 0, "Same type Point3 operator/(n,Point3 v) error: v.z can not be 0!");
+		return Point3<T>(n / v.x, n / v.y, n / v.z);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator/(const point3<T>& v, const T& n)
+	__duel__ const Point3<T> operator/(const Point3<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type point3 operator/(point3 v, n) error: n can not be 0!");
-		return point3<T>(v.x / n, v.y / n, v.z / n);
+		CHECK(n != 0, "Same type Point3 operator/(Point3 v, n) error: n can not be 0!");
+		return Point3<T>(v.x / n, v.y / n, v.z / n);
 	}
 	template<typename T>
-	__duel__ const point3<T> operator/(const point3<T>& v0, const point3<T>& v1)
+	__duel__ const Point3<T> operator/(const Point3<T>& v0, const Point3<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type point3 operator/(n,point3 v) error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type point3 operator/(n,point3 v) error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type point3 operator/(n,point3 v) error: v1.z can not be 0!");
-		return point3<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
+		CHECK(v1.x != 0, "Same type Point3 operator/(n,Point3 v) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Point3 operator/(n,Point3 v) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Point3 operator/(n,Point3 v) error: v1.z can not be 0!");
+		return Point3<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator/=(point3<T>& v, const U& n)
+	__duel__ const Point3<T>& operator/=(Point3<T>& v, const U& n)
 	{
-		CHECK(n != 0, "Same type point3 operator/=(point3 v, n) error: n can not be 0!");
+		CHECK(n != 0, "Same type Point3 operator/=(Point3 v, n) error: n can not be 0!");
 		v.x /= n;
 		v.y /= n;
 		v.z /= n;
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const point3<T>& operator/=(point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<T>& operator/=(Point3<T>& v0, const Point3<U>& v1)
 	{
-		CHECK(v1.x != 0, "Same type point3 operator/=(point3 v0,point3 v1) error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type point3 operator/=(point3 v0,point3 v1) error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type point3 operator/=(point3 v0,point3 v1) error: v1.z can not be 0!");
+		CHECK(v1.x != 0, "Same type Point3 operator/=(Point3 v0,Point3 v1) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Point3 operator/=(Point3 v0,Point3 v1) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Point3 operator/=(Point3 v0,Point3 v1) error: v1.z can not be 0!");
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		v0.z /= v1.z;
 		return v0;
 	}
 
-	__duel__ const point3<Int>& operator/=(point3<Int>& v, const Float& n) = delete;
-	__duel__ const point3<Int>& operator/=(point3<Int>& v0, const point3<Float>& v1) = delete;
+	__duel__ const Point3<Int>& operator/=(Point3<Int>& v, const Float& n) = delete;
+	__duel__ const Point3<Int>& operator/=(Point3<Int>& v0, const Point3<Float>& v1) = delete;
 
 
 #pragma endregion
@@ -1263,91 +1263,91 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region point3 different type operation
+#pragma region Point3 different type operation
 
-#pragma region point3 different type operation +
-
-	template<typename T, typename U>
-	__duel__ const point3<Float> operator+(const T& n, const point3<U>& v)
-	{
-		return point3<Float>(n + v.x, n + v.y, n + v.z);
-	}
-	template<typename T, typename U>
-	__duel__ const point3<Float> operator+(const point3<T>& v, const U& n)
-	{
-		return point3<Float>(v.x + n, v.y + n, v.z + n);
-	}
-	template<typename T, typename U>
-	__duel__ const point3<Float> operator+(const point3<T>& v0, const point3<U>& v1)
-	{
-		return point3<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
-	}
-
-#pragma endregion
-
-#pragma region point3 different type operation -
+#pragma region Point3 different type operation +
 
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator-(const T& n, const point3<U>& v)
+	__duel__ const Point3<Float> operator+(const T& n, const Point3<U>& v)
 	{
-		return point3<Float>(n - v.x, n - v.y, n - v.z);
+		return Point3<Float>(n + v.x, n + v.y, n + v.z);
 	}
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator-(const point3<T>& v, const U& n)
+	__duel__ const Point3<Float> operator+(const Point3<T>& v, const U& n)
 	{
-		return point3<Float>(v.x - n, v.y - n, v.z - n);
+		return Point3<Float>(v.x + n, v.y + n, v.z + n);
 	}
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator-(const point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<Float> operator+(const Point3<T>& v0, const Point3<U>& v1)
 	{
-		return point3<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
+		return Point3<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z);
 	}
 
 #pragma endregion
 
-#pragma region point3 different type operation *
+#pragma region Point3 different type operation -
 
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator*(const T& n, const point3<U>& v)
+	__duel__ const Point3<Float> operator-(const T& n, const Point3<U>& v)
 	{
-		return point3<Float>(n * v.x, n * v.y, n * v.z);
+		return Point3<Float>(n - v.x, n - v.y, n - v.z);
 	}
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator*(const point3<T>& v, const U& n)
+	__duel__ const Point3<Float> operator-(const Point3<T>& v, const U& n)
 	{
-		return point3<Float>(v.x * n, v.y * n, v.z * n);
+		return Point3<Float>(v.x - n, v.y - n, v.z - n);
 	}
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator*(const point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<Float> operator-(const Point3<T>& v0, const Point3<U>& v1)
 	{
-		return point3<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
+		return Point3<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z);
 	}
 
 #pragma endregion
 
-#pragma region point3 different type operation /
+#pragma region Point3 different type operation *
 
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator/(const T& n, const point3<U>& v)
+	__duel__ const Point3<Float> operator*(const T& n, const Point3<U>& v)
 	{
-		CHECK(v.x != 0, "point3<Float> operation /(n, point3 v1): v1.x can not be zero.");
-		CHECK(v.y != 0, "point3<Float> operation /(n, point3 v1): v1.y can not be zero.");
-		CHECK(v.z != 0, "point3<Float> operation /(n, point3 v1): v1.z can not be zero.");
-		return point3<Float>(n / v.x, n / v.y, n / v.z);
+		return Point3<Float>(n * v.x, n * v.y, n * v.z);
 	}
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator/(const point3<T>& v, const U& n)
+	__duel__ const Point3<Float> operator*(const Point3<T>& v, const U& n)
 	{
-		CHECK(n != 0, "point3<Float> operation /(point3 v, n): n can not be zero.");
-		return point3<Float>(v.x / n, v.y / n, v.z / n);
+		return Point3<Float>(v.x * n, v.y * n, v.z * n);
 	}
 	template<typename T, typename U>
-	__duel__ const point3<Float> operator/(const point3<T>& v0, const point3<U>& v1)
+	__duel__ const Point3<Float> operator*(const Point3<T>& v0, const Point3<U>& v1)
 	{
-		CHECK(v1.x != 0, "point3<Float> operation /(point3 v0, point3 v1): v1.x can not be zero.");
-		CHECK(v1.y != 0, "point3<Float> operation /(point3 v0, point3 v1): v1.y can not be zero.");
-		CHECK(v1.z != 0, "point3<Float> operation /(point3 v0, point3 v1): v1.z can not be zero.");
-		return point3<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
+		return Point3<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z);
+	}
+
+#pragma endregion
+
+#pragma region Point3 different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Point3<Float> operator/(const T& n, const Point3<U>& v)
+	{
+		CHECK(v.x != 0, "Point3<Float> operation /(n, Point3 v1): v1.x can not be zero.");
+		CHECK(v.y != 0, "Point3<Float> operation /(n, Point3 v1): v1.y can not be zero.");
+		CHECK(v.z != 0, "Point3<Float> operation /(n, Point3 v1): v1.z can not be zero.");
+		return Point3<Float>(n / v.x, n / v.y, n / v.z);
+	}
+	template<typename T, typename U>
+	__duel__ const Point3<Float> operator/(const Point3<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Point3<Float> operation /(Point3 v, n): n can not be zero.");
+		return Point3<Float>(v.x / n, v.y / n, v.z / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Point3<Float> operator/(const Point3<T>& v0, const Point3<U>& v1)
+	{
+		CHECK(v1.x != 0, "Point3<Float> operation /(Point3 v0, Point3 v1): v1.x can not be zero.");
+		CHECK(v1.y != 0, "Point3<Float> operation /(Point3 v0, Point3 v1): v1.y can not be zero.");
+		CHECK(v1.z != 0, "Point3<Float> operation /(Point3 v0, Point3 v1): v1.z can not be zero.");
+		return Point3<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
 	}
 
 #pragma endregion
@@ -1356,7 +1356,7 @@ namespace CUM
 #pragma endregion
 
 	template<typename T>
-	__duel__ void logData(const point3<T>& v)
+	__duel__ void logData(const Point3<T>& v)
 	{
 		const custd::OStream os;
 		os << v.x << "\t" << v.y << "\t" << v.z << custd::endl;
@@ -1364,22 +1364,22 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region vec4
+#pragma region Vec4
 	template<typename T>
-	class vec4
+	class Vec4
 	{
 	public:
 		T x, y, z, w;
 	public:
-		__duel__ vec4() :x(0), y(0), z(0), w(0) {}
-		__duel__ vec4(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
-		__duel__ vec4(const T& n) : x(n), y(n), z(n), w(n) {}
-		__duel__ vec4(const vec4<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+		__duel__ Vec4() :x(0), y(0), z(0), w(0) {}
+		__duel__ Vec4(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
+		__duel__ Vec4(const T& n) : x(n), y(n), z(n), w(n) {}
+		__duel__ Vec4(const Vec4<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 		template<typename U>
-		__duel__ explicit vec4(const vec4<U>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
-		__duel__ ~vec4() {}
+		__duel__ explicit Vec4(const Vec4<U>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
+		__duel__ ~Vec4() {}
 	public:
-		__duel__ const vec4& operator=(const vec4<int>& v)
+		__duel__ const Vec4& operator=(const Vec4<int>& v)
 		{
 			x = v.x;
 			y = v.y;
@@ -1391,37 +1391,37 @@ namespace CUM
 	public:
 		__duel__ T& operator[](const Int& idx)
 		{
-			CHECK(idx >= 0 && idx <= 3, "The <idx> in vec4<T>::operator[idx] is illegal!");
+			CHECK(idx >= 0 && idx <= 3, "The <idx> in Vec4<T>::operator[idx] is illegal!");
 			switch (idx)
 			{
 			case 0: return x; break;
 			case 1: return y; break;
 			case 2: return z; break;
 			case 3: return w; break;
-			default: CHECK(false, "Can not run vec4::operator[idx]: switch::default."); break;
+			default: CHECK(false, "Can not run Vec4::operator[idx]: switch::default."); break;
 			}
 		}
 	};
 
-	typedef vec4<Int> vec4i;
-	typedef vec4<Float> vec4f;
+	typedef Vec4<Int> Vec4i;
+	typedef Vec4<Float> Vec4f;
 
-#pragma region vec4 vector operation
+#pragma region Vec4 vector operation
 
 	template<typename T>
-	__duel__ const T dot(const vec4<T>& v0, const vec4<T>& v1)
+	__duel__ const T dot(const Vec4<T>& v0, const Vec4<T>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w * v1.w;
 	}
 
 	template<typename T, typename U>
-	__duel__ Float dot(const vec4<T>& v0, const vec4<U>& v1)
+	__duel__ Float dot(const Vec4<T>& v0, const Vec4<U>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y + v0.z*v1.z + v0.w*v1.w;
 	}
 
 	template<typename T>
-	const Float norm(const vec4<T>& v)
+	const Float norm(const Vec4<T>& v)
 	{
 		Float square = 0.0;
 		for (Int i = 0; i < 4; i++)
@@ -1432,10 +1432,10 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const vec4<Float> normalize(const vec4<T>& vec)
+	__duel__ const Vec4<Float> normalize(const Vec4<T>& vec)
 	{
 		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z + vec.w*vec.w;
-		CHECK(square > 0.0, "vec4 normalize error: square can not less than 0.0!");
+		CHECK(square > 0.0, "Vec4 normalize error: square can not less than 0.0!");
 		Float norm = sqrt(square);
 		Float inv = 1.0 / norm;
 		return inv * vec;
@@ -1443,28 +1443,28 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region vec4 same type operation
+#pragma region Vec4 same type operation
 
-#pragma region vec4 same type operation +
+#pragma region Vec4 same type operation +
 
 	template<typename T>
-	__duel__ const vec4<T> operator+(const T& n, const vec4<T>& v)
+	__duel__ const Vec4<T> operator+(const T& n, const Vec4<T>& v)
 	{
-		return vec4<T>(n + v.x, n + v.y, n + v.z, n + v.w);
+		return Vec4<T>(n + v.x, n + v.y, n + v.z, n + v.w);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator+(const vec4<T>& v, const T& n)
+	__duel__ const Vec4<T> operator+(const Vec4<T>& v, const T& n)
 	{
-		return vec4<T>(v.x + n, v.y + n, v.z + n, v.w + n);
+		return Vec4<T>(v.x + n, v.y + n, v.z + n, v.w + n);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator+(const vec4<T>& v0, const vec4<T>& v1)
+	__duel__ const Vec4<T> operator+(const Vec4<T>& v0, const Vec4<T>& v1)
 	{
-		return vec4<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
+		return Vec4<T>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator+=(vec4<T>& v, const U& n)
+	__duel__ const Vec4<T>& operator+=(Vec4<T>& v, const U& n)
 	{
 		v.x += n;
 		v.y += n;
@@ -1473,7 +1473,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator+=(vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<T>& operator+=(Vec4<T>& v0, const Vec4<U>& v1)
 	{
 		v0.x += v1.x;
 		v0.y += v1.y;
@@ -1482,32 +1482,32 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec4<Int>& operator+=(vec4<Int>& v, const Float& n) = delete;
-	__duel__ const vec4<Int>& operator+=(vec4<Int>& v0, const vec4<Float>& v1) = delete;
+	__duel__ const Vec4<Int>& operator+=(Vec4<Int>& v, const Float& n) = delete;
+	__duel__ const Vec4<Int>& operator+=(Vec4<Int>& v0, const Vec4<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec4 same type operation -
+#pragma region Vec4 same type operation -
 
 	template<typename T>
-	__duel__ const vec4<T> operator-(const T& n, const vec4<T>& v)
+	__duel__ const Vec4<T> operator-(const T& n, const Vec4<T>& v)
 	{
-		return vec4<T>(n - v.x, n - v.y, n - v.z, n - v.w);
+		return Vec4<T>(n - v.x, n - v.y, n - v.z, n - v.w);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator-(const vec4<T>& v, const T& n)
+	__duel__ const Vec4<T> operator-(const Vec4<T>& v, const T& n)
 	{
-		return vec4<T>(v.x - n, v.y - n, v.z - n, v.w - n);
+		return Vec4<T>(v.x - n, v.y - n, v.z - n, v.w - n);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator-(const vec4<T>& v0, const vec4<T>& v1)
+	__duel__ const Vec4<T> operator-(const Vec4<T>& v0, const Vec4<T>& v1)
 	{
-		return vec4<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
+		return Vec4<T>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator-=(vec4<T>& v, const U& n)
+	__duel__ const Vec4<T>& operator-=(Vec4<T>& v, const U& n)
 	{
 		v.x -= n;
 		v.y -= n;
@@ -1516,7 +1516,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator-=(vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<T>& operator-=(Vec4<T>& v0, const Vec4<U>& v1)
 	{
 		v0.x -= v1.x;
 		v0.y -= v1.y;
@@ -1525,32 +1525,32 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec4<Int>& operator-=(vec4<Int>& v, const Float& n) = delete;
-	__duel__ const vec4<Int>& operator-=(vec4<Int>& v0, const vec4<Float>& v1) = delete;
+	__duel__ const Vec4<Int>& operator-=(Vec4<Int>& v, const Float& n) = delete;
+	__duel__ const Vec4<Int>& operator-=(Vec4<Int>& v0, const Vec4<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec4 same type operation *
+#pragma region Vec4 same type operation *
 
 	template<typename T>
-	__duel__ const vec4<T> operator*(const T& n, const vec4<T>& v)
+	__duel__ const Vec4<T> operator*(const T& n, const Vec4<T>& v)
 	{
-		return vec4<T>(n * v.x, n * v.y, n * v.z, n * v.w);
+		return Vec4<T>(n * v.x, n * v.y, n * v.z, n * v.w);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator*(const vec4<T>& v, const T& n)
+	__duel__ const Vec4<T> operator*(const Vec4<T>& v, const T& n)
 	{
-		return vec4<T>(v.x * n, v.y * n, v.z * n,v.w * n);
+		return Vec4<T>(v.x * n, v.y * n, v.z * n,v.w * n);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator*(const vec4<T>& v0, const vec4<T>& v1)
+	__duel__ const Vec4<T> operator*(const Vec4<T>& v0, const Vec4<T>& v1)
 	{
-		return vec4<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
+		return Vec4<T>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator*=(vec4<T>& v, const U& n)
+	__duel__ const Vec4<T>& operator*=(Vec4<T>& v, const U& n)
 	{
 		v.x *= n;
 		v.y *= n;
@@ -1559,7 +1559,7 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator*=(vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<T>& operator*=(Vec4<T>& v0, const Vec4<U>& v1)
 	{
 		v0.x *= v1.x;
 		v0.y *= v1.y;
@@ -1568,43 +1568,43 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec4<Int>& operator*=(vec4<Int>& v, const Float& n) = delete;
-	__duel__ const vec4<Int>& operator*=(vec4<Int>& v0, const vec4<Float>& v1) = delete;
+	__duel__ const Vec4<Int>& operator*=(Vec4<Int>& v, const Float& n) = delete;
+	__duel__ const Vec4<Int>& operator*=(Vec4<Int>& v0, const Vec4<Float>& v1) = delete;
 
 
 #pragma endregion
 
-#pragma region vec4 same type operation /
+#pragma region Vec4 same type operation /
 
 	template<typename T>
-	__duel__ const vec4<T> operator/(const T& n, const vec4<T>& v)
+	__duel__ const Vec4<T> operator/(const T& n, const Vec4<T>& v)
 	{
-		CHECK(v.x != 0, "Same type vec4 operator/(n,vec4 v) error: v.x can not be 0!");
-		CHECK(v.y != 0, "Same type vec4 operator/(n,vec4 v) error: v.y can not be 0!");
-		CHECK(v.z != 0, "Same type vec4 operator/(n,vec4 v) error: v.z can not be 0!");
-		CHECK(v.w != 0, "Same type vec4 operator/(n,vec4 v) error: v.w can not be 0!");
-		return vec4<T>(n / v.x, n / v.y, n / v.z, n / v.w);
+		CHECK(v.x != 0, "Same type Vec4 operator/(n,Vec4 v) error: v.x can not be 0!");
+		CHECK(v.y != 0, "Same type Vec4 operator/(n,Vec4 v) error: v.y can not be 0!");
+		CHECK(v.z != 0, "Same type Vec4 operator/(n,Vec4 v) error: v.z can not be 0!");
+		CHECK(v.w != 0, "Same type Vec4 operator/(n,Vec4 v) error: v.w can not be 0!");
+		return Vec4<T>(n / v.x, n / v.y, n / v.z, n / v.w);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator/(const vec4<T>& v, const T& n)
+	__duel__ const Vec4<T> operator/(const Vec4<T>& v, const T& n)
 	{
-		CHECK(n != 0, "Same type vec4 operator/(vec4 v, n) error: n can not be 0!");
-		return vec4<T>(v.x / n, v.y / n, v.z / n, v.w / n);
+		CHECK(n != 0, "Same type Vec4 operator/(Vec4 v, n) error: n can not be 0!");
+		return Vec4<T>(v.x / n, v.y / n, v.z / n, v.w / n);
 	}
 	template<typename T>
-	__duel__ const vec4<T> operator/(const vec4<T>& v0, const vec4<T>& v1)
+	__duel__ const Vec4<T> operator/(const Vec4<T>& v0, const Vec4<T>& v1)
 	{
-		CHECK(v1.x != 0, "Same type vec4 operator/(n,vec4 v) error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type vec4 operator/(n,vec4 v) error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type vec4 operator/(n,vec4 v) error: v1.z can not be 0!");
-		CHECK(v1.w != 0, "Same type vec4 operator/(n,vec4 v) error: v1.w can not be 0!");
-		return vec4<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
+		CHECK(v1.x != 0, "Same type Vec4 operator/(n,Vec4 v) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Vec4 operator/(n,Vec4 v) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Vec4 operator/(n,Vec4 v) error: v1.z can not be 0!");
+		CHECK(v1.w != 0, "Same type Vec4 operator/(n,Vec4 v) error: v1.w can not be 0!");
+		return Vec4<T>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z);
 	}
 
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator/=(vec4<T>& v, const U& n)
+	__duel__ const Vec4<T>& operator/=(Vec4<T>& v, const U& n)
 	{
-		CHECK(n != 0, "Same type vec4 operator/=(vec4 v, n) error: n can not be 0!");
+		CHECK(n != 0, "Same type Vec4 operator/=(Vec4 v, n) error: n can not be 0!");
 		v.x /= n;
 		v.y /= n;
 		v.z /= n;
@@ -1612,12 +1612,12 @@ namespace CUM
 		return v;
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<T>& operator/=(vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<T>& operator/=(Vec4<T>& v0, const Vec4<U>& v1)
 	{
-		CHECK(v1.x != 0, "Same type vec4 operator/=(vec4 v0,vec4 v1) error: v1.x can not be 0!");
-		CHECK(v1.y != 0, "Same type vec4 operator/=(vec4 v0,vec4 v1) error: v1.y can not be 0!");
-		CHECK(v1.z != 0, "Same type vec4 operator/=(vec4 v0,vec4 v1) error: v1.z can not be 0!");
-		CHECK(v1.w != 0, "Same type vec4 operator/=(vec4 v0,vec4 v1) error: v1.w can not be 0!");
+		CHECK(v1.x != 0, "Same type Vec4 operator/=(Vec4 v0,Vec4 v1) error: v1.x can not be 0!");
+		CHECK(v1.y != 0, "Same type Vec4 operator/=(Vec4 v0,Vec4 v1) error: v1.y can not be 0!");
+		CHECK(v1.z != 0, "Same type Vec4 operator/=(Vec4 v0,Vec4 v1) error: v1.z can not be 0!");
+		CHECK(v1.w != 0, "Same type Vec4 operator/=(Vec4 v0,Vec4 v1) error: v1.w can not be 0!");
 		v0.x /= v1.x;
 		v0.y /= v1.y;
 		v0.z /= v1.z;
@@ -1625,8 +1625,8 @@ namespace CUM
 		return v0;
 	}
 
-	__duel__ const vec4<Int>& operator/=(vec4<Int>& v, const Float& n) = delete;
-	__duel__ const vec4<Int>& operator/=(vec4<Int>& v0, const vec4<Float>& v1) = delete;
+	__duel__ const Vec4<Int>& operator/=(Vec4<Int>& v, const Float& n) = delete;
+	__duel__ const Vec4<Int>& operator/=(Vec4<Int>& v0, const Vec4<Float>& v1) = delete;
 
 
 #pragma endregion
@@ -1634,93 +1634,93 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region vec4 different type operation
+#pragma region Vec4 different type operation
 
-#pragma region vec4 different type operation +
-
-	template<typename T, typename U>
-	__duel__ const vec4<Float> operator+(const T& n, const vec4<U>& v)
-	{
-		return vec4<Float>(n + v.x, n + v.y, n+ v.z, n + v.w);
-	}
-	template<typename T, typename U>
-	__duel__ const vec4<Float> operator+(const vec4<T>& v, const U& n)
-	{
-		return vec4<Float>(v.x + n, v.y + n, v.z + n, v.w + n);
-	}
-	template<typename T, typename U>
-	__duel__ const vec4<Float> operator+(const vec4<T>& v0, const vec4<U>& v1)
-	{
-		return vec4<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
-	}
-
-#pragma endregion
-
-#pragma region vec4 different type operation -
+#pragma region Vec4 different type operation +
 
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator-(const T& n, const vec4<U>& v)
+	__duel__ const Vec4<Float> operator+(const T& n, const Vec4<U>& v)
 	{
-		return vec4<Float>(n - v.x, n - v.y, n - v.z, n - v.w);
+		return Vec4<Float>(n + v.x, n + v.y, n+ v.z, n + v.w);
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator-(const vec4<T>& v, const U& n)
+	__duel__ const Vec4<Float> operator+(const Vec4<T>& v, const U& n)
 	{
-		return vec4<Float>(v.x - n, v.y - n, v.z - n, v.w - n);
+		return Vec4<Float>(v.x + n, v.y + n, v.z + n, v.w + n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator-(const vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<Float> operator+(const Vec4<T>& v0, const Vec4<U>& v1)
 	{
-		return vec4<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
+		return Vec4<Float>(v0.x + v1.x, v0.y + v1.y, v0.z + v1.z, v0.w + v1.w);
 	}
 
 #pragma endregion
 
-#pragma region vec4 different type operation *
+#pragma region Vec4 different type operation -
 
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator*(const T& n, const vec4<U>& v)
+	__duel__ const Vec4<Float> operator-(const T& n, const Vec4<U>& v)
 	{
-		return vec4<Float>(n * v.x, n * v.y, n * v.z, n * v.w);
+		return Vec4<Float>(n - v.x, n - v.y, n - v.z, n - v.w);
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator*(const vec4<T>& v, const U& n)
+	__duel__ const Vec4<Float> operator-(const Vec4<T>& v, const U& n)
 	{
-		return vec4<Float>(v.x * n, v.y * n, v.z * n, v.w * n);
+		return Vec4<Float>(v.x - n, v.y - n, v.z - n, v.w - n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator*(const vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<Float> operator-(const Vec4<T>& v0, const Vec4<U>& v1)
 	{
-		return vec4<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
+		return Vec4<Float>(v0.x - v1.x, v0.y - v1.y, v0.z - v1.z, v0.w - v1.w);
 	}
 
 #pragma endregion
 
-#pragma region vec4 different type operation /
+#pragma region Vec4 different type operation *
 
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator/(const T& n, const vec4<U>& v)
+	__duel__ const Vec4<Float> operator*(const T& n, const Vec4<U>& v)
 	{
-		CHECK(v.x != 0, "vec4<Float> operation /(n, vec4 v1): v1.x can not be zero.");
-		CHECK(v.y != 0, "vec4<Float> operation /(n, vec4 v1): v1.y can not be zero.");
-		CHECK(v.z != 0, "vec4<Float> operation /(n, vec4 v1): v1.z can not be zero.");
-		CHECK(v.w != 0, "vec4<Float> operation /(n, vec4 v1): v1.w can not be zero.");
-		return vec4<Float>(n / v.x, n / v.y, n / v.z, n / v.w);
+		return Vec4<Float>(n * v.x, n * v.y, n * v.z, n * v.w);
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator/(const vec4<T>& v, const U& n)
+	__duel__ const Vec4<Float> operator*(const Vec4<T>& v, const U& n)
 	{
-		CHECK(n != 0, "vec4<Float> operation /(vec4 v, n): n can not be zero.");
-		return vec4<Float>(v.x / n, v.y / n, v.z / n, v.w / n);
+		return Vec4<Float>(v.x * n, v.y * n, v.z * n, v.w * n);
 	}
 	template<typename T, typename U>
-	__duel__ const vec4<Float> operator/(const vec4<T>& v0, const vec4<U>& v1)
+	__duel__ const Vec4<Float> operator*(const Vec4<T>& v0, const Vec4<U>& v1)
 	{
-		CHECK(v1.x != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.x can not be zero.");
-		CHECK(v1.y != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.y can not be zero.");
-		CHECK(v1.z != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.z can not be zero.");
-		CHECK(v1.w != 0, "vec4<Float> operation /(vec4 v0, vec4 v1): v1.w can not be zero.");
-		return vec4<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z, v0.w / v1.w);
+		return Vec4<Float>(v0.x * v1.x, v0.y * v1.y, v0.z * v1.z, v0.w * v1.w);
+	}
+
+#pragma endregion
+
+#pragma region Vec4 different type operation /
+
+	template<typename T, typename U>
+	__duel__ const Vec4<Float> operator/(const T& n, const Vec4<U>& v)
+	{
+		CHECK(v.x != 0, "Vec4<Float> operation /(n, Vec4 v1): v1.x can not be zero.");
+		CHECK(v.y != 0, "Vec4<Float> operation /(n, Vec4 v1): v1.y can not be zero.");
+		CHECK(v.z != 0, "Vec4<Float> operation /(n, Vec4 v1): v1.z can not be zero.");
+		CHECK(v.w != 0, "Vec4<Float> operation /(n, Vec4 v1): v1.w can not be zero.");
+		return Vec4<Float>(n / v.x, n / v.y, n / v.z, n / v.w);
+	}
+	template<typename T, typename U>
+	__duel__ const Vec4<Float> operator/(const Vec4<T>& v, const U& n)
+	{
+		CHECK(n != 0, "Vec4<Float> operation /(Vec4 v, n): n can not be zero.");
+		return Vec4<Float>(v.x / n, v.y / n, v.z / n, v.w / n);
+	}
+	template<typename T, typename U>
+	__duel__ const Vec4<Float> operator/(const Vec4<T>& v0, const Vec4<U>& v1)
+	{
+		CHECK(v1.x != 0, "Vec4<Float> operation /(Vec4 v0, Vec4 v1): v1.x can not be zero.");
+		CHECK(v1.y != 0, "Vec4<Float> operation /(Vec4 v0, Vec4 v1): v1.y can not be zero.");
+		CHECK(v1.z != 0, "Vec4<Float> operation /(Vec4 v0, Vec4 v1): v1.z can not be zero.");
+		CHECK(v1.w != 0, "Vec4<Float> operation /(Vec4 v0, Vec4 v1): v1.w can not be zero.");
+		return Vec4<Float>(v0.x / v1.x, v0.y / v1.y, v0.z / v1.z, v0.w / v1.w);
 	}
 
 #pragma endregion
@@ -1729,7 +1729,7 @@ namespace CUM
 #pragma endregion
 
 	template<typename T>
-	__duel__ void logData(const vec4<T>& v)
+	__duel__ void logData(const Vec4<T>& v)
 	{
 		const custd::OStream os;
 		os << v.x << "\t" << v.y << "\t" << v.z << "\t" << v.w << custd::endl;
@@ -1748,11 +1748,11 @@ namespace CUM
 		__duel__ Quaternion(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
 		__duel__ Quaternion(const T& n) : x(n), y(n), z(n), w(n) {}
 		__duel__ Quaternion(const Quaternion<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
-		__duel__ Quaternion(const vec3<T>& v, const T& _w, const Bool& isRotate = false) : x(v.x), y(v.y), z(v.z), w(_w)
+		__duel__ Quaternion(const Vec3<T>& v, const T& _w, const Bool& isRotate = false) : x(v.x), y(v.y), z(v.z), w(_w)
 		{
 			if (isRotate)
 			{
-				vec3<T> axis = normalize(vec3<T>(v.x, v.y, v.z));
+				Vec3<T> axis = normalize(Vec3<T>(v.x, v.y, v.z));
 				T theta = _w;
 				T sinThetaDi2 = sin(0.5 * theta);
 				T cosThetaDi2 = cos(0.5 * theta);
@@ -1900,8 +1900,8 @@ namespace CUM
 	{
 		T a = v0.w;
 		T b = v1.w;
-		vec3<T> u(v0.x, v0.y, v0.z);
-		vec3<T> v(v1.x, v1.y, v1.z);
+		Vec3<T> u(v0.x, v0.y, v0.z);
+		Vec3<T> v(v1.x, v1.y, v1.z);
 		auto ur = a * v + b * u + cross(u, v);
 		T w = a * b - dot(u, v);
 		return Quaternion<T>(ur, w);
@@ -2027,8 +2027,8 @@ namespace CUM
 	{
 		Float a = v0.w;
 		Float b = v1.w;
-		vec3<Float> u(v0.x, v0.y, v0.z);
-		vec3<Float> v(v1.x, v1.y, v1.z);
+		Vec3<Float> u(v0.x, v0.y, v0.z);
+		Vec3<Float> v(v1.x, v1.y, v1.z);
 		auto ur = a * v + b * u + cross(u, v);
 		Float w = a * b - dot(u, v);
 		return Quaternion<Float>(ur, w);
@@ -2525,7 +2525,7 @@ namespace CUM
 		}
 	public:
 
-		Mat3x3(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2, const Bool& isColumn = false)
+		Mat3x3(const Vec3<T>& v0, const Vec3<T>& v1, const Vec3<T>& v2, const Bool& isColumn = false)
 		{
 			if (isColumn)
 			{
@@ -2559,19 +2559,19 @@ namespace CUM
 			}
 		}
 	public:
-		const vec3<T> GetRow(const Int& idx)
+		const Vec3<T> GetRow(const Int& idx)
 		{
 			CHECK(idx >= 0 && idx <= 2, "Mat3x3::GetRow(idx) error: idx is out of range!");
-			return vec3<T>(m[idx][0], m[idx][1], m[idx][2]);
+			return Vec3<T>(m[idx][0], m[idx][1], m[idx][2]);
 		}
-		const vec3<T> GetColumn(const Int& idx)
+		const Vec3<T> GetColumn(const Int& idx)
 		{
 			CHECK(idx >= 0 && idx <= 2, "Mat3x3::GetColumn(idx) error: idx is out of range!");
-			return vec3<T>(m[0][idx], m[1][idx], m[2][idx]);
+			return Vec3<T>(m[0][idx], m[1][idx], m[2][idx]);
 		}
-		const vec3<T> GetDiag()
+		const Vec3<T> GetDiag()
 		{
-			return vec3<T>(m[0][0], m[1][1], m[2][2]);
+			return Vec3<T>(m[0][0], m[1][1], m[2][2]);
 		}
 	};
 
@@ -3052,7 +3052,7 @@ namespace CUM
 
 		}
 	public:
-		Mat4x4(const vec4<T>& v0, const vec4<T>& v1, const vec4<T>& v2, const vec4<T>& v3, const Bool& isColumn = false)
+		Mat4x4(const Vec4<T>& v0, const Vec4<T>& v1, const Vec4<T>& v2, const Vec4<T>& v3, const Bool& isColumn = false)
 		{
 			if (isColumn)
 			{
@@ -3087,19 +3087,19 @@ namespace CUM
 			}
 		}
 	public:
-		const vec4<T> GetRow(const Int& idx)
+		const Vec4<T> GetRow(const Int& idx)
 		{
 			CHECK(idx >= 0 && idx <= 3, "Mat4x4::GetRow(idx) error: idx is out of range!");
-			return vec4<T>(m[idx][0], m[idx][1], m[idx][2], m[idx][3]);
+			return Vec4<T>(m[idx][0], m[idx][1], m[idx][2], m[idx][3]);
 		}
-		const vec4<T> GetColumn(const Int& idx)
+		const Vec4<T> GetColumn(const Int& idx)
 		{
 			CHECK(idx >= 0 && idx <= 3, "Mat4x4::GetColumn(idx) error: idx is out of range!");
-			return vec4<T>(m[0][idx], m[1][idx], m[2][idx], m[3][idx]);
+			return Vec4<T>(m[0][idx], m[1][idx], m[2][idx], m[3][idx]);
 		}
-		const vec4<T> GetDiag()
+		const Vec4<T> GetDiag()
 		{
-			return vec4<T>(m[0][0], m[1][1], m[2][2], m[3][3]);
+			return Vec4<T>(m[0][0], m[1][1], m[2][2], m[3][3]);
 		}
 	};
 
@@ -3540,11 +3540,11 @@ namespace CUM
 
 #pragma region different class math operation
 
-#pragma region Mat3x3-vec3
+#pragma region Mat3x3-Vec3
 	template<typename T>
-	const vec3<T> operator*(const Mat3x3<T>& mat, const vec3<T>& v)
+	__duel__ const Vec3<T> operator*(const Mat3x3<T>& mat, const Vec3<T>& v)
 	{
-		vec3<T> result;
+		Vec3<T> result;
 		for (Int i = 0; i < 3; i++)
 		{
 			result[i] = dot(mat.GetRow(i), v);
@@ -3553,11 +3553,11 @@ namespace CUM
 	}
 #pragma endregion
 
-#pragma region Mat4x4-vec4
+#pragma region Mat4x4-Vec4
 	template<typename T>
-	const vec4<T> operator*(const Mat4x4<T>& mat, const vec4<T>& v)
+	__duel__ const Vec4<T> operator*(const Mat4x4<T>& mat, const Vec4<T>& v)
 	{
-		vec4<T> result;
+		Vec4<T> result;
 		for (Int i = 0; i < 4; i++)
 		{
 			result[i] = dot(mat.GetRow(i), v);
@@ -3566,11 +3566,11 @@ namespace CUM
 	}
 #pragma endregion
 
-#pragma region Quaternion-vec4
+#pragma region Quaternion-Vec4
 	template<typename T>
-	const vec4<T> applyQuaTransform(const Quaternion<T>& qua, const vec4<T>& v)
+	__duel__ const Vec4<T> applyQuaTransform(const Quaternion<T>& qua, const Vec4<T>& v)
 	{
-		vec4<T> result;
+		Vec4<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, v.w);
 		Quaternion<T> quaConj = conjugate(qua);
 		Quaternion<T> pRes = qua * pQua * quaConj;

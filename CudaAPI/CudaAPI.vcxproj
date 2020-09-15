@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="SourceCode\Common\Cuda3DMath.cuh" />
     <ClInclude Include="SourceCode\Common\CudaPrimitivesVector.cuh" />
+    <ClInclude Include="SourceCode\Common\Ray.cuh" />
     <ClInclude Include="SourceCode\Common\stb_image.h" />
     <ClInclude Include="SourceCode\CudaAPI.cuh" />
     <ClInclude Include="SourceCode\CudaAPI.h" />
@@ -24,6 +25,7 @@
   <ItemGroup>
     <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu" />
     <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu" />
+    <CudaCompile Include="SourceCode\Common\Ray.cu" />
     <CudaCompile Include="SourceCode\CudaAPI.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cu" />
