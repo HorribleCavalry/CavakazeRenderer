@@ -10,6 +10,9 @@
     <Filter Include="SourceCode\CudaSTD">
       <UniqueIdentifier>{251802fa-374f-4d75-9b72-7891e984ad26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SourceCode\Common\Geometry">
+      <UniqueIdentifier>{d20071fa-b39f-44da-af9c-380ee4e74907}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\CudaAPI.cuh">
@@ -40,6 +43,9 @@
     <ClInclude Include="SourceCode\Common\Ray.cuh">
       <Filter>SourceCode\Common</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\Common\Geometry\Geometry.cuh">
+      <Filter>SourceCode\Common\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">
@@ -61,9 +67,6 @@
       <Filter>SourceCode\CudaSTD</Filter>
     </CudaCompile>
     <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu">
-      <Filter>SourceCode\Common</Filter>
-    </CudaCompile>
-    <CudaCompile Include="SourceCode\Common\Ray.cu">
       <Filter>SourceCode\Common</Filter>
     </CudaCompile>
   </ItemGroup>

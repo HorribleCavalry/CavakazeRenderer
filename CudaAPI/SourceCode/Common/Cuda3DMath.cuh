@@ -1364,6 +1364,16 @@ namespace CUM
 
 #pragma endregion
 
+#pragma region Normal
+
+	class Normal
+	{
+	public:
+		Float x, y, z;
+	};
+
+#pragma endregion
+
 #pragma region Vec4
 	template<typename T>
 	class Vec4

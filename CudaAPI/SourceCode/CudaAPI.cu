@@ -1,5 +1,7 @@
 ﻿#include "Common/Cuda3DMath.cuh"
 #include "Common/CudaPrimitivesVector.cuh"
+#include "Common/Ray.cuh"
+#include "Common/Geometry/Geometry.cuh"
 #include <chrono>
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -168,4 +170,8 @@ int main()
 	end = std::chrono::steady_clock::now();
 	duration = end - start;
 	//0.41093520000000000 second
+
+	Ray r;
+
+	Geometry g;
 }
