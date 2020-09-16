@@ -5,6 +5,8 @@
 #include "../Ray.cuh"
 #include "../../CudaSTD/cuiostream.cuh"
 
+#define Epsilon 0.0078125
+
 class Geometry
 {
 public:
@@ -16,10 +18,10 @@ public:
 	__duel__ Geometry() : centroid() {}
 	__duel__ Geometry(const CUM::Point3f& _centroid) : centroid(_centroid) {}
 public:
-	__duel__ virtual const Record HitTest(Ray& inputRay)
+	__duel__ virtual const Bool HitTest(Ray& inputRay)
 	{
 		CHECK(false, "Use Geometry::HitTest is not permitted!");
-		return Record();
+		return false;
 	}
 	__duel__ virtual const Float GetArea()
 	{
@@ -39,10 +41,26 @@ public:
 	Float radius;
 
 public:
-	__duel__ virtual const Record HitTest(Ray& inputRay) override
+	__duel__ virtual const Bool HitTest(Ray& inputRay) override
 	{
-		
-		return inputRay.record;
+		CUM::Vec3f origin(inputRay.origin.x, inputRay.origin.y, inputRay.origin.z);
+		Float a = CUM::dot(inputRay.direction, inputRay.direction);
+		Float b = 2.0 * dot(inputRay.direction, origin);
+		Float c = CUM::dot(origin, origin) - radius * radius;
+		Float discriminant = b * b - 4.0*a*c;
+		Float times = 0.0;
+		if (discriminant > 0.0)
+		{
+			times = 0.5 *(-b - discriminant) / a;
+			if (times<FLT_MAX && times>Epsilon)
+			{
+				inputRay.record.times = times;
+				CUM::Point3f endPoint = inputRay.GetEndPoint(times);
+
+			}
+		}
+
+		return false;
 	}
 	__duel__ virtual const Float GetArea() override
 	{
@@ -75,9 +93,9 @@ public:
 		volume = geoInfo.x * geoInfo.y * geoInfo.z;
 	}
 public:
-	__duel__ virtual const Record HitTest(Ray& inputRay) override
+	__duel__ virtual const Bool HitTest(Ray& inputRay) override
 	{
-		return inputRay.record;
+		return false;
 	}
 	__duel__ virtual const Float GetArea() override
 	{

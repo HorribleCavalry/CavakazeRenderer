@@ -44,7 +44,10 @@ public:
 	CUM::Vec3f direction;
 	Record record;
 public:
-
+	const CUM::Point3f GetEndPoint(const Float& times)
+	{
+		return origin + times * direction;
+	}
 };
 
 #endif // !__RAY__CUH__

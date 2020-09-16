@@ -4,7 +4,8 @@
 #include "../CudaSTD/CudaUtility.cuh"
 #include "../CudaSTD/cuvector.cuh"
 #include "../CudaSTD/cuiostream.cuh"
-#include <cuda/std/type_traits>
+#include <float.h>
+
 namespace CUM
 {
 #define LogData(data) logData(data)
@@ -1764,7 +1765,7 @@ namespace CUM
 		__duel__ Quaternion(const T& _x, const T& _y, const T& _z, const T& _w) : x(_x), y(_y), z(_z), w(_w) {}
 		__duel__ Quaternion(const T& n) : x(n), y(n), z(n), w(n) {}
 		__duel__ Quaternion(const Quaternion<T>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
-		__duel__ Quaternion(const Vec3<T>& v, const T& _w, const Bool& isRotate = false) : x(v.x), y(v.y), z(v.z), w(_w)
+		__duel__ Quaternion(const Vec3<T>& v, const T& _w, const Bool& isRotate = true) : x(v.x), y(v.y), z(v.z), w(_w)
 		{
 			if (isRotate)
 			{
@@ -3555,6 +3556,21 @@ namespace CUM
 #pragma endregion
 
 #pragma region different class math operation
+
+#pragma region Point3-Vec3
+	template<typename T>
+	const Point3<T> operator+(const Point3<T>& p, const Vec3<T>& v)
+	{
+		return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
+	}
+
+	template<typename T, typename U>
+	const Point3<Float> operator+(const Point3<T>& p, const Vec3<U>& v)
+	{
+		return Point3<Float>(p.x + v.x, p.y + v.y, p.z + v.z);
+	}
+
+#pragma endregion
 
 #pragma region Mat3x3-Vec3
 	template<typename T>
