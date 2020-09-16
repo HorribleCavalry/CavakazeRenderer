@@ -52,7 +52,10 @@ namespace CUM
 		}
 
 	public:
-
+		__duel__ const Int Size()
+		{
+			return size;
+		}
 	};
 }
 

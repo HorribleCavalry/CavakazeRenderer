@@ -71,16 +71,14 @@ public:
 
 __global__ void kernel()
 {
-	CUM::Quaternion<Float> rotatePositive(CUM::Vec3f(0, 1, 0), 0.25*PI, true);
-	CUM::Vec4f trans(1.0, 1.0, 1.0, 0.0);
-	CUM::Vec4f origin(1.0, 1.0, 1.0, 0.0);
-	for (Int i = 0; i < 1048576; i++)
+	CUM::PrimitiveVector<Geometry> geoVec;
+	Sphere sp;
+	Box bx;
+	geoVec.push_back(sp);
+	geoVec.push_back(bx);
+	for (Int i = 0; i < geoVec.Size(); i++)
 	{
-		auto temp = CUM::applyQuaTransform(rotatePositive, origin);
-		temp *= 2.0;
-		temp /= 2.0;
-		temp += trans;
-		temp -= trans;
+		geoVec[i].GetArea();
 	}
 }
 
@@ -172,6 +170,14 @@ int main()
 	//0.41093520000000000 second
 
 	Ray r;
-
-	Geometry g;
+	CUM::PrimitiveVector<Geometry> geoVec;
+	Sphere sp;
+	Box bx;
+	geoVec.push_back(sp);
+	geoVec.push_back(bx);
+	for (Int i = 0; i < geoVec.Size(); i++)
+	{
+		geoVec[i].GetArea();
+	}
+	//Geometry g;
 }
