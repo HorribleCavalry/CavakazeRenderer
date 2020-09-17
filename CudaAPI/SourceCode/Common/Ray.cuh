@@ -8,7 +8,7 @@ class Record
 {
 public:
 	CUM::Point3f position;
-	CUM::Normal normal;
+	CUM::Normal3f normal;
 	CUM::Color3f albedo;
 	Float times;
 public:

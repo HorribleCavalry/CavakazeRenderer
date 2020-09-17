@@ -6,6 +6,9 @@
 #include "../CudaSTD/cuiostream.cuh"
 #include <float.h>
 
+#define PI 3.14159265358979323846
+#define Epsilon 0.0078125
+
 namespace CUM
 {
 #define LogData(data) logData(data)
@@ -1373,12 +1376,24 @@ namespace CUM
 
 #pragma region Normal
 
-	class Normal
+	template<typename T>
+	class Normal3
 	{
 	public:
-		Float x, y, z;
+		T x, y, z;
+	public:
+		__duel__ Normal3() : x(0), y(1), (0) {}
+		__duel__ Normal3(const Vec3<T>& v) : x(v.x), y(v.y), z(v.z) {}
+		__duel__ const Normal3& operator=(const Vec3<T>& v)
+		{
+			x = v.x;
+			y = v.y;
+			z = v.z;
+			return *this;
+		}
 	};
 
+	typedef Normal3<Float> Normal3f;
 #pragma endregion
 
 #pragma region Vec4
