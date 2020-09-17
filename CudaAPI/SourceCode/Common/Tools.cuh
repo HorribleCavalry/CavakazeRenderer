@@ -23,6 +23,7 @@ public:
 		normal = rec.normal;
 		albedo = rec.albedo;
 		times = rec.times;
+		return *this;
 	}
 	//const Record operator=(Record&& rec)
 	//{
@@ -61,15 +62,21 @@ public:
 	Float nearPlan;
 	Float farPlan;
 public:
-
+	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan)
+		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan)
+	{
+		//Aspect ratio always width/height.
+		aspectRatio = Float(imageSize.x) / Float(imageSize.y);
+	}
 };
 
 class PersCamera : public Camera
 {
 public:
 	Float fovH;
-	Float fovV;
-
+public:
+	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Float& _fovH)
+		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan), fovH(_fovH) {}
 
 };
 

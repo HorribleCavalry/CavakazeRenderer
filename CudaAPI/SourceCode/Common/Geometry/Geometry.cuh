@@ -107,8 +107,10 @@ public:
 		volume = extent.x * extent.y * extent.z;
 	}
 public:
-	__duel__ virtual const Bool HitTest(Ray& inputRay) override
+	__duel__ virtual const Bool HitTest(Ray& ray) override
 	{
+		CUM::Vec3f directionB = CUM::applyQuaTransform(CUM::conjugate(rotation),ray.direction);
+
 		return false;
 	}
 	__duel__ virtual const Float GetArea() override

@@ -3574,13 +3574,13 @@ namespace CUM
 
 #pragma region Point3-Vec3
 	template<typename T>
-	const Point3<T> operator+(const Point3<T>& p, const Vec3<T>& v)
+	__duel__ const Point3<T> operator+(const Point3<T>& p, const Vec3<T>& v)
 	{
 		return Point3<T>(p.x + v.x, p.y + v.y, p.z + v.z);
 	}
 
 	template<typename T, typename U>
-	const Point3<Float> operator+(const Point3<T>& p, const Vec3<U>& v)
+	__duel__ const Point3<Float> operator+(const Point3<T>& p, const Vec3<U>& v)
 	{
 		return Point3<Float>(p.x + v.x, p.y + v.y, p.z + v.z);
 	}
@@ -3612,6 +3612,23 @@ namespace CUM
 		return result;
 	}
 #pragma endregion
+
+#pragma region Quaternion-Vec4
+	template<typename T>
+	__duel__ const Vec3<T> applyQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	{
+		Vec3<T> result;
+		Quaternion<T> pQua(v.x, v.y, v.z, 0);
+		Quaternion<T> quaConj = conjugate(qua);
+		Quaternion<T> pRes = qua * pQua * quaConj;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		return result;
+	}
+
+#pragma endregion
+
 
 #pragma region Quaternion-Vec4
 	template<typename T>
