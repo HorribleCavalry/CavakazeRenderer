@@ -1,6 +1,6 @@
 ﻿#include "Common/Cuda3DMath.cuh"
 #include "Common/CudaPrimitivesVector.cuh"
-#include "Common/Ray.cuh"
+#include "Common/Tools.cuh"
 #include "Common/Geometry/Geometry.cuh"
 #include <chrono>
 

@@ -2,7 +2,7 @@
 #define __GEOMETRY__CUH__
 
 #include "../Cuda3DMath.cuh"
-#include "../Ray.cuh"
+#include "../Tools.cuh"
 #include "../../CudaSTD/cuiostream.cuh"
 
 class Geometry
@@ -63,29 +63,16 @@ public:
 		if (discriminant > 0.0)
 		{
 			times = 0.5 *(-b - discriminant) / a;
-			if (times<FLT_MAX && times>Epsilon)
-			{
-				ray.record.times = times;
-				endPoint = ray.GetEndPoint(times);
-				normal = (endPoint - centroid) / radius;
-
-				ray.record.times = times;
-				ray.record.position = endPoint;
-				ray.record.normal = normal;
-				return true;
-			}
-			times = 0.5 *(-b + discriminant) / a;
-			if (times<FLT_MAX && times>Epsilon)
-			{
-				ray.record.times = times;
-				endPoint = ray.GetEndPoint(times);
-				normal = (endPoint - centroid) / radius;
-
-				ray.record.times = times;
-				ray.record.position = endPoint;
-				ray.record.normal = normal;
-				return true;
-			}
+			if (times < Epsilon)
+				times = 0.5 *(-b + discriminant) / a;
+			
+			ray.record.times = times;
+			endPoint = ray.GetEndPoint(times);
+			normal = (endPoint - centroid) / radius;
+			ray.record.times = times;
+			ray.record.position = endPoint;
+			ray.record.normal = normal;
+			return true;
 		}
 
 		return false;

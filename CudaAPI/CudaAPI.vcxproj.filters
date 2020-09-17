@@ -40,11 +40,11 @@
     <ClInclude Include="SourceCode\Common\CudaPrimitivesVector.cuh">
       <Filter>SourceCode\Common</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\Common\Ray.cuh">
-      <Filter>SourceCode\Common</Filter>
-    </ClInclude>
     <ClInclude Include="SourceCode\Common\Geometry\Geometry.cuh">
       <Filter>SourceCode\Common\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Common\Tools.cuh">
+      <Filter>SourceCode\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
