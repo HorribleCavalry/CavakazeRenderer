@@ -46,4 +46,15 @@ __duel__ void check(const bool& isAssert, const char* errorInfo, const Int val[]
 //Do not use this function, recommend marco ERROR_CHECK to use.
 void error_check(cudaError_t err, const char* file, int line);
 
+template<typename T, typename U, typename K>
+const Bool IsInRange(const T& n, const U& minN, const K& maxN)
+{
+	return n >= minN && n <= maxN;
+}
+
+//template<typename T>
+//const T abs(const T& val)
+//{
+//	return val < 0 ? -val : val;
+//}
 #endif // !__CUDAUYILITY__CUH__

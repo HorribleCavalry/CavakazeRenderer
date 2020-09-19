@@ -60,12 +60,19 @@ public:
 		CUM::Point3f endPoint;
 		CUM::Normal3f normal;
 
-		if (discriminant > 0.0)
+		if (discriminant < 0.0)
+		{
+			return false;
+		}
+		else
 		{
 			times = 0.5 *(-b - discriminant) / a;
 			if (times < Epsilon)
+			{
 				times = 0.5 *(-b + discriminant) / a;
-			
+				if (times < Epsilon)
+					return false;
+			}
 			ray.record.times = times;
 			endPoint = ray.GetEndPoint(times);
 			normal = (endPoint - centroid) / radius;
@@ -74,7 +81,6 @@ public:
 			ray.record.normal = normal;
 			return true;
 		}
-
 		return false;
 	}
 	__duel__ virtual const Float GetArea() override
@@ -87,35 +93,136 @@ public:
 	}
 };
 
-class Box : public Geometry
+//Orientd Box
+class OBox : public Geometry
 {
 public:
-	CUM::Point3f leftBottom;
 	CUM::Quaternionf rotation;
 private:
 	CUM::Vec3f extent;
+	CUM::Point3f pMin;
+	CUM::Point3f pMax;
 public:
 
-	__duel__ Box() : leftBottom(-1.0, 0.0, 5.0), rotation(0, 0, 0, 1), Geometry(CUM::Point3f(0.0, 1.0, 6)) {}
+	__duel__ OBox() : rotation(0, 0, 0, 1), Geometry(CUM::Point3f(0.0, 1.0, 6)) {}
 
 
-	__duel__ Box(CUM::Point3f& _centroid, const CUM::Point3f&_leftBottom, const CUM::Quaternionf& _rotation)
-		:leftBottom(_leftBottom), rotation(_rotation), Geometry(_centroid)
+	__duel__ OBox(CUM::Point3f& _centroid, const CUM::Vec3f& _extent, const CUM::Quaternionf& _rotation)
+		: extent(_extent), rotation(_rotation), Geometry(_centroid)
 	{
-		extent = 2.0 * CUM::abs(centroid - leftBottom);
+		pMin = -extent;
+		pMax = extent;
+		CUM::Vec3f pMax;
 		area = 2.0 * (extent.x*extent.y + extent.x*extent.z + extent.y*extent.z);
 		volume = extent.x * extent.y * extent.z;
+	}
+private:
+	const Int GetUnitVal(const Float& val)
+	{
+		return val >= 0.0 ? 1.0 : -1.0;
+	}
+	const CUM::Normal3f GetNormal(const CUM::Vec3f& v)
+	{
+		CHECK(!v.IsZero(), "OBox::GetNormal error: the v can not be a zero vec!");
+		Float unit;
+		switch (v.MaxAbsIdx())
+		{
+		case 0:
+		{
+			unit = GetUnitVal(v.x);
+			return CUM::Normal3f(unit, 0.0, 0.0);
+		}break;
+
+		case 1:
+		{
+			unit = GetUnitVal(v.y);
+			return CUM::Normal3f(0.0, unit, 0.0);
+		}break;
+
+		case 2:
+		{
+			unit = GetUnitVal(v.z);
+			return CUM::Normal3f(0.0, 0.0, unit);
+		}break;
+
+		default:
+			CHECK(false, "OBox::GetNormal error: can not run switch::default!");
+			break;
+		}
+		CHECK(false, "OBox::GetNormal error: can not run switch::default!");
+		return CUM::Normal3f(1.0, 0.0, 0.0);
 	}
 public:
 	__duel__ virtual const Bool HitTest(Ray& ray) override
 	{
-		CUM::Vec3f directionB = CUM::applyQuaTransform(CUM::conjugate(rotation),ray.direction);
+		CUM::Vec3f directionB = CUM::applyInvQuaTransform(rotation,ray.direction);
+		CUM::Point3f originB = CUM::applyInvQuaTransform(rotation, ray.origin - centroid);
 
-		return false;
+		Float ox = originB.x; Float oy = originB.y; Float oz = originB.z;
+		Float dx = directionB.x; Float dy = directionB.y; Float dz = directionB.z;
+
+		Float tx_min, ty_min, tz_min;
+		Float tx_max, ty_max, tz_max;
+
+		Float a = 1.0 / dx;
+		if (a >= 0)
+		{
+			tx_min = (pMin.x - ox) * a;
+			tx_max = (pMax.x - ox) * a;
+		}
+		else
+		{
+			tx_min = (pMax.x - ox) * a;
+			tx_max = (pMin.x - ox) * a;
+		}
+
+		Float b = 1.0 / dy;
+		if (b >= 0)
+		{
+			ty_min = (pMin.y - oy) * b;
+			ty_max = (pMax.y - oy) * b;
+		}
+		else
+		{
+			ty_min = (pMax.y - oy) * b;
+			ty_max = (pMin.y - oy) * b;
+		}
+
+		Float c = 1.0 / dy;
+		if (b >= 0)
+		{
+			tz_min = (pMin.z - oz) * c;
+			tz_max = (pMax.z - oz) * c;
+		}
+		else
+		{
+			tz_min = (pMax.z - oz) * c;
+			tz_max = (pMin.z - oz) * c;
+		}
+
+		Float t0, t1;
+
+		t0 = tx_min > ty_min ? tx_min : ty_min;
+		t0 = tz_min > 0.0 ? tz_min : t0;
+
+		t1 = tx_max < ty_max ? tx_max : ty_max;
+		t1 = tz_max < t1 ? tz_max : t1;
+
+		Bool isHit = t0 < t1 && t1 > Epsilon;
+
+		if (isHit)
+		{
+			ray.record.times = t0;
+			CUM::Point3f hitPositionB(originB + t0 * directionB);
+			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
+			CUM::Vec3f normal(CUM::applyQuaTransform(rotation, CUM::Vec3f(normalB.x, normalB.y, normalB.z)));
+			ray.record.normal = normal;
+		}
+
+		return isHit;
 	}
 	__duel__ virtual const Float GetArea() override
 	{
-		const custd::OStream os; os << "Called Box GetArea!" << custd::endl;
 		return area;
 	}
 	__duel__ virtual const Float GetVolume() override

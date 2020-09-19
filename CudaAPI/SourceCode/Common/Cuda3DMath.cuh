@@ -5,9 +5,10 @@
 #include "../CudaSTD/cuvector.cuh"
 #include "../CudaSTD/cuiostream.cuh"
 #include <float.h>
+#include <math.h>
 
 #define PI 3.14159265358979323846
-#define Epsilon 0.0078125
+#define Epsilon 0.0009765625
 
 namespace CUM
 {
@@ -370,6 +371,19 @@ namespace CUM
 			default: CHECK(false, "Can not run Vec3::operator[idx]: switch::default."); break;
 			}
 		}
+	public:
+		const Bool IsZero() const
+		{
+			return x == 0 && y == 0 && z == 0;
+		}
+		const Int MaxAbsIdx() const
+		{
+			T xa = abs<Float>(3.0);
+			T ya = abs<Float>(3.0);
+			T za = abs<Float>(3.0);
+			//return max(xa, ya) ? (max(xa, za) ? 0 : 2) : (max(ya, za)1 : 2);
+			return 0;
+		}
 	};
 
 	typedef Vec3<Int> Vec3i;
@@ -481,6 +495,12 @@ namespace CUM
 #pragma endregion
 
 #pragma region Vec3 same type operation -
+
+	template<typename T>
+	__duel__ const Vec3<T> operator-(const Vec3<T>& v)
+	{
+		return Vec3<T>(-v.x, -v.y, -v.z);
+	}
 
 	template<typename T>
 	__duel__ const Vec3<T> operator-(const T& n, const Vec3<T>& v)
@@ -1038,6 +1058,21 @@ namespace CUM
 			return *this;
 		}
 
+
+		__duel__ const Point3(const Vec3<T>& v)
+			: x(v.x), y(v.y), z(v.z)
+		{
+
+		}
+
+		__duel__ const Point3& operator=(const Vec3<T>& v)
+		{
+			x = v.x;
+			y = v.y;
+			z = v.z;
+			return *this;
+		}
+
 	public:
 		__duel__ T& operator[](const Int& idx)
 		{
@@ -1383,6 +1418,13 @@ namespace CUM
 		T x, y, z;
 	public:
 		__duel__ Normal3() : x(0), y(1), z(0) {}
+		__duel__ Normal3(const T& _x, const T& _y, const T& _z)
+		{
+			Vec3<Float> normal = normalize(CUM::Vec3<T>(_x, _y, _z));
+			x = normal.x;
+			y = normal.y;
+			z = normal.z;
+		}
 		__duel__ Normal3(const Vec3<T>& v) : x(v.x), y(v.y), z(v.z) {}
 		__duel__ const Normal3& operator=(const Vec3<T>& v)
 		{
@@ -3627,6 +3669,19 @@ namespace CUM
 		return result;
 	}
 
+	template<typename T>
+	__duel__ const Vec3f applyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	{
+		Vec3<T> result;
+		Quaternion<T> pQua(v.x, v.y, v.z, 0);
+		Quaternion<T> quaConj = conjugate(qua);
+		Quaternion<T> pRes = quaConj* pQua * pQua;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		return result;
+	}
+
 #pragma endregion
 
 
@@ -3647,8 +3702,13 @@ namespace CUM
 
 #pragma endregion
 
-#pragma region 
+#pragma region
+
+#pragma region  other utilities
+#pragma endregion
 }
+
+
 
 #endif // !__CUDA3DMATH__CUH__
 

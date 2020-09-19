@@ -71,7 +71,7 @@ __global__ void kernel()
 {
 	CUM::PrimitiveVector<Geometry> geoVec;
 	Sphere sp;
-	Box bx;
+	OBox bx;
 	geoVec.push_back(sp);
 	geoVec.push_back(bx);
 	for (Int i = 0; i < geoVec.Size(); i++)
@@ -170,12 +170,16 @@ int main()
 	Ray r;
 	CUM::PrimitiveVector<Geometry> geoVec;
 	Sphere sp;
-	Box bx;
+	OBox bx;
 	geoVec.push_back(sp);
 	geoVec.push_back(bx);
 	for (Int i = 0; i < geoVec.Size(); i++)
 	{
 		geoVec[i].GetArea();
 	}
+
+	CUM::Point3f p0;
+	CUM::Vec3f vfff;
+	p0 = vfff;
 	//Geometry g;
 }
