@@ -378,11 +378,10 @@ namespace CUM
 		}
 		const Int MaxAbsIdx() const
 		{
-			T xa = abs<Float>(3.0);
-			T ya = abs<Float>(3.0);
-			T za = abs<Float>(3.0);
-			//return max(xa, ya) ? (max(xa, za) ? 0 : 2) : (max(ya, za)1 : 2);
-			return 0;
+			T xa = x < 0.0 ? -x : x;
+			T ya = y < 0.0 ? -y : y;
+			T za = z < 0.0 ? -z : z;
+			return xa > ya ? (xa > za ? 0 : 2) : (ya > za ? 1 : 2);
 		}
 	};
 

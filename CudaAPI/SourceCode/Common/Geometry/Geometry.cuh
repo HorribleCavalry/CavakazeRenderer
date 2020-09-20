@@ -16,7 +16,7 @@ public:
 	__duel__ Geometry() : centroid() {}
 	__duel__ Geometry(const CUM::Point3f& _centroid) : centroid(_centroid) {}
 public:
-	__duel__ virtual const Bool HitTest(Ray& inputRay)
+	__duel__ virtual const Bool HitTest(Ray& ray)
 	{
 		CHECK(false, "Use Geometry::HitTest is not permitted!");
 		return false;
@@ -228,6 +228,70 @@ public:
 	__duel__ virtual const Float GetVolume() override
 	{
 		return volume;
+	}
+};
+
+class Triangle : public Geometry
+{
+public:
+	CUM::Point3f points[3];
+	CUM::Normal3f normal;
+public:
+	__duel__ Triangle(const CUM::Point3f _points[3])
+	{
+		for (Int i = 0; i < 3; i++)
+		{
+			points[i] = _points[i];
+		}
+		normal = CUM::normalize(CUM::cross(points[1] - points[0], points[2] - points[0]));
+	}
+public:
+	__duel__ virtual const Bool HitTest(Ray& ray) override
+	{
+		Float a = points[0].x - points[1].x, b = points[0].x - points[2].x, c = ray.direction.x, d = points[0].x - ray.origin.x;
+		Float e = points[0].y - points[1].y, f = points[0].y - points[2].y, g = ray.direction.y, h = points[0].y - ray.origin.y;
+		Float i = points[0].z - points[1].z, j = points[0].z - points[2].z, k = ray.direction.z, l = points[0].z - ray.origin.z;
+
+		Float m = f * k - g * j, n = h * k - g * l, p = f * l - h * j;
+		Float q = g * i - e * k, s = e * j - f * i;
+
+		double inv_denom = 1.0 / (a * m + b * q + c * s);
+
+		double e1 = d * m - b * n - c * p;
+		double beta = e1 * inv_denom;
+
+		if (beta < 0.0)
+			return (false);
+
+		double r = r = e * l - h * i;
+		double e2 = a * n + d * q + c * r;
+		double gamma = e2 * inv_denom;
+
+		if (gamma < 0.0)
+			return false;
+
+		if (beta + gamma > 1.0)
+			return false;
+
+		double e3 = a * p - b * r + d * s;
+		double t = e3 * inv_denom;
+
+		if (t < Epsilon)
+			return false;
+
+		ray.record.times = t;
+		ray.record.normal = normal;
+		ray.record.position = ray.GetEndPoint(t);
+		return true;
+	}
+	__duel__ virtual const Float GetArea()
+	{
+		return 0.5 * CUM::norm(CUM::cross(points[1] - points[0], points[2] - points[0]));
+	}
+	__duel__ virtual const Float GetVolume()
+	{
+		CHECK(false, "The triangle do not have volume!");
+		return 0.0;
 	}
 };
 
