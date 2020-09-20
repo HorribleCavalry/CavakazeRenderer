@@ -4,6 +4,8 @@
 #include "../Cuda3DMath.cuh"
 #include "../Tools.cuh"
 #include "../../CudaSTD/cuiostream.cuh"
+#include "../CudaPrimitivesVector.cuh"
+#include "../../CudaSTD/cuvector.cuh"
 
 class Geometry
 {
@@ -90,6 +92,141 @@ public:
 	__duel__ virtual const Float GetVolume() override
 	{
 		return 0.0;
+	}
+};
+
+//Orientd Box
+class BBox : public Geometry
+{
+private:
+	CUM::Vec3f extent;
+	CUM::Point3f pMin;
+	CUM::Point3f pMax;
+public:
+
+	__duel__ BBox() : Geometry(CUM::Point3f(0.0, 1.0, 6)) {}
+
+
+	__duel__ BBox(CUM::Point3f& _centroid, const CUM::Vec3f& _extent)
+		: extent(_extent), Geometry(_centroid)
+	{
+		pMin = -extent;
+		pMax = extent;
+		CUM::Vec3f pMax;
+		area = 2.0 * (extent.x*extent.y + extent.x*extent.z + extent.y*extent.z);
+		volume = extent.x * extent.y * extent.z;
+	}
+private:
+	const Int GetUnitVal(const Float& val)
+	{
+		return val >= 0.0 ? 1.0 : -1.0;
+	}
+	const CUM::Normal3f GetNormal(const CUM::Vec3f& v)
+	{
+		CHECK(!v.IsZero(), "BBox::GetNormal error: the v can not be a zero vec!");
+		Float unit;
+		switch (v.MaxAbsIdx())
+		{
+		case 0:
+		{
+			unit = GetUnitVal(v.x);
+			return CUM::Normal3f(unit, 0.0, 0.0);
+		}break;
+
+		case 1:
+		{
+			unit = GetUnitVal(v.y);
+			return CUM::Normal3f(0.0, unit, 0.0);
+		}break;
+
+		case 2:
+		{
+			unit = GetUnitVal(v.z);
+			return CUM::Normal3f(0.0, 0.0, unit);
+		}break;
+
+		default:
+			CHECK(false, "OBox::GetNormal error: can not run switch::default!");
+			break;
+		}
+		CHECK(false, "OBox::GetNormal error: can not run switch::default!");
+		return CUM::Normal3f(1.0, 0.0, 0.0);
+	}
+public:
+	__duel__ virtual const Bool HitTest(Ray& rayB) override
+	{
+		CUM::Vec3f directionB = rayB.direction;
+		CUM::Point3f originB = rayB.origin - centroid;
+
+		Float ox = originB.x; Float oy = originB.y; Float oz = originB.z;
+		Float dx = directionB.x; Float dy = directionB.y; Float dz = directionB.z;
+
+		Float tx_min, ty_min, tz_min;
+		Float tx_max, ty_max, tz_max;
+
+		Float a = 1.0 / dx;
+		if (a >= 0)
+		{
+			tx_min = (pMin.x - ox) * a;
+			tx_max = (pMax.x - ox) * a;
+		}
+		else
+		{
+			tx_min = (pMax.x - ox) * a;
+			tx_max = (pMin.x - ox) * a;
+		}
+
+		Float b = 1.0 / dy;
+		if (b >= 0)
+		{
+			ty_min = (pMin.y - oy) * b;
+			ty_max = (pMax.y - oy) * b;
+		}
+		else
+		{
+			ty_min = (pMax.y - oy) * b;
+			ty_max = (pMin.y - oy) * b;
+		}
+
+		Float c = 1.0 / dy;
+		if (b >= 0)
+		{
+			tz_min = (pMin.z - oz) * c;
+			tz_max = (pMax.z - oz) * c;
+		}
+		else
+		{
+			tz_min = (pMax.z - oz) * c;
+			tz_max = (pMin.z - oz) * c;
+		}
+
+		Float t0, t1;
+
+		t0 = tx_min > ty_min ? tx_min : ty_min;
+		t0 = tz_min > 0.0 ? tz_min : t0;
+
+		t1 = tx_max < ty_max ? tx_max : ty_max;
+		t1 = tz_max < t1 ? tz_max : t1;
+
+		Bool isHit = t0 < t1 && t1 > Epsilon;
+
+		if (isHit)
+		{
+			rayB.record.times = t0;
+			CUM::Point3f hitPositionB(originB + t0 * directionB);
+			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
+			rayB.record.normal = CUM::Vec3f(normalB.x, normalB.y, normalB.z);
+		}
+
+		return isHit;
+	}
+	__duel__ virtual const Float GetArea() override
+	{
+		return area;
+	}
+	__duel__ virtual const Float GetVolume() override
+	{
+		return volume;
 	}
 };
 
@@ -293,6 +430,35 @@ public:
 		CHECK(false, "The triangle do not have volume!");
 		return 0.0;
 	}
+};
+
+class Mesh
+{
+public:
+	CUM::PrimitiveVector<Geometry> primitives;
+};
+
+class Material
+{
+
+};
+
+class Object
+{
+public:
+	CUM::Transform transform;
+	Mesh mesh;
+	Material material;
+};
+
+struct HierarchyTreeNode
+{
+	custd::cuvector<HierarchyTreeNode*> childNodes;
+};
+
+class HierarchyTree
+{
+
 };
 
 #endif // !__GEOMETRY__CUH__

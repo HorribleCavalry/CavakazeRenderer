@@ -16,6 +16,7 @@
     <ClInclude Include="SourceCode\Common\Geometry\Geometry.cuh" />
     <ClInclude Include="SourceCode\Common\Tools.cuh" />
     <ClInclude Include="SourceCode\Common\stb_image.h" />
+    <ClInclude Include="SourceCode\Common\Utility.cuh" />
     <ClInclude Include="SourceCode\CudaAPI.cuh" />
     <ClInclude Include="SourceCode\CudaAPI.h" />
     <ClInclude Include="SourceCode\CudaSTD\cuarray.cuh" />

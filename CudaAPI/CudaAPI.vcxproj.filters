@@ -46,6 +46,9 @@
     <ClInclude Include="SourceCode\Common\Tools.cuh">
       <Filter>SourceCode\Common</Filter>
     </ClInclude>
+    <ClInclude Include="SourceCode\Common\Utility.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">

@@ -3705,6 +3705,16 @@ namespace CUM
 
 #pragma region  other utilities
 #pragma endregion
+
+	class Transform
+	{
+	public:
+		Vec3f scale;
+		Quaternionf rotation;
+		Vec3f translation;
+	public:
+
+	};
 }
 
 
