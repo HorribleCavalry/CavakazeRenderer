@@ -9,19 +9,19 @@ class Record
 public:
 	CUM::Point3f position;
 	CUM::Normal3f normal;
-	CUM::Color3f albedo;
+	CUM::Color3f sampledColor;
 	Float times;
 public:
-	__duel__ Record():position(CUM::Point3f()),normal(),albedo(CUM::Color3f()),times(0.0) {}
+	__duel__ Record():position(CUM::Point3f()),normal(),sampledColor(CUM::Color3f()),times(0.0) {}
 	__duel__ Record(const CUM::Point3f& _position, const CUM::Normal3f& _normal, const CUM::Color3f& _albedo, const Float& _time)
-		:position(_position), normal(_normal), albedo(_albedo), times(_time) {}
+		:position(_position), normal(_normal), sampledColor(_albedo), times(_time) {}
 	//Record(CUM::Point3f&& _position, CUM::Normal&& _normal, CUM::Color3f&& _albedo, Float&& _time)
 	//	:position(_position), normal(_normal), albedo(_albedo), times(_time) {}
 	__duel__ const Record operator=(const Record& rec)
 	{
 		position = rec.position;
 		normal = rec.normal;
-		albedo = rec.albedo;
+		sampledColor = rec.sampledColor;
 		times = rec.times;
 		return *this;
 	}
@@ -61,12 +61,19 @@ public:
 	Float aspectRatio;
 	Float nearPlan;
 	Float farPlan;
+	Int sampleTime;
 public:
-	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan)
-		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan)
+	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime)
+		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan), sampleTime(_sampleTime)
 	{
 		//Aspect ratio always width/height.
 		aspectRatio = Float(imageSize.x) / Float(imageSize.y);
+	}
+
+public:
+	const Ray GetRay(const CUM::Vec2f& uv)
+	{
+
 	}
 };
 
@@ -75,8 +82,8 @@ class PersCamera : public Camera
 public:
 	Float fovH;
 public:
-	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Float& _fovH)
-		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan), fovH(_fovH) {}
+	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH)
+		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime), fovH(_fovH) {}
 
 };
 

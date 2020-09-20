@@ -56,6 +56,16 @@ namespace CUM
 		{
 			return size;
 		}
+	public:
+		//To do...
+		bool HitTest(Ray& ray)
+		{
+			for (size_t i = 0; i < length; i++)
+			{
+
+			}
+			return false;
+		}
 	};
 }
 

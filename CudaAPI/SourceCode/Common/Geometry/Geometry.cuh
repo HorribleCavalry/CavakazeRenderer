@@ -440,7 +440,7 @@ public:
 
 class Material
 {
-
+	
 };
 
 class Object
@@ -448,17 +448,109 @@ class Object
 public:
 	CUM::Transform transform;
 	Mesh mesh;
+	BBox bBox;
 	Material material;
 };
 
 struct HierarchyTreeNode
 {
+	Object object;
 	custd::cuvector<HierarchyTreeNode*> childNodes;
 };
 
 class HierarchyTree
 {
+private:
+	static HierarchyTreeNode* headNod;
+public:
+	__duel__ const HierarchyTreeNode* GetInstance()
+	{
+		if (!headNod)
+			headNod = new HierarchyTreeNode;
+		return headNod;
+	}
+};
 
+class Texture
+{
+public:
+	CUM::Color3f* buffer;
+	CUM::Vec2i size;
+	Int width;
+	Int height;
+	Int length;
+public:
+	__duel__ Texture(const CUM::Vec2i& _size)
+		: size(_size),width(_size.x), height(_size.y)
+	{
+		length = width * height;
+		buffer = new CUM::Color3f[width * height];
+	}
+};
+
+__global__ void render(Texture* renderTarget, Camera camera, CUM::PrimitiveVector<Geometry>* primitivesVector_devicePtr)
+{
+	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+
+	CUM::Vec2i size = renderTarget->size;
+
+	Int x = globalIdx % size.x;
+	Int y = globalIdx % size.y;
+
+	Float u = Float(x) / Float(size.x);
+	Float v = Float(y) / Float(size.y);
+	CUM::Vec2f uv(u, v);
+	Ray ray = camera.GetRay(uv);
+
+	CUM::Color3f resultColor(1.0);
+	CUM::Color3f tempColor(1.0);
+
+	Bool haveHitPrimitives = false;
+
+	for (Int i = 0; i < camera.sampleTime; i++)
+	{
+		haveHitPrimitives = false;
+
+		if (primitivesVector_devicePtr->HitTest(ray))
+		{
+			tempColor = ray.record.sampledColor;
+			resultColor *= tempColor;
+			haveHitPrimitives = true;
+		}
+
+		if (!haveHitPrimitives)
+		{
+			resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
+			break;
+		}
+
+
+
+	}
+}
+
+class Scene
+{
+public:
+	Camera* camera;
+	//HierarchyTree hierarchyTree;
+	CUM::PrimitiveVector<Geometry> primitivesVector;
+	
+public:
+	__duel__ void Render()
+	{
+		
+	}
+public:
+	void copyToDevice()
+	{
+
+	}
+public:
+	void AddPrimitive(Geometry& geo)
+	{
+		primitivesVector.push_back(geo);
+	}
 };
 
 #endif // !__GEOMETRY__CUH__

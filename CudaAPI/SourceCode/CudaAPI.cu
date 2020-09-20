@@ -182,4 +182,8 @@ int main()
 	CUM::Vec3f vfff;
 	p0 = vfff;
 	//Geometry g;
+
+	Scene scene;
+	Sphere sp;
+	scene.AddPrimitive(sp);
 }
