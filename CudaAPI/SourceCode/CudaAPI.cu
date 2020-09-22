@@ -2,6 +2,7 @@
 #include "Common/CudaPrimitivesVector.cuh"
 #include "Common/Tools.cuh"
 #include "Common/Geometry/Geometry.cuh"
+#include "cuda/std/limits"
 #include <chrono>
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -85,10 +86,42 @@ __global__ void kernel()
 //	return CUM::Vec4<Float>();
 //}
 
-
-__global__ void testVirtualBetweenHostAndDevice(Camera* cam)
+class Base
 {
-	cam->Call();
+public:
+	Int a;
+	__duel__ virtual void Call()
+	{
+		printf("Called Base::Call()\n");
+	}
+};
+
+class Child : public Base
+{
+public:
+	Int b;
+	__duel__ virtual void Call() override
+	{
+		printf("Called Child::Call()\n");
+	}
+};
+
+template<typename T>
+__global__ void applyDeviceVirtualPtr(T* des)
+{
+	T temp(*des);
+	T* tempPtr = &temp;
+	Int insBytes = sizeof(T);
+	void* desUnit = (void*)des;
+	void* tempUnit = (void*)tempPtr;
+	memcpy(des, tempPtr, sizeof(T));
+}
+
+template<typename T>
+__global__ void testCopiedInstance(T* ins)
+{
+	custd::OStream os;
+	os << ins->sampleTime<<custd::endl;
 }
 
 int main()
@@ -188,14 +221,28 @@ int main()
 	p0 = vfff;
 	//Geometry g;
 
-	Scene scene;
-	//Sphere sp;
-	scene.AddPrimitive(sp);
-	Camera* perCamHost = new Camera;
-	Camera* perCamDevice;
-	cudaMalloc(&perCamDevice, sizeof(Camera));
-	cudaMemcpy(perCamDevice, perCamHost, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
-	testVirtualBetweenHostAndDevice << <1, 1 >> > (perCamDevice);
+	//Scene scene;
+	////Sphere sp;
+	//scene.AddPrimitive(sp);
+	//Camera* perCamHost = new Camera;
+	//perCamHost->sampleTime = 10;
+	//Camera* perCamHostDeviceInterMediate;
+	//Camera* perCamDevice;
+	//
+	//cudaMalloc(&perCamHostDeviceInterMediate, sizeof(Camera));
+	//cudaMalloc(&perCamDevice, sizeof(Camera));
+
+	//cudaMemcpy(perCamHostDeviceInterMediate, perCamHost, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
+	//copyInstance << <1, 1 >> > (perCamHostDeviceInterMediate);
+
+	Base* insHost = new Base;
+	Base* insDevice;
+	insHost->a = 10;
+	cudaMalloc(&insDevice, sizeof(Base));
+	cudaMemcpy(insDevice, insHost, sizeof(Base), cudaMemcpyKind::cudaMemcpyHostToDevice);
+	applyDeviceVirtualPtr << <1, 1 >> > (insDevice);
+
+
 	//perCamHost->Call();
 	//scene.Rendering();
 }

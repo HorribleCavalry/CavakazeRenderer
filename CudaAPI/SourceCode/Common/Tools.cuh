@@ -117,6 +117,11 @@ public:
 		aspectRatio = Float(imageSize.x) / Float(imageSize.y);
 	}
 
+	__duel__ const Camera& operator=(const Camera& cam)
+	{
+		sampleTime = cam.sampleTime;
+	}
+
 public:
 	__duel__ const Ray GetRay(const CUM::Vec2f& uv)
 	{
