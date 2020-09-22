@@ -514,9 +514,6 @@ public:
 	Camera* camera;
 	Camera* cameraDevice;
 
-	Camera tempCamera;
-	Camera tempCameraDevice;
-
 	//HierarchyTree hierarchyTree;
 	CUM::PrimitiveVector<Geometry> primitivesVector;
 	CUM::PrimitiveVector<Geometry> primitivesVector_device;
@@ -541,10 +538,9 @@ public:
 public:
 	void copyToDevice()
 	{
-		tempCameraDevice = camera->copyToDevice();
-
 		cudaMalloc(&cameraDevice, sizeof(Camera));
-		cudaMemcpy(cameraDevice, &tempCamera, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
+		cudaMemcpy(cameraDevice, &camera, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
+		ApplyDeviceVirtualPtr(cameraDevice);
 	}
 public:
 	void AddPrimitive(Geometry& geo)

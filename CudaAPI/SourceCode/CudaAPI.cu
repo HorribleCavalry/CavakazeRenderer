@@ -106,16 +106,6 @@ public:
 	}
 };
 
-template<typename T>
-__global__ void applyDeviceVirtualPtr(T* des)
-{
-	T temp(*des);
-	T* tempPtr = &temp;
-	Int insBytes = sizeof(T);
-	void* desUnit = (void*)des;
-	void* tempUnit = (void*)tempPtr;
-	memcpy(des, tempPtr, sizeof(T));
-}
 
 template<typename T>
 __global__ void testCopiedInstance(T* ins)
@@ -240,8 +230,7 @@ int main()
 	insHost->a = 10;
 	cudaMalloc(&insDevice, sizeof(Base));
 	cudaMemcpy(insDevice, insHost, sizeof(Base), cudaMemcpyKind::cudaMemcpyHostToDevice);
-	applyDeviceVirtualPtr << <1, 1 >> > (insDevice);
-
+	ApplyDeviceVirtualPtr(insDevice);
 
 	//perCamHost->Call();
 	//scene.Rendering();

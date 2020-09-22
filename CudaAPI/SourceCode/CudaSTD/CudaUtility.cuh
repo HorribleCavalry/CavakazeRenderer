@@ -57,4 +57,21 @@ const Bool IsInRange(const T& n, const U& minN, const K& maxN)
 //{
 //	return val < 0 ? -val : val;
 //}
+
+template<typename T>
+__global__ void applyDeviceVirtualPtr(T* devicePtr)
+{
+	T temp(*devicePtr);
+	T* tempPtr = &temp;
+	Int insBytes = sizeof(T);
+	void* desUnit = (void*)devicePtr;
+	void* tempUnit = (void*)tempPtr;
+	memcpy(devicePtr, tempPtr, sizeof(T));
+}
+
+template<typename T>
+__host__ void ApplyDeviceVirtualPtr(T* devicePtr)
+{
+	applyDeviceVirtualPtr<<<1,1>>> (devicePtr);
+}
 #endif // !__CUDAUYILITY__CUH__
