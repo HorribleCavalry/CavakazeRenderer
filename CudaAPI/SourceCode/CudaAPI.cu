@@ -86,6 +86,11 @@ __global__ void kernel()
 //}
 
 
+__global__ void testVirtualBetweenHostAndDevice(Camera* cam)
+{
+	cam->Call();
+}
+
 int main()
 {
 	//Person** prList = new Person*[5];
@@ -184,6 +189,13 @@ int main()
 	//Geometry g;
 
 	Scene scene;
-	Sphere sp;
+	//Sphere sp;
 	scene.AddPrimitive(sp);
+	Camera* perCamHost = new Camera;
+	Camera* perCamDevice;
+	cudaMalloc(&perCamDevice, sizeof(Camera));
+	cudaMemcpy(perCamDevice, perCamHost, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
+	testVirtualBetweenHostAndDevice << <1, 1 >> > (perCamDevice);
+	//perCamHost->Call();
+	//scene.Rendering();
 }

@@ -438,11 +438,6 @@ public:
 	CUM::PrimitiveVector<Geometry> primitives;
 };
 
-class Material
-{
-	
-};
-
 class Object
 {
 public:
@@ -471,28 +466,11 @@ public:
 	}
 };
 
-class Texture
-{
-public:
-	CUM::Color3f* buffer;
-	CUM::Vec2i size;
-	Int width;
-	Int height;
-	Int length;
-public:
-	__duel__ Texture(const CUM::Vec2i& _size)
-		: size(_size),width(_size.x), height(_size.y)
-	{
-		length = width * height;
-		buffer = new CUM::Color3f[width * height];
-	}
-};
-
-__global__ void render(Texture* renderTarget, Camera camera, CUM::PrimitiveVector<Geometry>* primitivesVector_devicePtr)
+__global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primitivesVector_devicePtr)
 {
 	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
-
-	CUM::Vec2i size = renderTarget->size;
+	Camera camera = *_camera;
+	CUM::Vec2i size = camera.renderTarget.size;
 
 	Int x = globalIdx % size.x;
 	Int y = globalIdx % size.y;
@@ -509,48 +487,73 @@ __global__ void render(Texture* renderTarget, Camera camera, CUM::PrimitiveVecto
 
 	for (Int i = 0; i < camera.sampleTime; i++)
 	{
-		haveHitPrimitives = false;
 
-		if (primitivesVector_devicePtr->HitTest(ray))
+		if (primitivesVector_devicePtr.HitTest(ray))
 		{
 			tempColor = ray.record.sampledColor;
 			resultColor *= tempColor;
-			haveHitPrimitives = true;
+			ray = ray.CalculateNextRay();
 		}
-
-		if (!haveHitPrimitives)
+		else
 		{
 			resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
 			break;
 		}
-
-
-
 	}
+	camera.renderTarget.buffer[globalIdx].r = round(resultColor.r);
+	camera.renderTarget.buffer[globalIdx].g = round(resultColor.g);
+	camera.renderTarget.buffer[globalIdx].b = round(resultColor.b);
+
+
+
 }
 
 class Scene
 {
 public:
 	Camera* camera;
+	Camera* cameraDevice;
+
+	Camera tempCamera;
+	Camera tempCameraDevice;
+
 	//HierarchyTree hierarchyTree;
 	CUM::PrimitiveVector<Geometry> primitivesVector;
-	
+	CUM::PrimitiveVector<Geometry> primitivesVector_device;
 public:
-	__duel__ void Render()
+	__duel__ void Rendering()
 	{
-		
+		CUM::Vec2i size(camera->imageSize);
+		Int totalNum = size.x*size.y;
+
+		Int threadNum = 1024;
+		Int blockNum = Int(floor((Float(totalNum)/threadNum)) + Epsilon);
+		//rendering <<<blockNum, threadNum >>>
+		//	(cameraDevice,
+		//	primitivesVector_device);
 	}
+
+	__duel__ void EndRendering()
+	{
+
+	}
+
 public:
 	void copyToDevice()
 	{
+		tempCameraDevice = camera->copyToDevice();
 
+		cudaMalloc(&cameraDevice, sizeof(Camera));
+		cudaMemcpy(cameraDevice, &tempCamera, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
 	}
 public:
 	void AddPrimitive(Geometry& geo)
 	{
 		primitivesVector.push_back(geo);
 	}
+public:
+
+
 };
 
 #endif // !__GEOMETRY__CUH__

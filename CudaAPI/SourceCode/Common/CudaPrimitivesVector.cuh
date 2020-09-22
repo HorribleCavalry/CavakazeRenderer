@@ -2,6 +2,8 @@
 #define __CUDAPRIMITIVESVECTOR__CUH__
 
 #include "../CudaSTD/CudaUtility.cuh"
+#include "Tools.cuh"
+
 
 namespace CUM
 {
@@ -14,6 +16,7 @@ namespace CUM
 		Int size = 0;
 	public:
 		__duel__ PrimitiveVector() : ptrList(nullptr), capacity(0), size(0) {}
+		__duel__ PrimitiveVector(const PrimitiveVector& vec) : ptrList(vec.ptrList), capacity(vec.capacity), size(vec.size) {}
 		__duel__ PrimitiveVector(const T& val) : ptrList(new T*[1]), capacity(1), size(1) { ptrList[0] = &val; }
 		__duel__ ~PrimitiveVector()
 		{
@@ -58,13 +61,20 @@ namespace CUM
 		}
 	public:
 		//To do...
-		bool HitTest(Ray& ray)
+		__duel__ bool HitTest(Ray& ray)
 		{
-			for (size_t i = 0; i < length; i++)
+			for (size_t i = 0; i < size; i++)
 			{
 
 			}
 			return false;
+		}
+
+	public:
+		__duel__ const PrimitiveVector copyToDevice()
+		{
+			PrimitiveVector result;
+			return result;
 		}
 	};
 }

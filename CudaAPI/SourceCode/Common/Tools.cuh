@@ -4,12 +4,18 @@
 #include "../CudaSTD/CudaUtility.cuh"
 #include "Cuda3DMath.cuh"
 
+class Material
+{
+
+};
+
 class Record
 {
 public:
 	CUM::Point3f position;
 	CUM::Normal3f normal;
 	CUM::Color3f sampledColor;
+	Material sampledMaterial;
 	Float times;
 public:
 	__duel__ Record():position(CUM::Point3f()),normal(),sampledColor(CUM::Color3f()),times(0.0) {}
@@ -49,6 +55,34 @@ public:
 	{
 		return origin + times * direction;
 	}
+	//To do...
+	__duel__ const Ray CalculateNextRay()
+	{
+		return Ray();
+	}
+};
+
+class Texture
+{
+public:
+	CUM::Color3f* buffer;
+	CUM::Vec2i size;
+	Int width;
+	Int height;
+	Int length;
+public:
+	__duel__ Texture() {}
+	__duel__ Texture(const CUM::Vec2i& _size)
+		: size(_size), width(_size.x), height(_size.y)
+	{
+		length = width * height;
+		buffer = new CUM::Color3f[width * height];
+	}
+};
+
+enum CameraType
+{
+	Perspective
 };
 
 class Camera
@@ -62,18 +96,45 @@ public:
 	Float nearPlan;
 	Float farPlan;
 	Int sampleTime;
+	Texture renderTarget;
+	CameraType type;
 public:
-	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime)
-		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan), sampleTime(_sampleTime)
+	__duel__ Camera()
+	{
+
+	}
+
+	__duel__ Camera(const Camera& cam) : position(cam.position),direction(cam.direction),rotation(cam.rotation),imageSize(cam.imageSize),aspectRatio(cam.aspectRatio),
+		nearPlan(cam.nearPlan),farPlan(cam.farPlan),sampleTime(cam.sampleTime),renderTarget(cam.renderTarget)
+	{
+
+	}
+
+	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, Texture _renderTarget)
+		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan), sampleTime(_sampleTime),renderTarget(_renderTarget)
 	{
 		//Aspect ratio always width/height.
 		aspectRatio = Float(imageSize.x) / Float(imageSize.y);
 	}
 
 public:
-	const Ray GetRay(const CUM::Vec2f& uv)
+	__duel__ const Ray GetRay(const CUM::Vec2f& uv)
 	{
+		return Ray();
+	}
 
+	virtual Camera copyToDevice()
+	{
+		Camera result(*this);
+		Int bufferLength = renderTarget.length;
+		cudaMalloc(&result.renderTarget.buffer, bufferLength * sizeof(CUM::Color3f));
+		return result;
+	}
+public:
+	__duel__ virtual void Call()
+	{
+		custd::OStream os;
+		os << "Called Camera"<<custd::endl;
 	}
 };
 
@@ -82,9 +143,24 @@ class PersCamera : public Camera
 public:
 	Float fovH;
 public:
-	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH)
-		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime), fovH(_fovH) {}
 
+	__duel__ PersCamera() {}
+
+	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture _renderTarget)
+		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime,_renderTarget), fovH(_fovH) {}
+	virtual Camera copyToDevice() override
+	{
+		PersCamera result(*this);
+		Int bufferLength = renderTarget.length;
+		cudaMalloc(&result.renderTarget.buffer, bufferLength * sizeof(CUM::Color3f));
+		return result;
+	}
+public:
+	__duel__ virtual void Call() override
+	{
+		custd::OStream os;
+		os << "Called PersCamera" << custd::endl;
+	}
 };
 
 #endif // !__RAY__CUH__
