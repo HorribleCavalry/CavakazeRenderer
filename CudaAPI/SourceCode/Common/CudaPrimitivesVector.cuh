@@ -74,9 +74,16 @@ namespace CUM
 		__duel__ void copyValToDevice(PrimitiveVector* device)
 		{
 			T** ptrListDevice;
-			Int* devicePtr;
-			pt
-			cudaMalloc(&ptrListDevice)
+			cudaMalloc(&ptrListDevice, capacity * sizeof(T*));
+			T** ptrListHost = new T*[capacity];
+			for (Int i = 0; i < size; i++)
+			{
+				ptrList[i]->copyToDevice(&ptrListHost[i]);
+			}
+
+			cudaMemcpy(ptrListDevice, ptrListHost, size * sizeof(T*), cudaMemcpyKind::cudaMemcpyHostToDevice);
+
+			delete[] ptrListHost;
 		}
 	};
 }

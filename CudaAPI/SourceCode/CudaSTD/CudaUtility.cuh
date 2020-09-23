@@ -76,7 +76,7 @@ __host__ void ApplyDeviceVirtualPtr(T* devicePtr)
 }
 
 template<typename T>
-__host__ void CudaInsMemCpyHostToDevice(T*& device, T*& host, const Int& size)
+__host__ void CudaInsMemCpyHostToDevice(T*& device, T*& host, const Int size)
 {
 
 	cudaMalloc(&device, size);

@@ -33,6 +33,11 @@ public:
 		CHECK(false, "Use Geometry::GetVolume is not permitted!");
 		return 0.0;
 	}
+public:
+	virtual void copyToDevice(Geometry*& device)
+	{
+		CudaInsMemCpyHostToDevice(device, this, sizeof(Geometry));
+	}
 };
 
 class Sphere : public Geometry
@@ -545,7 +550,7 @@ public:
 	void copyToDevice()
 	{
 		CudaInsMemCpyHostToDevice(cameraDevice, cameraHost, sizeof(Camera));
-		CudaInsMemCpyHostToDevice(&primitivesVectorDevice, primitivesVectorHost, sizeof(CUM::PrimitiveVector<Geometry>));
+		CudaInsMemCpyHostToDevice(primitivesVectorDevice, primitivesVectorHost, sizeof(CUM::PrimitiveVector<Geometry>));
 	}
 public:
 	void AddPrimitive(Geometry& geo)
