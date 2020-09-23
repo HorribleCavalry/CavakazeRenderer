@@ -74,4 +74,17 @@ __host__ void ApplyDeviceVirtualPtr(T* devicePtr)
 {
 	applyDeviceVirtualPtr<<<1,1>>> (devicePtr);
 }
+
+template<typename T>
+__host__ void CudaInsMemCpyHostToDevice(T*& device, T*& host, const Int& size)
+{
+
+	cudaMalloc(&device, size);
+	cudaMemcpy(device, host, size, cudaMemcpyKind::cudaMemcpyHostToDevice);
+	ApplyDeviceVirtualPtr(device);
+
+	//host->copyValToDevice();
+
+}
+
 #endif // !__CUDAUYILITY__CUH__

@@ -71,10 +71,12 @@ namespace CUM
 		}
 
 	public:
-		__duel__ const PrimitiveVector copyToDevice()
+		__duel__ void copyValToDevice(PrimitiveVector* device)
 		{
-			PrimitiveVector result;
-			return result;
+			T** ptrListDevice;
+			Int* devicePtr;
+			pt
+			cudaMalloc(&ptrListDevice)
 		}
 	};
 }

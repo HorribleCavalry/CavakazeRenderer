@@ -511,16 +511,22 @@ __global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primit
 class Scene
 {
 public:
-	Camera* camera;
-	Camera* cameraDevice;
+	PersCamera* cameraHost;
+	PersCamera* cameraDevice;
 
 	//HierarchyTree hierarchyTree;
-	CUM::PrimitiveVector<Geometry> primitivesVector;
-	CUM::PrimitiveVector<Geometry> primitivesVector_device;
+	CUM::PrimitiveVector<Geometry>* primitivesVectorHost;
+	CUM::PrimitiveVector<Geometry>* primitivesVectorDevice;
+public:
+	__duel__ Scene(PersCamera* _cameraHost, PersCamera* _cameraDevice)
+		:cameraHost(_cameraHost), cameraDevice(_cameraDevice)
+	{
+		
+	}
 public:
 	__duel__ void Rendering()
 	{
-		CUM::Vec2i size(camera->imageSize);
+		CUM::Vec2i size(cameraHost->imageSize);
 		Int totalNum = size.x*size.y;
 
 		Int threadNum = 1024;
@@ -538,14 +544,13 @@ public:
 public:
 	void copyToDevice()
 	{
-		cudaMalloc(&cameraDevice, sizeof(Camera));
-		cudaMemcpy(cameraDevice, &camera, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
-		ApplyDeviceVirtualPtr(cameraDevice);
+		CudaInsMemCpyHostToDevice(cameraDevice, cameraHost, sizeof(Camera));
+		CudaInsMemCpyHostToDevice(&primitivesVectorDevice, primitivesVectorHost, sizeof(CUM::PrimitiveVector<Geometry>));
 	}
 public:
 	void AddPrimitive(Geometry& geo)
 	{
-		primitivesVector.push_back(geo);
+		(*primitivesVectorHost).push_back(geo);
 	}
 public:
 
