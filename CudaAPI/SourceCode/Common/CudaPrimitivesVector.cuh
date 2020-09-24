@@ -20,9 +20,9 @@ namespace CUM
 		__duel__ PrimitiveVector(const T& val) : ptrList(new T*[1]), capacity(1), size(1) { ptrList[0] = &val; }
 		__duel__ ~PrimitiveVector()
 		{
-			if (ptrList)
-				delete[] ptrList;
-			ptrList = nullptr;
+			//if (ptrList)
+			//	delete[] ptrList;
+			//ptrList = nullptr;
 		}
 	public:
 		__duel__ void push_back(T& val)
@@ -71,20 +71,25 @@ namespace CUM
 		}
 
 	public:
-		__duel__ void copyValToDevice(PrimitiveVector* device)
+		__host__ PrimitiveVector* copyToDevice()
 		{
-			T** ptrListDevice;
-			cudaMalloc(&ptrListDevice, capacity * sizeof(T*));
-			
+			PrimitiveVector vecInsWithDevicePtr(*this);
+
 			T** ptrListHost = new T*[capacity];
 			for (Int i = 0; i < size; i++)
 			{
-				ptrList[i]->copyToDevice(&ptrListHost[i]);
+				ptrListHost[i] = ptrList[i]->copyToDevice();
 			}
 
+			T** ptrListDevice;
+			cudaMalloc(&ptrListDevice, capacity * sizeof(T*));
 			cudaMemcpy(ptrListDevice, ptrListHost, size * sizeof(T*), cudaMemcpyKind::cudaMemcpyHostToDevice);
-
 			delete[] ptrListHost;
+
+			vecInsWithDevicePtr.ptrList = ptrListDevice;
+
+			PrimitiveVector* vecDevice = CudaInsMemCpyHostToDevice(&vecInsWithDevicePtr);
+			return vecDevice;
 		}
 	};
 }

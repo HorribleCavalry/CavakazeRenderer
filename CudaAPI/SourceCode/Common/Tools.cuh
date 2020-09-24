@@ -114,6 +114,7 @@ public:
 	__duel__ const Camera& operator=(const Camera& cam)
 	{
 		sampleTime = cam.sampleTime;
+		return *this;
 	}
 
 public:

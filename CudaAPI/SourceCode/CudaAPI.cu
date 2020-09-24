@@ -119,129 +119,32 @@ __global__ void testSceneCopy(T* ins)
 {
 	ins->Call();
 	ins->camera->Call();
+	auto vecPtr = ins->primitivesVectorPtr;
+	auto vec = *vecPtr;
+	Int size = vec.Size();
+	for (Int i = 0; i < size; i++)
+	{
+		vec[i].Call();
+	}
 }
 
 int main()
 {
-	//Person** prList = new Person*[5];
 
-	//Person per0;
-	//Student stu;
-	//Farmer far;
-	//Heacker hea;
-	//Worker wor;
-	//prList[0] = &per0;
-	//prList[1] = &stu;
-	//prList[2] = &far;
-	//prList[3] = &hea;
-	//prList[4] = &wor;
-	//
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	prList[i]->callType();
-	//}
-
-	//CUM::PrimitiveVector<Person> list;
-	//list.push_back(per0);
-	//list.push_back(stu);
-	//list.push_back(far);
-	//list.push_back(hea);
-	//list.push_back(wor);
-	//for (Int i = 0; i < 5; i++)
-	//{
-	//	list[i].callType();
-	//}
-
-	CUM::Vec2i vi0;
-	CUM::Vec2i vi1(1.0f, 2.0f);
-	CUM::Vec2f vf0;
-	CUM::Vec2f vf1(1.0f, 2.0f);
-	CUM::Vec4f vf4(2.0f);
-	auto test =CUM::normalize(vf4);
-	CUM::Vec3f vf41(2.0f);
-	auto test1 = CUM::normalize(vf41);
-
-	Person per0;
-	Student stu;
-	Farmer far;
-	Heacker hea;
-	Worker wor;
-
-	CUM::PrimitiveVector<Person> list;
-	list.push_back(per0);
-	list.push_back(stu);
-	list.push_back(far);
-	list.push_back(hea);
-	list.push_back(wor);
-	for (Int i = 0; i < 5; i++)
-	{
-		list[i].callType();
-	}
-
-	CUM::Quaternion<Float> rotatePositive(CUM::Vec3f(0, 1, 0), 0.25*PI, true);
-	CUM::Vec4f trans(1.0, 1.0, 1.0, 0.0);
-	CUM::Vec4f origin(1.0, 1.0, 1.0, 0.0);
-	
-	auto start = std::chrono::steady_clock::now();
-
-	for (Int i = 0; i < 1048576; i++)
-	{
-		auto temp = CUM::applyQuaTransform(rotatePositive, origin);
-		temp *= 2.0;
-		temp /= 2.0;
-		temp += trans;
-		temp -= trans;
-	}
-	auto end = std::chrono::steady_clock::now();
-	std::chrono::duration<Float> duration = end - start;
-	//0.41030820000000001 second
-
-	start = std::chrono::steady_clock::now();
-	kernel << <1, 1 >> > ();
-	end = std::chrono::steady_clock::now();
-	duration = end - start;
-	//0.41093520000000000 second
-
-	Ray r;
-	CUM::PrimitiveVector<Geometry> geoVec;
-	Sphere sp;
-	OBox bx;
-	geoVec.push_back(sp);
-	geoVec.push_back(bx);
-	for (Int i = 0; i < geoVec.Size(); i++)
-	{
-		geoVec[i].GetArea();
-	}
-
-	CUM::Point3f p0;
-	CUM::Vec3f vfff;
-	p0 = vfff;
-	//Geometry g;
-
-	//Scene scene;
-	////Sphere sp;
-	//scene.AddPrimitive(sp);
-	//Camera* perCamHost = new Camera;
-	//perCamHost->sampleTime = 10;
-	//Camera* perCamHostDeviceInterMediate;
-	//Camera* perCamDevice;
-	//
-	//cudaMalloc(&perCamHostDeviceInterMediate, sizeof(Camera));
-	//cudaMalloc(&perCamDevice, sizeof(Camera));
-
-	//cudaMemcpy(perCamHostDeviceInterMediate, perCamHost, sizeof(Camera), cudaMemcpyKind::cudaMemcpyHostToDevice);
-	//copyInstance << <1, 1 >> > (perCamHostDeviceInterMediate);
-
-	Base* insHost = new Base;
-	Base* insDevice;
-	insHost->a = 10;
-	cudaMalloc(&insDevice, sizeof(Base));
-	cudaMemcpy(insDevice, insHost, sizeof(Base), cudaMemcpyKind::cudaMemcpyHostToDevice);
-	ApplyDeviceVirtualPtr(insDevice);
 	PersCamera persCam;
-	Scene scene(&persCam);
+	CUM::PrimitiveVector<Geometry> vec;
+	Geometry geo;
+	Sphere sp;
+	BBox bb;
+	OBox ob;
+	Triangle tri;
+	vec.push_back(geo);
+	vec.push_back(sp);
+	vec.push_back(bb);
+	vec.push_back(ob);
+	vec.push_back(tri);
+	Scene scene(&persCam, &vec);
 	Scene* sceneDevice = scene.copyToDevice();
 	testSceneCopy << <1, 1 >> > (sceneDevice);
-	//perCamHost->Call();
-	//scene.Rendering();
+
 }

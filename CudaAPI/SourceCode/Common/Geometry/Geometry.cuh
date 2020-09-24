@@ -34,9 +34,14 @@ public:
 		return 0.0;
 	}
 public:
-	virtual void copyToDevice(Geometry*& device)
+	virtual Geometry* copyToDevice()
 	{
-		//CudaInsMemCpyHostToDevice(device, this, sizeof(Geometry));
+		return CudaInsMemCpyHostToDevice(this);
+	}
+	__duel__ virtual void Call()
+	{
+		custd::OStream os;
+		os << "Called Geometry::Call();\n";
 	}
 };
 
@@ -97,6 +102,16 @@ public:
 	__duel__ virtual const Float GetVolume() override
 	{
 		return 0.0;
+	}
+public:
+	virtual Sphere* copyToDevice() override
+	{
+		return CudaInsMemCpyHostToDevice(this);
+	}
+	__duel__ virtual void Call() override
+	{
+		custd::OStream os;
+		os << "Called Sphere::Call();\n";
 	}
 };
 
@@ -232,6 +247,16 @@ public:
 	__duel__ virtual const Float GetVolume() override
 	{
 		return volume;
+	}
+public:
+	virtual BBox* copyToDevice() override
+	{
+		return CudaInsMemCpyHostToDevice(this);
+	}
+	__duel__ virtual void Call() override
+	{
+		custd::OStream os;
+		os << "Called BBox::Call();\n";
 	}
 };
 
@@ -371,6 +396,16 @@ public:
 	{
 		return volume;
 	}
+public:
+	virtual OBox* copyToDevice() override
+	{
+		return CudaInsMemCpyHostToDevice(this);
+	}
+	__duel__ virtual void Call() override
+	{
+		custd::OStream os;
+		os << "Called OBox::Call();\n";
+	}
 };
 
 class Triangle : public Geometry
@@ -379,6 +414,11 @@ public:
 	CUM::Point3f points[3];
 	CUM::Normal3f normal;
 public:
+	__duel__ Triangle()
+	{
+
+	}
+
 	__duel__ Triangle(const CUM::Point3f _points[3])
 	{
 		for (Int i = 0; i < 3; i++)
@@ -434,6 +474,16 @@ public:
 	{
 		CHECK(false, "The triangle do not have volume!");
 		return 0.0;
+	}
+public:
+	virtual Triangle* copyToDevice() override
+	{
+		return CudaInsMemCpyHostToDevice(this);
+	}
+	__duel__ virtual void Call() override
+	{
+		custd::OStream os;
+		os << "Called Triangle::Call();\n";
 	}
 };
 
@@ -529,8 +579,14 @@ public:
 
 
 public:
-	__duel__ Scene(PersCamera* _cameraHost)
-		:camera(_cameraHost)
+
+	__duel__ Scene()
+	{
+
+	}
+
+	__duel__ Scene(PersCamera* _camera, CUM::PrimitiveVector<Geometry>* _primitivesVectorPtr)
+		:camera(_camera), primitivesVectorPtr(_primitivesVectorPtr)
 	{
 		
 	}
@@ -555,11 +611,13 @@ public:
 public:
 	Scene* copyToDevice()
 	{
-
 		Scene sceneInsWithDevicePtr(*this);
 
 		PersCamera* cameraDevice = camera->copyToDevice();
+		CUM::PrimitiveVector<Geometry>* primitivesVectorPtrDevice = primitivesVectorPtr->copyToDevice();
+
 		sceneInsWithDevicePtr.camera = cameraDevice;
+		sceneInsWithDevicePtr.primitivesVectorPtr = primitivesVectorPtrDevice;
 
 		Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
 		return sceneDevice;

@@ -59,7 +59,7 @@ const Bool IsInRange(const T& n, const U& minN, const K& maxN)
 //}
 
 template<typename T>
-__global__ void applyDeviceVirtualPtr(T* devicePtr)
+__global__ void ApplyDeviceVirtualPtr(T* devicePtr)
 {
 	T temp(*devicePtr);
 	T* tempPtr = &temp;
@@ -69,11 +69,11 @@ __global__ void applyDeviceVirtualPtr(T* devicePtr)
 	memcpy(devicePtr, tempPtr, sizeof(T));
 }
 
-template<typename T>
-__host__ void ApplyDeviceVirtualPtr(T* devicePtr)
-{
-	applyDeviceVirtualPtr<<<1,1>>> (devicePtr);
-}
+//template<typename T>
+//__host__ void ApplyDeviceVirtualPtr(T* devicePtr)
+//{
+//	applyDeviceVirtualPtr<<<1,1>>> (devicePtr);
+//}
 
 template<typename T>
 __host__ T* CudaInsMemCpyHostToDevice(const T* insWithDevicePtr)
@@ -81,7 +81,7 @@ __host__ T* CudaInsMemCpyHostToDevice(const T* insWithDevicePtr)
 	T* device;
 	cudaMalloc(&device, sizeof(T));
 	cudaMemcpy(device, insWithDevicePtr, sizeof(T), cudaMemcpyKind::cudaMemcpyHostToDevice);
-	ApplyDeviceVirtualPtr(device);
+	ApplyDeviceVirtualPtr << <1, 1 >> > (device);
 	return device;
 }
 
