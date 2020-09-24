@@ -75,6 +75,7 @@ namespace CUM
 		{
 			T** ptrListDevice;
 			cudaMalloc(&ptrListDevice, capacity * sizeof(T*));
+			
 			T** ptrListHost = new T*[capacity];
 			for (Int i = 0; i < size; i++)
 			{

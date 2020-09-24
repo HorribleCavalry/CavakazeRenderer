@@ -80,11 +80,6 @@ public:
 	}
 };
 
-enum CameraType
-{
-	Perspective
-};
-
 class Camera
 {
 public:
@@ -97,7 +92,6 @@ public:
 	Float farPlan;
 	Int sampleTime;
 	Texture renderTarget;
-	CameraType type;
 public:
 	__duel__ Camera()
 	{
@@ -128,12 +122,12 @@ public:
 		return Ray();
 	}
 
-	virtual Camera copyToDevice()
+	virtual Camera* copyToDevice()
 	{
 		Camera result(*this);
 		Int bufferLength = renderTarget.length;
 		cudaMalloc(&result.renderTarget.buffer, bufferLength * sizeof(CUM::Color3f));
-		return result;
+		return nullptr;
 	}
 public:
 	__duel__ virtual void Call()
@@ -153,12 +147,11 @@ public:
 
 	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture _renderTarget)
 		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime,_renderTarget), fovH(_fovH) {}
-	virtual Camera copyToDevice() override
+	virtual PersCamera* copyToDevice() override
 	{
-		PersCamera result(*this);
-		Int bufferLength = renderTarget.length;
-		cudaMalloc(&result.renderTarget.buffer, bufferLength * sizeof(CUM::Color3f));
-		return result;
+		PersCamera persCamWithDevicePtr(*this);
+		PersCamera* device = CudaInsMemCpyHostToDevice(&persCamWithDevicePtr);
+		return device;
 	}
 public:
 	__duel__ virtual void Call() override

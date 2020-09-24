@@ -36,7 +36,7 @@ public:
 public:
 	virtual void copyToDevice(Geometry*& device)
 	{
-		CudaInsMemCpyHostToDevice(device, this, sizeof(Geometry));
+		//CudaInsMemCpyHostToDevice(device, this, sizeof(Geometry));
 	}
 };
 
@@ -516,26 +516,32 @@ __global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primit
 class Scene
 {
 public:
-	PersCamera* cameraHost;
-	PersCamera* cameraDevice;
+	PersCamera*  camera;
 
 	//HierarchyTree hierarchyTree;
-	CUM::PrimitiveVector<Geometry>* primitivesVectorHost;
-	CUM::PrimitiveVector<Geometry>* primitivesVectorDevice;
+	CUM::PrimitiveVector<Geometry>* primitivesVectorPtr;
 public:
-	__duel__ Scene(PersCamera* _cameraHost, PersCamera* _cameraDevice)
-		:cameraHost(_cameraHost), cameraDevice(_cameraDevice)
+	__duel__ void Call()
+	{
+		custd::OStream os;
+		os << "Called Scene::Call();\n";
+	}
+
+
+public:
+	__duel__ Scene(PersCamera* _cameraHost)
+		:camera(_cameraHost)
 	{
 		
 	}
 public:
 	__duel__ void Rendering()
 	{
-		CUM::Vec2i size(cameraHost->imageSize);
-		Int totalNum = size.x*size.y;
+		//CUM::Vec2i size(camera->imageSize);
+		//Int totalNum = size.x*size.y;
 
-		Int threadNum = 1024;
-		Int blockNum = Int(floor((Float(totalNum)/threadNum)) + Epsilon);
+		//Int threadNum = 1024;
+		//Int blockNum = Int(floor((Float(totalNum)/threadNum)) + Epsilon);
 		//rendering <<<blockNum, threadNum >>>
 		//	(cameraDevice,
 		//	primitivesVector_device);
@@ -547,15 +553,21 @@ public:
 	}
 
 public:
-	void copyToDevice()
+	Scene* copyToDevice()
 	{
-		CudaInsMemCpyHostToDevice(cameraDevice, cameraHost, sizeof(Camera));
-		CudaInsMemCpyHostToDevice(primitivesVectorDevice, primitivesVectorHost, sizeof(CUM::PrimitiveVector<Geometry>));
+
+		Scene sceneInsWithDevicePtr(*this);
+
+		PersCamera* cameraDevice = camera->copyToDevice();
+		sceneInsWithDevicePtr.camera = cameraDevice;
+
+		Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
+		return sceneDevice;
 	}
 public:
 	void AddPrimitive(Geometry& geo)
 	{
-		(*primitivesVectorHost).push_back(geo);
+		(*primitivesVectorPtr).push_back(geo);
 	}
 public:
 

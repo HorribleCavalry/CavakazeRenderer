@@ -114,6 +114,13 @@ __global__ void testCopiedInstance(T* ins)
 	os << ins->sampleTime<<custd::endl;
 }
 
+template<typename T>
+__global__ void testSceneCopy(T* ins)
+{
+	ins->Call();
+	ins->camera->Call();
+}
+
 int main()
 {
 	//Person** prList = new Person*[5];
@@ -231,7 +238,10 @@ int main()
 	cudaMalloc(&insDevice, sizeof(Base));
 	cudaMemcpy(insDevice, insHost, sizeof(Base), cudaMemcpyKind::cudaMemcpyHostToDevice);
 	ApplyDeviceVirtualPtr(insDevice);
-
+	PersCamera persCam;
+	Scene scene(&persCam);
+	Scene* sceneDevice = scene.copyToDevice();
+	testSceneCopy << <1, 1 >> > (sceneDevice);
 	//perCamHost->Call();
 	//scene.Rendering();
 }
