@@ -34,10 +34,15 @@ public:
 		return 0.0;
 	}
 public:
-	virtual Geometry* copyToDevice()
+	__host__ virtual Geometry* copyToDevice()
 	{
 		return CudaInsMemCpyHostToDevice(this);
 	}
+	__duel__ virtual void Release()
+	{
+
+	}
+public:
 	__duel__ virtual void Call()
 	{
 		custd::OStream os;
@@ -108,6 +113,11 @@ public:
 	{
 		return CudaInsMemCpyHostToDevice(this);
 	}
+	__duel__ virtual void Release() override
+	{
+
+	}
+public:
 	__duel__ virtual void Call() override
 	{
 		custd::OStream os;
@@ -253,6 +263,11 @@ public:
 	{
 		return CudaInsMemCpyHostToDevice(this);
 	}
+	__duel__ virtual void Release() override
+	{
+
+	}
+public:
 	__duel__ virtual void Call() override
 	{
 		custd::OStream os;
@@ -401,6 +416,11 @@ public:
 	{
 		return CudaInsMemCpyHostToDevice(this);
 	}
+	__duel__ virtual void Release() override
+	{
+
+	}
+public:
 	__duel__ virtual void Call() override
 	{
 		custd::OStream os;
@@ -476,10 +496,15 @@ public:
 		return 0.0;
 	}
 public:
-	virtual Triangle* copyToDevice() override
+	__host__ virtual Triangle* copyToDevice() override
 	{
 		return CudaInsMemCpyHostToDevice(this);
 	}
+	__duel__ virtual void Release() override
+	{
+
+	}
+public:
 	__duel__ virtual void Call() override
 	{
 		custd::OStream os;
@@ -618,6 +643,24 @@ public:
 
 		Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
 		return sceneDevice;
+	}
+	__duel__ void Release()
+	{
+		custd::OStream os;
+		os << "Called Scene::Release()!\n";
+		CHECK(camera, "Scene::Release() error: camera can not be nullptr!");;
+		CHECK(primitivesVectorPtr, "Scene::Release() error: primitivesVectorPtr can not be nullptr!");
+		if (camera)
+		{
+			camera->Release();
+			camera = nullptr;
+		}
+		if (primitivesVectorPtr)
+		{
+			primitivesVectorPtr->Release();
+			primitivesVectorPtr = nullptr;
+		}
+		
 	}
 public:
 	void AddPrimitive(Geometry& geo)

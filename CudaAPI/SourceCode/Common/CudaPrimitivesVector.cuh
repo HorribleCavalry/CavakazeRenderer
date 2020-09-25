@@ -91,6 +91,24 @@ namespace CUM
 			PrimitiveVector* vecDevice = CudaInsMemCpyHostToDevice(&vecInsWithDevicePtr);
 			return vecDevice;
 		}
+		__duel__ void Release()
+		{
+			CHECK(ptrList, "PrimitiveVector::Release() error:: ptrList can not be nullptr");
+			for (Int i = 0; i < size; i++)
+			{
+				if (ptrList[i])
+				{
+					ptrList[i]->Release();
+					delete ptrList[i];
+					ptrList[i] = nullptr;
+				}
+			}
+			if (ptrList)
+			{
+				delete[] ptrList;
+				ptrList = nullptr;
+			}
+		}
 	};
 }
 

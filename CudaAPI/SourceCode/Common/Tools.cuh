@@ -109,6 +109,17 @@ public:
 		Texture* textureDevice = CudaInsMemCpyHostToDevice(&textureInsWithDevicePtr);
 		return textureDevice;
 	}
+	__duel__ void Release()
+	{
+		custd::OStream os;
+		os << "Called Texture::Release()!\n";
+		CHECK(buffer, "Texture::Release() error: buffer can not be bullptr");
+		if (buffer)
+		{
+			delete[] buffer;
+			buffer = nullptr;
+		}
+	}
 };
 
 class Camera
@@ -161,6 +172,14 @@ public:
 		Camera* device = CudaInsMemCpyHostToDevice(&camWithDevicePtr);
 		return device;
 	}
+	__duel__ virtual void Release()
+	{
+		if (renderTarget)
+		{
+			renderTarget->Release();
+			delete renderTarget;
+		}
+	}
 public:
 	__duel__ virtual void Call()
 	{
@@ -191,6 +210,20 @@ public:
 	{
 		custd::OStream os;
 		os << "Called PersCamera" << custd::endl;
+	}
+public:
+	__duel__ virtual void Release() override
+	{
+		custd::OStream os;
+		os << "Called PersCamera::Release()!\n";
+		CHECK(renderTarget, "PersCamera::Release() error: RenderTarget can not be nullptr!");
+		if (renderTarget)
+		{
+			renderTarget->Release();
+			delete renderTarget;
+			renderTarget = nullptr;
+		}
+
 	}
 };
 

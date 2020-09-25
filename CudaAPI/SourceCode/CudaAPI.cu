@@ -138,6 +138,8 @@ __global__ void testSceneCopy(T* ins)
 	os << ins->camera->renderTarget->GetColor(CUM::Vec2f(0.5, 0.5)).r << custd::endl;
 }
 
+
+
 int main()
 {
 	Int width = 5;
