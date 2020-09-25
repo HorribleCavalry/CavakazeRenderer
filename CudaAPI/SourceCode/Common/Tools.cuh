@@ -72,11 +72,29 @@ public:
 	Int length;
 public:
 	__duel__ Texture() {}
-	__duel__ Texture(const CUM::Vec2i& _size)
-		: size(_size), width(_size.x), height(_size.y)
+	__duel__ Texture(const CUM::Vec2i& _size, CUM::Color3f* _buffer)
+		: size(_size), width(_size.x), height(_size.y), buffer(_buffer)
 	{
 		length = width * height;
-		buffer = new CUM::Color3f[width * height];
+		//buffer = new CUM::Color3f[width * height];
+	}
+public:
+	const CUM::Color3f GetColor(const CUM::Vec2f uv) const
+	{
+		CHECK(uv.x <= 1.0&&uv.x >= 0.0, "Texture::GetColor(const CUM::Vec2f uv) error: the uv.x is out of range!");
+		CHECK(uv.y <= 1.0&&uv.y >= 0.0, "Texture::GetColor(const CUM::Vec2f uv) error: the uv.y is out of range!");
+
+		CHECK(size.x >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the size.x can not be zero or less than zero!");
+		CHECK(size.y >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the size.y can not be zero or less than zero!");
+		CUM::Vec2f deltaEpcilon = 1.0 / size * Epsilon;
+		CUM::Vec2i position;
+		position.x = floor(uv.x * width + deltaEpcilon.x);
+		position.y = floor(uv.y * height + deltaEpcilon.y);
+		Int idx = position.x*height + position.y;
+		CHECK(position.x <= width && position.x >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the position.x is out of range!");
+		CHECK(position.y <= width && position.y >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the position.y is out of range!");
+		CHECK(idx >= 0 && idx <= width * height, "Texture::GetColor(const CUM::Vec2f uv) error: the idx is out of range!");
+		return buffer[idx];
 	}
 };
 

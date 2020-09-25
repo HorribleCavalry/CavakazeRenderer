@@ -89,10 +89,15 @@ __global__ void kernel()
 class Base
 {
 public:
-	Int a;
+	Float a;
 	__duel__ virtual void Call()
 	{
 		printf("Called Base::Call()\n");
+	}
+	Float GetStaticVariable()
+	{
+		static Float val = a / 2.0;
+		return val;
 	}
 };
 
@@ -104,6 +109,7 @@ public:
 	{
 		printf("Called Child::Call()\n");
 	}
+
 };
 
 
@@ -147,4 +153,20 @@ int main()
 	Scene* sceneDevice = scene.copyToDevice();
 	testSceneCopy << <1, 1 >> > (sceneDevice);
 
+	Base b0;
+	b0.a = 1.0;
+	Base b1;
+	b1.a = 2.0;
+	custd::cout << b0.GetStaticVariable() << custd::endl;
+	custd::cout << b1.GetStaticVariable() << custd::endl;
+	Int width = 5;
+	Int height = 5;
+
+	CUM::Color3f* buffer = new CUM::Color3f[width*height];
+	Int idx = height / 2 * width + height / 2;
+	buffer[idx] = CUM::Color3f(1.0);
+	Texture texture(CUM::Vec2i(width, height), buffer);
+	CUM::Color3f result = texture.GetColor(CUM::Vec2f(0.5, 0.5));
+	custd::cout << result.r << custd::endl;
+	delete[] buffer;
 }

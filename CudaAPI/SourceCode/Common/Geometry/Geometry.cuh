@@ -558,9 +558,6 @@ __global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primit
 	camera.renderTarget.buffer[globalIdx].r = round(resultColor.r);
 	camera.renderTarget.buffer[globalIdx].g = round(resultColor.g);
 	camera.renderTarget.buffer[globalIdx].b = round(resultColor.b);
-
-
-
 }
 
 class Scene

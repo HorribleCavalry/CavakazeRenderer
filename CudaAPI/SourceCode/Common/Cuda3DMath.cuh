@@ -50,6 +50,12 @@ namespace CUM
 #pragma region Vec2 vector operation
 
 	template<typename T>
+	__duel__ const Vec2<Int> floor(const Vec2<T>& v)
+	{
+		return Vec2<Int>(floor(v.x), floor(v.y));
+	}
+
+	template<typename T>
 	__duel__ const T dot(const Vec2<T>& v0, const Vec2<T>& v1)
 	{
 		return v0.x*v1.x + v0.y * v1.y;
