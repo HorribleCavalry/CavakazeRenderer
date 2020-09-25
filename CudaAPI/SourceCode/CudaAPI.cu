@@ -3,6 +3,7 @@
 #include "Common/Tools.cuh"
 #include "Common/Geometry/Geometry.cuh"
 #include "cuda/std/limits"
+#include "Common/stb_image.h"
 #include <chrono>
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -168,7 +169,6 @@ int main()
 	b1.a = 2.0;
 	custd::cout << b0.GetStaticVariable() << custd::endl;
 	custd::cout << b1.GetStaticVariable() << custd::endl;
-
 
 
 	CUM::Color3f result = RenderTarget.GetColor(CUM::Vec2f(0.5, 0.5));
