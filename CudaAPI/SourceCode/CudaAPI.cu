@@ -132,12 +132,21 @@ __global__ void testSceneCopy(T* ins)
 	{
 		vec[i].Call();
 	}
+
+	custd::OStream os;
+	os << ins->camera->renderTarget->GetColor(CUM::Vec2f(0.5, 0.5)).r << custd::endl;
 }
 
 int main()
 {
-
+	Int width = 5;
+	Int height = 5;
+	CUM::Color3f* buffer = new CUM::Color3f[width*height];
+	Int idx = height / 2 * width + height / 2;
+	buffer[idx] = CUM::Color3f(1.0);
+	Texture RenderTarget(CUM::Vec2i(width, height), buffer);
 	PersCamera persCam;
+	persCam.renderTarget = &RenderTarget;
 	CUM::PrimitiveVector<Geometry> vec;
 	Geometry geo;
 	Sphere sp;
@@ -159,14 +168,12 @@ int main()
 	b1.a = 2.0;
 	custd::cout << b0.GetStaticVariable() << custd::endl;
 	custd::cout << b1.GetStaticVariable() << custd::endl;
-	Int width = 5;
-	Int height = 5;
 
-	CUM::Color3f* buffer = new CUM::Color3f[width*height];
-	Int idx = height / 2 * width + height / 2;
-	buffer[idx] = CUM::Color3f(1.0);
-	Texture texture(CUM::Vec2i(width, height), buffer);
-	CUM::Color3f result = texture.GetColor(CUM::Vec2f(0.5, 0.5));
+
+
+	CUM::Color3f result = RenderTarget.GetColor(CUM::Vec2f(0.5, 0.5));
 	custd::cout << result.r << custd::endl;
 	delete[] buffer;
+
+
 }

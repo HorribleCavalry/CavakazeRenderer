@@ -79,7 +79,7 @@ public:
 		//buffer = new CUM::Color3f[width * height];
 	}
 public:
-	const CUM::Color3f GetColor(const CUM::Vec2f uv) const
+	__duel__ const CUM::Color3f GetColor(const CUM::Vec2f uv) const
 	{
 		CHECK(uv.x <= 1.0&&uv.x >= 0.0, "Texture::GetColor(const CUM::Vec2f uv) error: the uv.x is out of range!");
 		CHECK(uv.y <= 1.0&&uv.y >= 0.0, "Texture::GetColor(const CUM::Vec2f uv) error: the uv.y is out of range!");
@@ -96,6 +96,19 @@ public:
 		CHECK(idx >= 0 && idx <= width * height, "Texture::GetColor(const CUM::Vec2f uv) error: the idx is out of range!");
 		return buffer[idx];
 	}
+public:
+	Texture* copyToDevice()
+	{
+		Texture textureInsWithDevicePtr(*this);
+		CUM::Color3f* bufferDevice;
+
+		cudaMalloc(&bufferDevice, length * sizeof(CUM::Color3f));
+		cudaMemcpy(bufferDevice, buffer, length * sizeof(CUM::Color3f), cudaMemcpyKind::cudaMemcpyHostToDevice);
+
+		textureInsWithDevicePtr.buffer = bufferDevice;
+		Texture* textureDevice = CudaInsMemCpyHostToDevice(&textureInsWithDevicePtr);
+		return textureDevice;
+	}
 };
 
 class Camera
@@ -109,7 +122,7 @@ public:
 	Float nearPlan;
 	Float farPlan;
 	Int sampleTime;
-	Texture renderTarget;
+	Texture* renderTarget;
 public:
 	__duel__ Camera()
 	{
@@ -122,7 +135,7 @@ public:
 
 	}
 
-	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, Texture _renderTarget)
+	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, Texture* _renderTarget)
 		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan), sampleTime(_sampleTime),renderTarget(_renderTarget)
 	{
 		//Aspect ratio always width/height.
@@ -143,10 +156,10 @@ public:
 
 	virtual Camera* copyToDevice()
 	{
-		Camera result(*this);
-		Int bufferLength = renderTarget.length;
-		cudaMalloc(&result.renderTarget.buffer, bufferLength * sizeof(CUM::Color3f));
-		return nullptr;
+		Camera camWithDevicePtr(*this);
+		camWithDevicePtr.renderTarget = renderTarget->copyToDevice();
+		Camera* device = CudaInsMemCpyHostToDevice(&camWithDevicePtr);
+		return device;
 	}
 public:
 	__duel__ virtual void Call()
@@ -164,11 +177,12 @@ public:
 
 	__duel__ PersCamera() {}
 
-	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture _renderTarget)
+	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture* _renderTarget)
 		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime,_renderTarget), fovH(_fovH) {}
 	virtual PersCamera* copyToDevice() override
 	{
 		PersCamera persCamWithDevicePtr(*this);
+		persCamWithDevicePtr.renderTarget = renderTarget->copyToDevice();
 		PersCamera* device = CudaInsMemCpyHostToDevice(&persCamWithDevicePtr);
 		return device;
 	}

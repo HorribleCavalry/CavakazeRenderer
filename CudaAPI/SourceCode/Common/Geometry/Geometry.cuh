@@ -525,7 +525,7 @@ __global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primit
 {
 	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
 	Camera camera = *_camera;
-	CUM::Vec2i size = camera.renderTarget.size;
+	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int x = globalIdx % size.x;
 	Int y = globalIdx % size.y;
@@ -555,9 +555,9 @@ __global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primit
 			break;
 		}
 	}
-	camera.renderTarget.buffer[globalIdx].r = round(resultColor.r);
-	camera.renderTarget.buffer[globalIdx].g = round(resultColor.g);
-	camera.renderTarget.buffer[globalIdx].b = round(resultColor.b);
+	camera.renderTarget->buffer[globalIdx].r = round(resultColor.r);
+	camera.renderTarget->buffer[globalIdx].g = round(resultColor.g);
+	camera.renderTarget->buffer[globalIdx].b = round(resultColor.b);
 }
 
 class Scene
