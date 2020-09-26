@@ -40,7 +40,8 @@ public:
 	}
 	__duel__ virtual void Release()
 	{
-
+		custd::OStream os;
+		os << "Called Geometry::Release()!\n";
 	}
 public:
 	__duel__ virtual void Call()
@@ -115,7 +116,8 @@ public:
 	}
 	__duel__ virtual void Release() override
 	{
-
+		custd::OStream os;
+		os << "Called Sphere::Release()!\n";
 	}
 public:
 	__duel__ virtual void Call() override
@@ -265,7 +267,8 @@ public:
 	}
 	__duel__ virtual void Release() override
 	{
-
+		custd::OStream os;
+		os << "Called BBox::Release()!\n";
 	}
 public:
 	__duel__ virtual void Call() override
@@ -418,7 +421,8 @@ public:
 	}
 	__duel__ virtual void Release() override
 	{
-
+		custd::OStream os;
+		os << "Called OBox::Release()!\n";
 	}
 public:
 	__duel__ virtual void Call() override
@@ -502,7 +506,8 @@ public:
 	}
 	__duel__ virtual void Release() override
 	{
-
+		custd::OStream os;
+		os << "Called Triangle::Release()!\n";
 	}
 public:
 	__duel__ virtual void Call() override
@@ -648,7 +653,7 @@ public:
 	{
 		custd::OStream os;
 		os << "Called Scene::Release()!\n";
-		CHECK(camera, "Scene::Release() error: camera can not be nullptr!");;
+		CHECK(camera, "Scene::Release() error: camera can not be nullptr!");
 		CHECK(primitivesVectorPtr, "Scene::Release() error: primitivesVectorPtr can not be nullptr!");
 		if (camera)
 		{

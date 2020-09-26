@@ -113,7 +113,7 @@ public:
 	{
 		custd::OStream os;
 		os << "Called Texture::Release()!\n";
-		CHECK(buffer, "Texture::Release() error: buffer can not be bullptr");
+		CHECK(buffer, "Texture::Release() error: buffer can not be nullptr");
 		if (buffer)
 		{
 			delete[] buffer;
@@ -219,6 +219,11 @@ public:
 		CHECK(renderTarget, "PersCamera::Release() error: RenderTarget can not be nullptr!");
 		if (renderTarget)
 		{
+			//custd::OStream os;
+			//
+			//os << renderTarget << custd::endl;
+			//os << renderTarget->width << custd::endl;
+
 			renderTarget->Release();
 			delete renderTarget;
 			renderTarget = nullptr;

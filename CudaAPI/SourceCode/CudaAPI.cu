@@ -115,10 +115,11 @@ public:
 
 
 template<typename T>
-__global__ void testCopiedInstance(T* ins)
+__global__ void ReleaseIns(T* ins)
 {
-	custd::OStream os;
-	os << ins->sampleTime<<custd::endl;
+	//custd::OStream os;
+	//os << ins->sampleTime<<custd::endl;
+	ins->Release();
 }
 
 template<typename T>
@@ -147,35 +148,22 @@ int main()
 	CUM::Color3f* buffer = new CUM::Color3f[width*height];
 	Int idx = height / 2 * width + height / 2;
 	buffer[idx] = CUM::Color3f(1.0);
-	Texture RenderTarget(CUM::Vec2i(width, height), buffer);
-	PersCamera persCam;
-	persCam.renderTarget = &RenderTarget;
-	CUM::PrimitiveVector<Geometry> vec;
-	Geometry geo;
-	Sphere sp;
-	BBox bb;
-	OBox ob;
-	Triangle tri;
-	vec.push_back(geo);
-	vec.push_back(sp);
-	vec.push_back(bb);
-	vec.push_back(ob);
-	vec.push_back(tri);
-	Scene scene(&persCam, &vec);
+	Texture* RenderTarget = new Texture(CUM::Vec2i(width, height), buffer);
+	PersCamera* persCam = new PersCamera;
+	persCam->renderTarget = RenderTarget;
+	CUM::PrimitiveVector<Geometry>* vec = new CUM::PrimitiveVector<Geometry>;
+	Geometry* geo = new Geometry;
+	Sphere* sp = new Sphere;
+	BBox* bb = new BBox;
+	OBox* ob = new OBox;
+	Triangle* tri = new Triangle;
+	vec->push_back(*geo);
+	vec->push_back(*sp);
+	vec->push_back(*bb);
+	vec->push_back(*ob);
+	vec->push_back(*tri);
+	Scene scene(persCam, vec);
 	Scene* sceneDevice = scene.copyToDevice();
-	testSceneCopy << <1, 1 >> > (sceneDevice);
-
-	Base b0;
-	b0.a = 1.0;
-	Base b1;
-	b1.a = 2.0;
-	custd::cout << b0.GetStaticVariable() << custd::endl;
-	custd::cout << b1.GetStaticVariable() << custd::endl;
-
-
-	CUM::Color3f result = RenderTarget.GetColor(CUM::Vec2f(0.5, 0.5));
-	custd::cout << result.r << custd::endl;
-	delete[] buffer;
-
-
+	scene.Release();
+	ReleaseIns << <1, 1 >> > (sceneDevice);
 }

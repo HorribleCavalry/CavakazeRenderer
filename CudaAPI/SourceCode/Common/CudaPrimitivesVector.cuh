@@ -94,6 +94,8 @@ namespace CUM
 		__duel__ void Release()
 		{
 			CHECK(ptrList, "PrimitiveVector::Release() error:: ptrList can not be nullptr");
+			custd::OStream os;
+			os << "Called PrimitiveVector::Release()!\n";
 			for (Int i = 0; i < size; i++)
 			{
 				if (ptrList[i])

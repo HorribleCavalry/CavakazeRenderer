@@ -31,6 +31,8 @@ namespace custd
 		__duel__ const OStream& operator<<(const char* val) const;
 
 		__duel__ const OStream& operator<<(void(*edl)()) const;
+
+		__duel__ const OStream& operator<<(const void* ptr) const;
 	};
 
 	const OStream cout;

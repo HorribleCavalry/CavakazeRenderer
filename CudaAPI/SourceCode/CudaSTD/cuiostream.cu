@@ -93,7 +93,12 @@ namespace custd
 		return *this;
 	}
 
-	//template<typename T>
+	__duel__ const OStream & OStream::operator<<(const void* ptr) const
+	{
+		printf("%llx", (unsigned long long)ptr);
+		return *this;
+	}
+
 	__device__ void kout(const int& val)
 	{
 		printf("%d", val);
