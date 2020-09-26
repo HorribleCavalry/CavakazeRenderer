@@ -5,6 +5,8 @@
 #include "cuda/std/limits"
 #include "Common/stb_image.h"
 #include <chrono>
+#include <string>
+
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
@@ -139,31 +141,68 @@ __global__ void testSceneCopy(T* ins)
 	os << ins->camera->renderTarget->GetColor(CUM::Vec2f(0.5, 0.5)).r << custd::endl;
 }
 
-
-
-int main()
+__global__ void renderUV(Texture* renderTargetDevice)
 {
-	Int width = 5;
-	Int height = 5;
-	CUM::Color3f* buffer = new CUM::Color3f[width*height];
-	Int idx = height / 2 * width + height / 2;
-	buffer[idx] = CUM::Color3f(1.0);
-	Texture* RenderTarget = new Texture(CUM::Vec2i(width, height), buffer);
-	PersCamera* persCam = new PersCamera;
-	persCam->renderTarget = RenderTarget;
-	CUM::PrimitiveVector<Geometry>* vec = new CUM::PrimitiveVector<Geometry>;
-	Geometry* geo = new Geometry;
-	Sphere* sp = new Sphere;
-	BBox* bb = new BBox;
-	OBox* ob = new OBox;
-	Triangle* tri = new Triangle;
-	vec->push_back(*geo);
-	vec->push_back(*sp);
-	vec->push_back(*bb);
-	vec->push_back(*ob);
-	vec->push_back(*tri);
-	Scene scene(persCam, vec);
-	Scene* sceneDevice = scene.copyToDevice();
-	scene.Release();
-	ReleaseIns << <1, 1 >> > (sceneDevice);
+	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+
+	Float u = Float(globalIdx % renderTargetDevice->width) / Float(renderTargetDevice->width);
+	Float v = Float(globalIdx / renderTargetDevice->width) / Float(renderTargetDevice->height);
+	renderTargetDevice->buffer[globalIdx].r = u;
+	renderTargetDevice->buffer[globalIdx].g = v;
+}
+
+int main(int argc, char* argv[])
+{
+	//Int width = 5;
+	//Int height = 5;
+	//CUM::Color3f* buffer = new CUM::Color3f[width*height];
+	//Int idx = height / 2 * width + height / 2;
+	//buffer[idx] = CUM::Color3f(1.0);
+	//Texture* RenderTarget = new Texture(CUM::Vec2i(width, height), buffer);
+	//PersCamera* persCam = new PersCamera;
+	//persCam->renderTarget = RenderTarget;
+	//CUM::PrimitiveVector<Geometry>* vec = new CUM::PrimitiveVector<Geometry>;
+	//Geometry* geo = new Geometry;
+	//Sphere* sp = new Sphere;
+	//BBox* bb = new BBox;
+	//OBox* ob = new OBox;
+	//Triangle* tri = new Triangle;
+	//vec->push_back(*geo);
+	//vec->push_back(*sp);
+	//vec->push_back(*bb);
+	//vec->push_back(*ob);
+	//vec->push_back(*tri);
+	//Scene scene(persCam, vec);
+	//Scene* sceneDevice = scene.copyToDevice();
+	//scene.Release();
+	//ReleaseIns << <1, 1 >> > (sceneDevice);
+
+
+
+	CUM::Vec2i imageSize(1920, 1080);
+	Int imageLength = imageSize.x*imageSize.y;
+	CUM::Color3f* uvBuffer = new CUM::Color3f[imageLength];
+	Texture* renderTarget = new Texture(imageSize, uvBuffer);
+
+	std::string exePath = argv[0];//获取当前程序所在的路径
+	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
+	const char* imageName = "Image.ppm";
+	std::string imagePath = hierarchyPath + imageName;
+
+	//for (Int i = 0; i < imageLength; i++)
+	//{
+	//	Float u = Float(i % imageSize.x) / Float(imageSize.x);
+	//	Float v = Float(i / imageSize.x) / Float(imageSize.y);
+	//	uvBuffer[i].r = u;
+	//	uvBuffer[i].g = v;
+	//}
+
+
+	Texture* renderTargetDevice = renderTarget->copyToDevice();
+	Int threadNum = 1024;
+	Int blockNum = imageLength / threadNum;
+	renderUV << < blockNum, threadNum >> > (renderTargetDevice);
+	renderTarget->CopyFromDevice(renderTargetDevice);
+	renderTarget->Save(imagePath.c_str());
+
 }

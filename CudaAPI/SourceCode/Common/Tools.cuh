@@ -3,6 +3,8 @@
 
 #include "../CudaSTD/CudaUtility.cuh"
 #include "Cuda3DMath.cuh"
+#include <fstream>
+#include <iomanip>
 
 class Material
 {
@@ -97,7 +99,7 @@ public:
 		return buffer[idx];
 	}
 public:
-	Texture* copyToDevice()
+	__host__ Texture* copyToDevice()
 	{
 		Texture textureInsWithDevicePtr(*this);
 		CUM::Color3f* bufferDevice;
@@ -109,6 +111,14 @@ public:
 		Texture* textureDevice = CudaInsMemCpyHostToDevice(&textureInsWithDevicePtr);
 		return textureDevice;
 	}
+
+	__host__ void CopyFromDevice(Texture* device)
+	{
+		Texture hostTex;
+		cudaMemcpy(&hostTex, device, sizeof(Texture), cudaMemcpyKind::cudaMemcpyDeviceToHost);
+		cudaMemcpy(buffer,hostTex.buffer, length * sizeof(CUM::Color3f), cudaMemcpyKind::cudaMemcpyDeviceToHost);
+	}
+
 	__duel__ void Release()
 	{
 		custd::OStream os;
@@ -119,6 +129,25 @@ public:
 			delete[] buffer;
 			buffer = nullptr;
 		}
+	}
+
+	__host__ void Save(const char* path)
+	{
+		std::ofstream image(path);
+		const Int maxVal = 255;
+		image << "P3\n";
+		image << size.x << " " << size.y << "\n";
+		image << maxVal << "\n";
+		Int R, G, B;
+		B = 0;
+		for (Int i = 0; i < length; i++)
+		{
+			R = round(maxVal* buffer[i].r);
+			G = round(maxVal* buffer[i].g);
+			B = round(maxVal* buffer[i].b);
+			image << R << " " << G << " " << B << "\n";
+		}
+		image.close();
 	}
 };
 
