@@ -189,15 +189,6 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	//for (Int i = 0; i < imageLength; i++)
-	//{
-	//	Float u = Float(i % imageSize.x) / Float(imageSize.x);
-	//	Float v = Float(i / imageSize.x) / Float(imageSize.y);
-	//	uvBuffer[i].r = u;
-	//	uvBuffer[i].g = v;
-	//}
-
-
 	Texture* renderTargetDevice = renderTarget->copyToDevice();
 	Int threadNum = 1024;
 	Int blockNum = imageLength / threadNum;

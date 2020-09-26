@@ -53,8 +53,14 @@ public:
 	CUM::Vec3f direction;
 	Record record;
 public:
+	__duel__ Ray()
+	{
+		record.times = -1.0;
+	}
+public:
 	__duel__ const CUM::Point3f GetEndPoint(const Float& times)
 	{
+		CHECK(record.times >= 0.0, "Ray::GetEndPoint(const Float& times) error: the times can not less than 0!");
 		return origin + times * direction;
 	}
 	//To do...
@@ -189,11 +195,6 @@ public:
 	}
 
 public:
-	__duel__ const Ray GetRay(const CUM::Vec2f& uv)
-	{
-		return Ray();
-	}
-
 	virtual Camera* copyToDevice()
 	{
 		Camera camWithDevicePtr(*this);
@@ -215,6 +216,11 @@ public:
 		custd::OStream os;
 		os << "Called Camera"<<custd::endl;
 	}
+	__duel__ virtual const Ray GetRay(const CUM::Vec2f& uv)
+	{
+		CHECK(false, "Can not call Camera::GetRay!");
+	}
+
 };
 
 class PersCamera : public Camera
@@ -227,6 +233,7 @@ public:
 
 	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture* _renderTarget)
 		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime,_renderTarget), fovH(_fovH) {}
+public:
 	virtual PersCamera* copyToDevice() override
 	{
 		PersCamera persCamWithDevicePtr(*this);
@@ -234,13 +241,6 @@ public:
 		PersCamera* device = CudaInsMemCpyHostToDevice(&persCamWithDevicePtr);
 		return device;
 	}
-public:
-	__duel__ virtual void Call() override
-	{
-		custd::OStream os;
-		os << "Called PersCamera" << custd::endl;
-	}
-public:
 	__duel__ virtual void Release() override
 	{
 		custd::OStream os;
@@ -248,16 +248,32 @@ public:
 		CHECK(renderTarget, "PersCamera::Release() error: RenderTarget can not be nullptr!");
 		if (renderTarget)
 		{
-			//custd::OStream os;
-			//
-			//os << renderTarget << custd::endl;
-			//os << renderTarget->width << custd::endl;
-
 			renderTarget->Release();
 			delete renderTarget;
 			renderTarget = nullptr;
 		}
 
+	}
+public:
+	__duel__ virtual void Call() override
+	{
+		custd::OStream os;
+		os << "Called PersCamera" << custd::endl;
+	}
+	__duel__ virtual const Ray GetRay(const CUM::Vec2f& uv) override
+	{
+		Float unitWidth = 2.0 * tan(fovH);
+		Float unitHeight = unitWidth / aspectRatio;
+		CUM::Vec2f flippedUV(uv.x, 1.0 - uv.y);
+		CUM::Vec2f unitPosFactor = (flippedUV - 0.5);
+		Float uintX = unitPosFactor.x * unitWidth;
+		Float uintY = unitPosFactor.y * unitHeight;
+
+		CUM::Point3f directionPos(uintX, uintY, 1.0);
+		Ray result;
+		result.origin = position;
+		result.direction = CUM::normalize(directionPos - position);
+		return result;
 	}
 };
 
