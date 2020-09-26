@@ -72,6 +72,9 @@
     <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu">
       <Filter>SourceCode\Common</Filter>
     </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Tools.cu">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SourceCode\Common\stb_image.cpp">

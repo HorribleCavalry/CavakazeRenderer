@@ -153,47 +153,60 @@ __global__ void renderUV(Texture* renderTargetDevice)
 
 int main(int argc, char* argv[])
 {
-	//Int width = 5;
-	//Int height = 5;
-	//CUM::Color3f* buffer = new CUM::Color3f[width*height];
-	//Int idx = height / 2 * width + height / 2;
-	//buffer[idx] = CUM::Color3f(1.0);
-	//Texture* RenderTarget = new Texture(CUM::Vec2i(width, height), buffer);
-	//PersCamera* persCam = new PersCamera;
-	//persCam->renderTarget = RenderTarget;
-	//CUM::PrimitiveVector<Geometry>* vec = new CUM::PrimitiveVector<Geometry>;
-	//Geometry* geo = new Geometry;
-	//Sphere* sp = new Sphere;
-	//BBox* bb = new BBox;
-	//OBox* ob = new OBox;
-	//Triangle* tri = new Triangle;
-	//vec->push_back(*geo);
-	//vec->push_back(*sp);
-	//vec->push_back(*bb);
-	//vec->push_back(*ob);
-	//vec->push_back(*tri);
-	//Scene scene(persCam, vec);
-	//Scene* sceneDevice = scene.copyToDevice();
-	//scene.Release();
-	//ReleaseIns << <1, 1 >> > (sceneDevice);
-
-
-
-	CUM::Vec2i imageSize(1920, 1080);
-	Int imageLength = imageSize.x*imageSize.y;
-	CUM::Color3f* uvBuffer = new CUM::Color3f[imageLength];
-	Texture* renderTarget = new Texture(imageSize, uvBuffer);
-
 	std::string exePath = argv[0];//获取当前程序所在的路径
 	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Texture* renderTargetDevice = renderTarget->copyToDevice();
-	Int threadNum = 1024;
-	Int blockNum = imageLength / threadNum;
-	renderUV << < blockNum, threadNum >> > (renderTargetDevice);
-	renderTarget->CopyFromDevice(renderTargetDevice);
-	renderTarget->Save(imagePath.c_str());
+	Int width = 256;
+	Int height = 144;
+	CUM::Vec2i RenderTargetSize(width, height);
+	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
+	CUM::Color3f* buffer = new CUM::Color3f[imageLength];
+	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
+	PersCamera* camera = new PersCamera({ 0.0 }, { 0.0,1.0,0.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, 1, 0.5 * PI, RenderTarget);
+	Sphere* sps = new Sphere[3];
+	sps[0].centroid = CUM::Point3f(-5.0, 0.0, 10.0);
+	sps[1].centroid = CUM::Point3f(0.0, 0.0, 10.0);
+	sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
+
+	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
+	for (Int i = 0; i < 3; i++)
+	{
+		primitiveVec->push_back(sps[i]);
+	}
+
+	Scene scene(camera, primitiveVec);
+	Scene* sceneDevice = scene.copyToDevice();
+
+	rendering << < imageLength / 1024, 1024 >> > (sceneDevice);
+	cudaError_t error = cudaGetLastError();
+
+	if (error != cudaError_t::cudaSuccess)
+	{
+		printf("%s\n", cudaGetErrorString(error));
+	}
+	scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+	scene.camera->renderTarget->Save(imagePath.c_str());
+	//scene.camera->GetRay({ 0.5,0.5 });
+	//scene.Release();
+	ReleaseIns << <1, 1 >> > (sceneDevice);
+
+	//CUM::Vec2i imageSize(1920, 1080);
+	//Int imageLength = imageSize.x*imageSize.y;
+	//CUM::Color3f* uvBuffer = new CUM::Color3f[imageLength];
+	//Texture* renderTarget = new Texture(imageSize, uvBuffer);
+
+	//std::string exePath = argv[0];//获取当前程序所在的路径
+	//std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
+	//const char* imageName = "Image.ppm";
+	//std::string imagePath = hierarchyPath + imageName;
+
+	//Texture* renderTargetDevice = renderTarget->copyToDevice();
+	//Int threadNum = 1024;
+	//Int blockNum = imageLength / threadNum;
+	//renderUV << < blockNum, threadNum >> > (renderTargetDevice);
+	//renderTarget->CopyFromDevice(renderTargetDevice);
+	//renderTarget->Save(imagePath.c_str());
 
 }

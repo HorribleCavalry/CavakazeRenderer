@@ -160,6 +160,8 @@ public:
 class Camera
 {
 public:
+	static Texture* RenderTargetDevice;
+public:
 	CUM::Point3f position;
 	CUM::Vec3f direction;
 	CUM::Quaternionf rotation;
@@ -170,7 +172,7 @@ public:
 	Int sampleTime;
 	Texture* renderTarget;
 public:
-	__duel__ Camera()
+	__duel__ Camera() : sampleTime(64)
 	{
 
 	}
@@ -219,6 +221,7 @@ public:
 	__duel__ virtual const Ray GetRay(const CUM::Vec2f& uv)
 	{
 		CHECK(false, "Can not call Camera::GetRay!");
+		return Ray();
 	}
 
 };
@@ -238,6 +241,7 @@ public:
 	{
 		PersCamera persCamWithDevicePtr(*this);
 		persCamWithDevicePtr.renderTarget = renderTarget->copyToDevice();
+		RenderTargetDevice = persCamWithDevicePtr.renderTarget;
 		PersCamera* device = CudaInsMemCpyHostToDevice(&persCamWithDevicePtr);
 		return device;
 	}
@@ -258,21 +262,24 @@ public:
 	__duel__ virtual void Call() override
 	{
 		custd::OStream os;
-		os << "Called PersCamera" << custd::endl;
+		os << "Called PersCamera!\n";
 	}
 	__duel__ virtual const Ray GetRay(const CUM::Vec2f& uv) override
 	{
-		Float unitWidth = 2.0 * tan(fovH);
+		Float unitWidth = 2.0 * tan(0.5 * fovH);
+		//CHECK(aspectRatio != 0.0, "PersCamera::GetRay(const CUM::Vec2f& uv) error: the aspectRatio can not be 0!");
 		Float unitHeight = unitWidth / aspectRatio;
-		CUM::Vec2f flippedUV(uv.x, 1.0 - uv.y);
-		CUM::Vec2f unitPosFactor = (flippedUV - 0.5);
-		Float uintX = unitPosFactor.x * unitWidth;
-		Float uintY = unitPosFactor.y * unitHeight;
+		//CUM::Vec2f flippedUV(uv.x, 1.0 - uv.y);
+		//CUM::Vec2f unitPosFactor = (flippedUV - 0.5);
+		//Float uintX = unitPosFactor.x * unitWidth;
+		//Float uintY = unitPosFactor.y * unitHeight;
 
-		CUM::Point3f directionPos(uintX, uintY, 1.0);
+		//CUM::Point3f directionPos(uintX, uintY, 1.0);
 		Ray result;
 		result.origin = position;
-		result.direction = CUM::normalize(directionPos - position);
+		//result.direction = CUM::applyQuaTransform(rotation, CUM::normalize(directionPos - position));
+		result.direction = CUM::Vec3f(0.0, 0.0, 1.0);
+
 		return result;
 	}
 };

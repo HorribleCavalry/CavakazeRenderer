@@ -551,44 +551,6 @@ public:
 	}
 };
 
-__global__ void rendering(Camera* _camera, CUM::PrimitiveVector<Geometry> primitivesVector_devicePtr)
-{
-	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
-	Camera camera = *_camera;
-	CUM::Vec2i size = camera.renderTarget->size;
-
-	Int x = globalIdx % size.x;
-	Int y = globalIdx % size.y;
-
-	Float u = Float(x) / Float(size.x);
-	Float v = Float(y) / Float(size.y);
-	CUM::Vec2f uv(u, v);
-	Ray ray = camera.GetRay(uv);
-
-	CUM::Color3f resultColor(1.0);
-	CUM::Color3f tempColor(1.0);
-
-	Bool haveHitPrimitives = false;
-
-	for (Int i = 0; i < camera.sampleTime; i++)
-	{
-
-		if (primitivesVector_devicePtr.HitTest(ray))
-		{
-			tempColor = ray.record.sampledColor;
-			resultColor *= tempColor;
-			ray = ray.CalculateNextRay();
-		}
-		else
-		{
-			resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
-			break;
-		}
-	}
-	camera.renderTarget->buffer[globalIdx].r = round(resultColor.r);
-	camera.renderTarget->buffer[globalIdx].g = round(resultColor.g);
-	camera.renderTarget->buffer[globalIdx].b = round(resultColor.b);
-}
 
 class Scene
 {
@@ -676,5 +638,52 @@ public:
 
 
 };
+
+__global__ void rendering(Scene* scene)
+{
+	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+	PersCamera& camera = *scene->camera;
+	CUM::PrimitiveVector<Geometry>& primitiveVec = *(scene->primitivesVectorPtr);
+	CUM::Vec2i size = camera.renderTarget->size;
+
+	Int x = globalIdx % size.x;
+	Int y = globalIdx % size.y;
+
+	Float u = Float(x) / Float(size.x);
+	Float v = Float(y) / Float(size.y);
+	CUM::Vec2f uv(u, v);
+
+	//camera.Call();
+	Ray ray = camera.GetRay(uv);
+
+	//CUM::Color3f resultColor(1.0);
+	//CUM::Color3f tempColor(1.0);
+
+	//Bool haveHitPrimitives = false;
+
+	//for (Int i = 0; i < camera.sampleTime; i++)
+	//{
+
+	//	if (primitiveVec.HitTest(ray))
+	//	{
+	//		tempColor = ray.record.sampledColor;
+	//		resultColor *= tempColor;
+	//		ray = ray.CalculateNextRay();
+	//	}
+	//	else
+	//	{
+	//		resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
+	//		break;
+	//	}
+	//}
+	//camera.renderTarget->buffer[globalIdx].r = round(resultColor.r);
+	//camera.renderTarget->buffer[globalIdx].g = round(resultColor.g);
+	//camera.renderTarget->buffer[globalIdx].b = round(resultColor.b);
+
+	camera.renderTarget->buffer[globalIdx].r = 1.0;
+	camera.renderTarget->buffer[globalIdx].g = 1.0;
+	camera.renderTarget->buffer[globalIdx].b = 1.0;
+}
+
 
 #endif // !__GEOMETRY__CUH__

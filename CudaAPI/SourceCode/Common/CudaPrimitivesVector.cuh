@@ -63,10 +63,24 @@ namespace CUM
 		//To do...
 		__duel__ bool HitTest(Ray& ray)
 		{
-			for (size_t i = 0; i < size; i++)
-			{
-
-			}
+			//Float times = FLT_MAX;
+			//Ray sampleRay(ray);
+			//Ray resultRay(ray);
+			//Bool isHit = false;
+			//for (Int i = 0; i < size; i++)
+			//{
+			//	sampleRay = ray;
+			//	if (ptrList[i]->HitTest(sampleRay))
+			//	{
+			//		if (sampleRay.record.times < times)
+			//		{
+			//			isHit = true;
+			//			resultRay = sampleRay;
+			//		}
+			//	}
+			//	
+			//}
+			//return isHit;
 			return false;
 		}
 

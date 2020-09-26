@@ -27,6 +27,7 @@
   <ItemGroup>
     <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu" />
     <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu" />
+    <CudaCompile Include="SourceCode\Common\Tools.cu" />
     <CudaCompile Include="SourceCode\CudaAPI.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu" />
     <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cu" />
