@@ -7,10 +7,11 @@
 #include <cuda/std/cassert>
 #include <device_launch_parameters.h>
 
-typedef bool Bool;
 typedef int Int;
-typedef unsigned int Uint;
+typedef bool Bool;
 typedef double Float;
+typedef unsigned int Uint;
+typedef unsigned short Ushort;
 
 #define __duel__ __host__ __device__
 

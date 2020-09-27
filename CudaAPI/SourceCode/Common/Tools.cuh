@@ -70,48 +70,61 @@ public:
 	}
 };
 
+struct Pixel
+{
+	Ushort r, g, b, a;
+};
+
 class Texture
 {
 public:
-	CUM::Color3f* buffer;
+	Pixel* buffer;
 	CUM::Vec2i size;
 	Int width;
 	Int height;
 	Int length;
 public:
 	__duel__ Texture() {}
-	__duel__ Texture(const CUM::Vec2i& _size, CUM::Color3f* _buffer)
+	__duel__ Texture(const CUM::Vec2i& _size, Pixel* _buffer)
 		: size(_size), width(_size.x), height(_size.y), buffer(_buffer)
 	{
 		length = width * height;
 		//buffer = new CUM::Color3f[width * height];
 	}
 public:
-	__duel__ const CUM::Color3f GetColor(const CUM::Vec2f uv) const
+	__duel__ const CUM::Color3f GetColorRGB(const CUM::Vec2f uv) const
 	{
 		CHECK(uv.x <= 1.0&&uv.x >= 0.0, "Texture::GetColor(const CUM::Vec2f uv) error: the uv.x is out of range!");
 		CHECK(uv.y <= 1.0&&uv.y >= 0.0, "Texture::GetColor(const CUM::Vec2f uv) error: the uv.y is out of range!");
 
 		CHECK(size.x >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the size.x can not be zero or less than zero!");
 		CHECK(size.y >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the size.y can not be zero or less than zero!");
-		CUM::Vec2f deltaEpcilon = 1.0 / size * Epsilon;
+
+		//CUM::Vec2f deltaEpcilon = 1.0 / size * Epsilon;
 		CUM::Vec2i position;
-		position.x = floor(uv.x * width + deltaEpcilon.x);
-		position.y = floor(uv.y * height + deltaEpcilon.y);
+		//position.x = floor(uv.x * width + deltaEpcilon.x);
+		//position.y = floor(uv.y * height + deltaEpcilon.y);
+		position.x = floor(uv.x * width);
+		position.y = floor(uv.y * height);
 		Int idx = position.x*height + position.y;
+
 		CHECK(position.x <= width && position.x >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the position.x is out of range!");
 		CHECK(position.y <= width && position.y >= 0, "Texture::GetColor(const CUM::Vec2f uv) error: the position.y is out of range!");
 		CHECK(idx >= 0 && idx <= width * height, "Texture::GetColor(const CUM::Vec2f uv) error: the idx is out of range!");
-		return buffer[idx];
+		Float R = Float(buffer[idx].r) / 255.0;
+		Float G = Float(buffer[idx].g) / 255.0;
+		Float B = Float(buffer[idx].b) / 255.0;
+		//Float A = Float(buffer[idx].a) / 255.0;
+		return CUM::Color3f(R, G, B);
 	}
 public:
 	__host__ Texture* copyToDevice()
 	{
 		Texture textureInsWithDevicePtr(*this);
-		CUM::Color3f* bufferDevice;
+		Pixel* bufferDevice;
 
-		cudaMalloc(&bufferDevice, length * sizeof(CUM::Color3f));
-		cudaMemcpy(bufferDevice, buffer, length * sizeof(CUM::Color3f), cudaMemcpyKind::cudaMemcpyHostToDevice);
+		cudaMalloc(&bufferDevice, length * sizeof(Pixel));
+		cudaMemcpy(bufferDevice, buffer, length * sizeof(Pixel), cudaMemcpyKind::cudaMemcpyHostToDevice);
 
 		textureInsWithDevicePtr.buffer = bufferDevice;
 		Texture* textureDevice = CudaInsMemCpyHostToDevice(&textureInsWithDevicePtr);
@@ -121,8 +134,12 @@ public:
 	__host__ void CopyFromDevice(Texture* device)
 	{
 		Texture hostTex;
-		cudaMemcpy(&hostTex, device, sizeof(Texture), cudaMemcpyKind::cudaMemcpyDeviceToHost);
-		cudaMemcpy(buffer,hostTex.buffer, length * sizeof(CUM::Color3f), cudaMemcpyKind::cudaMemcpyDeviceToHost);
+		cudaError_t error =  cudaMemcpy(&hostTex, device, sizeof(Texture), cudaMemcpyKind::cudaMemcpyDeviceToHost);
+		if (error != cudaError_t::cudaSuccess)
+		{
+			printf("%s\n", cudaGetErrorString(error));
+		}
+		cudaMemcpy(buffer,hostTex.buffer, length * sizeof(Pixel), cudaMemcpyKind::cudaMemcpyDeviceToHost);
 	}
 
 	__duel__ void Release()
@@ -144,14 +161,12 @@ public:
 		image << "P3\n";
 		image << size.x << " " << size.y << "\n";
 		image << maxVal << "\n";
-		Int R, G, B;
-		B = 0;
 		for (Int i = 0; i < length; i++)
 		{
-			R = round(maxVal* buffer[i].r);
-			G = round(maxVal* buffer[i].g);
-			B = round(maxVal* buffer[i].b);
-			image << R << " " << G << " " << B << "\n";
+			//R = round(maxVal* buffer[i].r);
+			//G = round(maxVal* buffer[i].g);
+			//B = round(maxVal* buffer[i].b);
+			image << buffer[i].r << " " << buffer[i].g << " " << buffer[i].b << "\n";
 		}
 		image.close();
 	}
@@ -237,7 +252,7 @@ public:
 	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture* _renderTarget)
 		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime,_renderTarget), fovH(_fovH) {}
 public:
-	virtual PersCamera* copyToDevice() override
+	__host__ virtual PersCamera* copyToDevice() override
 	{
 		PersCamera persCamWithDevicePtr(*this);
 		persCamWithDevicePtr.renderTarget = renderTarget->copyToDevice();
@@ -266,19 +281,18 @@ public:
 	}
 	__duel__ virtual const Ray GetRay(const CUM::Vec2f& uv) override
 	{
+		CHECK(aspectRatio != 0.0, "PersCamera::GetRay(const CUM::Vec2f& uv) error: the aspectRatio can not be 0!");
 		Float unitWidth = 2.0 * tan(0.5 * fovH);
-		//CHECK(aspectRatio != 0.0, "PersCamera::GetRay(const CUM::Vec2f& uv) error: the aspectRatio can not be 0!");
 		Float unitHeight = unitWidth / aspectRatio;
-		//CUM::Vec2f flippedUV(uv.x, 1.0 - uv.y);
-		//CUM::Vec2f unitPosFactor = (flippedUV - 0.5);
-		//Float uintX = unitPosFactor.x * unitWidth;
-		//Float uintY = unitPosFactor.y * unitHeight;
+		CUM::Vec2f flippedUV(uv.x, 1.0 - uv.y);
+		CUM::Vec2f unitPosFactor = (flippedUV - 0.5);
+		Float uintX = unitPosFactor.x * unitWidth;
+		Float uintY = unitPosFactor.y * unitHeight;
 
-		//CUM::Point3f directionPos(uintX, uintY, 1.0);
+		CUM::Point3f directionPos(uintX, uintY, 1.0);
 		Ray result;
 		result.origin = position;
-		//result.direction = CUM::applyQuaTransform(rotation, CUM::normalize(directionPos - position));
-		result.direction = CUM::Vec3f(0.0, 0.0, 1.0);
+		result.direction = CUM::applyQuaTransform(rotation, CUM::normalize(directionPos - position));
 
 		return result;
 	}

@@ -162,24 +162,35 @@ int main(int argc, char* argv[])
 	Int height = 144;
 	CUM::Vec2i RenderTargetSize(width, height);
 	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
-	CUM::Color3f* buffer = new CUM::Color3f[imageLength];
+	Pixel* buffer = new Pixel[imageLength];
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
 	PersCamera* camera = new PersCamera({ 0.0 }, { 0.0,1.0,0.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, 1, 0.5 * PI, RenderTarget);
-	Sphere* sps = new Sphere[3];
-	sps[0].centroid = CUM::Point3f(-5.0, 0.0, 10.0);
-	sps[1].centroid = CUM::Point3f(0.0, 0.0, 10.0);
-	sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
+	//Sphere* sps = new Sphere[3];
+	//sps[0].centroid = CUM::Point3f(-5.0, 0.0, 10.0);
+	//sps[1].centroid = CUM::Point3f(0.0, 0.0, 10.0);
+	//sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
+
+	Sphere* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
+	Sphere* sp1 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
+	Sphere* sp2 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
-	for (Int i = 0; i < 3; i++)
-	{
-		primitiveVec->push_back(sps[i]);
-	}
+	//for (Int i = 0; i < 3; i++)
+	//{
+	//	primitiveVec->push_back(sps[i]);
+	//}
+
+	primitiveVec->push_back(*sp0);
+	primitiveVec->push_back(*sp1);
+	primitiveVec->push_back(*sp2);
 
 	Scene scene(camera, primitiveVec);
 	Scene* sceneDevice = scene.copyToDevice();
 
-	rendering << < imageLength / 1024, 1024 >> > (sceneDevice);
+	Int threadNum = 64;
+	Int blockNum = imageLength / threadNum;
+
+	rendering << < blockNum, threadNum >> > (sceneDevice);
 	cudaError_t error = cudaGetLastError();
 
 	if (error != cudaError_t::cudaSuccess)
@@ -188,8 +199,7 @@ int main(int argc, char* argv[])
 	}
 	scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
 	scene.camera->renderTarget->Save(imagePath.c_str());
-	//scene.camera->GetRay({ 0.5,0.5 });
-	//scene.Release();
+	scene.Release();
 	ReleaseIns << <1, 1 >> > (sceneDevice);
 
 	//CUM::Vec2i imageSize(1920, 1080);

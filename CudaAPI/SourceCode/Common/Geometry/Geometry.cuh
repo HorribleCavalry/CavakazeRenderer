@@ -647,12 +647,12 @@ __global__ void rendering(Scene* scene)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int x = globalIdx % size.x;
-	Int y = globalIdx % size.y;
+	Int y = globalIdx / size.x;
 
 	Float u = Float(x) / Float(size.x);
 	Float v = Float(y) / Float(size.y);
-	CUM::Vec2f uv(u, v);
-
+	CUM::Vec2f uv(u,v);
+	
 	//camera.Call();
 	Ray ray = camera.GetRay(uv);
 
@@ -680,9 +680,9 @@ __global__ void rendering(Scene* scene)
 	//camera.renderTarget->buffer[globalIdx].g = round(resultColor.g);
 	//camera.renderTarget->buffer[globalIdx].b = round(resultColor.b);
 
-	camera.renderTarget->buffer[globalIdx].r = 1.0;
-	camera.renderTarget->buffer[globalIdx].g = 1.0;
-	camera.renderTarget->buffer[globalIdx].b = 1.0;
+	camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
+	camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
+	camera.renderTarget->buffer[globalIdx].b = 0;
 }
 
 
