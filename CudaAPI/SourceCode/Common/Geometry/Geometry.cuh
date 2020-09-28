@@ -656,33 +656,42 @@ __global__ void rendering(Scene* scene)
 	//camera.Call();
 	Ray ray = camera.GetRay(uv);
 
-	//CUM::Color3f resultColor(1.0);
-	//CUM::Color3f tempColor(1.0);
+	CUM::Color3f resultColor(1.0);
+	CUM::Color3f tempColor(1.0);
 
-	//Bool haveHitPrimitives = false;
+	Bool haveHitPrimitives = false;
+	if (globalIdx==1)
+	{
+		custd::OStream os;
+		os << resultColor.r << custd::endl;
+	}
+	for (Int i = 0; i < camera.sampleTime; i++)
+	{
 
-	//for (Int i = 0; i < camera.sampleTime; i++)
-	//{
+		if (primitiveVec.HitTest(ray))
+		{
+			tempColor = ray.record.sampledColor;
+			resultColor *= tempColor;
+			ray = ray.CalculateNextRay();
+		}
+		else
+		{
+			resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
+			break;
+		}
+	}
+	Float R = round(resultColor.r);
+	Float G = round(resultColor.g);
+	Float B = round(resultColor.b);
+	Float A = round(255.0);
+	camera.renderTarget->buffer[globalIdx].r = R;
+	camera.renderTarget->buffer[globalIdx].g = G;
+	camera.renderTarget->buffer[globalIdx].b = B;
+	camera.renderTarget->buffer[globalIdx].a = A;
 
-	//	if (primitiveVec.HitTest(ray))
-	//	{
-	//		tempColor = ray.record.sampledColor;
-	//		resultColor *= tempColor;
-	//		ray = ray.CalculateNextRay();
-	//	}
-	//	else
-	//	{
-	//		resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
-	//		break;
-	//	}
-	//}
-	//camera.renderTarget->buffer[globalIdx].r = round(resultColor.r);
-	//camera.renderTarget->buffer[globalIdx].g = round(resultColor.g);
-	//camera.renderTarget->buffer[globalIdx].b = round(resultColor.b);
-
-	camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
-	camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
-	camera.renderTarget->buffer[globalIdx].b = 0;
+	//camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
+	//camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
+	//camera.renderTarget->buffer[globalIdx].b = 0;
 }
 
 

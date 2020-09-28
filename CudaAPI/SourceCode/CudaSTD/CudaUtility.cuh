@@ -37,7 +37,7 @@ __duel__ void check(const bool& isAssert, const char* errorInfo, const Float& va
 
 //#define CHECK(isAssert, errorInfo, valArray, size) check(isAssert, errorInfo, valArray, size, __FILE__, __LINE__)
 
-__duel__ void check(const bool& isAssert, const char* errorInfo, const Int val[], const Uint& size, const char* file, const int& line);
+//__duel__ void check(const bool& isAssert, const char* errorInfo, const Int val[], const Uint& size, const char* file, const int& line);
 
 
 //CUDA_CHECK(cudaError_t err);

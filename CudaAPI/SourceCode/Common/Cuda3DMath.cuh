@@ -437,7 +437,7 @@ namespace CUM
 	__duel__ const Vec3<Float> normalize(const Vec3<T>& vec)
 	{
 		Float square = vec.x*vec.x + vec.y*vec.y + vec.z*vec.z;
-		CHECK(square > 0.0, "Vec3 normalize error: square can not less than 0.0!");
+		CHECK(square >= 0.0, "Vec3 normalize error: square can not less than 0.0!");
 		Float norm = sqrt(square);
 		Float inv = 1.0 / norm;
 		return inv * vec;

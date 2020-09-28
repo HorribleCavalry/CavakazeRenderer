@@ -1,7 +1,7 @@
 ﻿#include "CudaUtility.cuh"
-void check(const bool & isAssert, const char * errorInfo, const char * file, const int & line)
+__duel__ void check(const bool & isNotAssert, const char * errorInfo, const char * file, const int & line)
 {
-	if (!isAssert)
+	if (!isNotAssert)
 	{
 		printf("====================Error Occurred!====================\n");
 		printf("Error occurred in: %s\n", file);
