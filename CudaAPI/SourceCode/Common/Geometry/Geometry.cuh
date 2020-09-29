@@ -710,61 +710,75 @@ void RenderingOnHost(Scene* scene)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
+	const Int aliasingTime = 2;
+	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / (aliasingTime*aliasingTime);
+
+	CUM::Vec2f uv;
+	Int x, y;
+	Float u, v;
+
+	Ray ray;
+	CUM::Color3f resultColor(0.0);
+	CUM::Color3f sampledColor(1.0);
+	CUM::Color3f tempColor(1.0);
+	Float R, G, B, A;
 	for (Int globalIdx = 0; globalIdx < length; globalIdx++)
 	{
-		if (globalIdx == length / 2)
+		x = globalIdx % size.x;
+		y = globalIdx / size.x;
+		
+		u = Float(x) / Float(size.x);
+		v = Float(y) / Float(size.y);
+
+		resultColor.r=0.0;
+		resultColor.g=0.0;
+		resultColor.b=0.0;
+
+		for (Int i = 0; i < aliasingTime; i++)
 		{
-			Int k= 90;
-		}
-
-
-		Int x = globalIdx % size.x;
-		Int y = globalIdx / size.x;
-
-		Float u = Float(x) / Float(size.x);
-		Float v = Float(y) / Float(size.y);
-		CUM::Vec2f uv(u, v);
-
-		//camera.Call();
-		Ray ray = camera.GetRay(uv);
-
-		CUM::Color3f resultColor(1.0);
-		CUM::Color3f tempColor(1.0);
-
-		Bool haveHitPrimitives = false;
-		if (globalIdx == 1)
-		{
-			custd::OStream os;
-			os << resultColor.r << custd::endl;
-		}
-		for (Int i = 0; i < camera.sampleTime; i++)
-		{
-
-			if (primitiveVec.HitTest(ray))
+			for (Int j = 0; j < aliasingTime; j++)
 			{
-				tempColor = ray.record.sampledColor;
-				resultColor *= tempColor;
-				ray = ray.CalculateNextRay();
-			}
-			else
-			{
-				resultColor *= scene->GetSkyColor(ray.direction);
-				break;
+				uv.x = u + i * deltaSampleUV.x;
+				uv.y = v + j * deltaSampleUV.y;
+
+				ray = camera.GetRay(uv);
+
+				sampledColor.r=1.0;
+				sampledColor.g=1.0;
+				sampledColor.b=1.0;
+
+				tempColor.r = 1.0;
+				tempColor.g = 1.0;
+				tempColor.b = 1.0;
+
+				for (Int i = 0; i < camera.sampleTime; i++)
+				{
+
+					if (primitiveVec.HitTest(ray))
+					{
+						tempColor = ray.record.sampledColor;
+						sampledColor *= tempColor;
+						ray = ray.CalculateNextRay();
+					}
+					else
+					{
+						sampledColor *= scene->GetSkyColor(ray.direction);
+						break;
+					}
+				}
+				resultColor += sampledColor;
 			}
 		}
+		resultColor /= (aliasingTime*aliasingTime);
 		resultColor *= 255.0;
-		Float R = round(resultColor.r);
-		Float G = round(resultColor.g);
-		Float B = round(resultColor.b);
-		Float A = round(255.0);
+		R = round(resultColor.r);
+		G = round(resultColor.g);
+		B = round(resultColor.b);
+		A = round(255.0);
 		camera.renderTarget->buffer[globalIdx].r = R;
 		camera.renderTarget->buffer[globalIdx].g = G;
 		camera.renderTarget->buffer[globalIdx].b = B;
 		camera.renderTarget->buffer[globalIdx].a = A;
-
-		//camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
-		//camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
-		//camera.renderTarget->buffer[globalIdx].b = 0;
 	}
 }
 

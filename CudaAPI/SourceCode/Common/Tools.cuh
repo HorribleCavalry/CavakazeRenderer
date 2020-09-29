@@ -83,13 +83,15 @@ public:
 	Int width;
 	Int height;
 	Int length;
+	CUM::Vec2f deltaUV;
 public:
 	__duel__ Texture() {}
 	__duel__ Texture(const CUM::Vec2i& _size, Pixel* _buffer)
 		: size(_size), width(_size.x), height(_size.y), buffer(_buffer)
 	{
 		length = width * height;
-		//buffer = new CUM::Color3f[width * height];
+		deltaUV.x = 1.0 / width;
+		deltaUV.y = 1.0 / height;
 	}
 public:
 	__duel__ const CUM::Color3f GetColorRGB(const CUM::Vec2f uv) const
