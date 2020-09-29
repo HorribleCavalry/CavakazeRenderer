@@ -1,5 +1,5 @@
-﻿#ifndef __RAY__CUH__
-#define __RAY__CUH__
+﻿#ifndef __TOOLS__CUH__
+#define __TOOLS__CUH__
 
 #include "../CudaSTD/CudaUtility.cuh"
 #include "Cuda3DMath.cuh"
@@ -60,7 +60,7 @@ public:
 public:
 	__duel__ const CUM::Point3f GetEndPoint(const Float& times)
 	{
-		CHECK(record.times >= 0.0, "Ray::GetEndPoint(const Float& times) error: the times can not less than 0!");
+		//CHECK(record.times >= 0.0, "Ray::GetEndPoint(const Float& times) error: the times can not less than 0!");
 		return origin + times * direction;
 	}
 	//To do...
@@ -292,10 +292,11 @@ public:
 		CUM::Point3f directionPos(uintX, uintY, 1.0);
 		Ray result;
 		result.origin = position;
-		result.direction = CUM::applyQuaTransform(rotation, CUM::normalize(directionPos - position));
+		//result.direction = CUM::applyQuaTransform(rotation, CUM::normalize(directionPos - position));
+		result.direction = CUM::normalize(directionPos - position);
 
 		return result;
 	}
 };
 
-#endif // !__RAY__CUH__
+#endif // !__TOOLS__CUH__

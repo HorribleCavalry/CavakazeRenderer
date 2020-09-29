@@ -1846,7 +1846,7 @@ namespace CUM
 		__duel__ explicit Quaternion(const Quaternion<U>& v) : x(v.x), y(v.y), z(v.z), w(v.w) {}
 		__duel__ ~Quaternion() {}
 	public:
-		__duel__ const Quaternion& operator=(const Quaternion<int>& v)
+		__duel__ const Quaternion& operator=(const Quaternion& v)
 		{
 			x = v.x;
 			y = v.y;
@@ -1854,6 +1854,14 @@ namespace CUM
 			w = v.w;
 			return *this;
 		}
+		//__duel__ const Quaternion& operator=(const Quaternion<int>& v)
+		//{
+		//	x = v.x;
+		//	y = v.y;
+		//	z = v.z;
+		//	w = v.w;
+		//	return *this;
+		//}
 
 	public:
 		__duel__ T& operator[](const Int& idx)
@@ -1983,7 +1991,7 @@ namespace CUM
 		Vec3<T> v(v1.x, v1.y, v1.z);
 		auto ur = a * v + b * u + cross(u, v);
 		T w = a * b - dot(u, v);
-		return Quaternion<T>(ur, w);
+		return Quaternion<T>(ur, w, false);
 	}
 #pragma endregion
 
@@ -3667,7 +3675,7 @@ namespace CUM
 		Vec3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
 		Quaternion<T> quaConj = conjugate(qua);
-		Quaternion<T> pRes = qua * pQua * quaConj;
+		auto pRes = qua * pQua * quaConj;
 		result.x = pRes.x;
 		result.y = pRes.y;
 		result.z = pRes.z;

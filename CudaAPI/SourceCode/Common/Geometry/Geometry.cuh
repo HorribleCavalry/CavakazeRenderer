@@ -58,7 +58,7 @@ public:
 
 public:
 	__duel__ Sphere() : Geometry(), radius(1.0) {}
-	__duel__ Sphere(const CUM::Point3f& _centroid, const Float& _radius) : Geometry(), radius(_radius)
+	__duel__ Sphere(const CUM::Point3f& _centroid, const Float& _radius) : Geometry(_centroid), radius(_radius)
 	{
 		area = 4.0 * PI * radius * radius;
 		volume = 4.0 * PI * radius * radius * radius / 3.0;
@@ -66,39 +66,42 @@ public:
 public:
 	__duel__ virtual const Bool HitTest(Ray& ray) override
 	{
-		CHECK(radius > 0.0, "Sphere::HitTest error: radius can not be 0!");
+		CHECK(radius > 0.0, "Sphere::HitTest error: radius can not less than 0!");
 
-		CUM::Vec3f origin(ray.origin.x, ray.origin.y, ray.origin.z);
-		Float a = CUM::dot(ray.direction, ray.direction);
-		Float b = 2.0 * dot(ray.direction, origin);
-		Float c = CUM::dot(origin, origin) - radius * radius;
-		Float discriminant = b * b - 4.0*a*c;
+		CUM::Vec3f CO(ray.origin - centroid);
+		Float A = CUM::dot(ray.direction, ray.direction);
+		Float B = 2.0 * dot(ray.direction, CO);
+		Float C = CUM::dot(CO, CO) - radius * radius;
+		Float discriminant = B * B - 4.0*A*C;
 		Float times = 0.0;
 
 		CUM::Point3f endPoint;
 		CUM::Normal3f normal;
 
-		if (discriminant < 0.0)
+		if (discriminant <= 0.0)
 		{
 			return false;
 		}
 		else
 		{
-			times = 0.5 *(-b - discriminant) / a;
+			times = 0.5 *(-B - discriminant) / A;
 			if (times < Epsilon)
 			{
-				times = 0.5 *(-b + discriminant) / a;
+				times = 0.5 *(-B + discriminant) / A;
 				if (times < Epsilon)
 					return false;
 			}
 			ray.record.times = times;
 			endPoint = ray.GetEndPoint(times);
 			normal = (endPoint - centroid) / radius;
+
+			ray.record.sampledColor = CUM::Color3f(1.0, 0.0, 0.0);
 			ray.record.times = times;
 			ray.record.position = endPoint;
 			ray.record.normal = normal;
 			return true;
 		}
+		CHECK(false, "Sphere::HitTest(Ray& ray) error: it can not be here!");
 		return false;
 	}
 	__duel__ virtual const Float GetArea() override
@@ -127,7 +130,7 @@ public:
 	}
 };
 
-//Orientd Box
+//Bounding Box
 class BBox : public Geometry
 {
 private:
@@ -247,6 +250,7 @@ public:
 			rayB.record.times = t0;
 			CUM::Point3f hitPositionB(originB + t0 * directionB);
 			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
+			rayB.record.sampledColor = CUM::Color3f(1.0, 0.0, 0.0);
 			rayB.record.normal = CUM::Vec3f(normalB.x, normalB.y, normalB.z);
 		}
 
@@ -520,7 +524,7 @@ public:
 class Mesh
 {
 public:
-	CUM::PrimitiveVector<Geometry> primitives;
+	CUM::PrimitiveVector<Triangle> primitives;
 };
 
 class Object
@@ -635,11 +639,14 @@ public:
 		(*primitivesVectorPtr).push_back(geo);
 	}
 public:
-
+	__duel__ const CUM::Color3f GetSkyColor(const CUM::Vec3f& direction) const
+	{
+		return CUM::Color3f(1.0, 0.0, 1.0);
+	}
 
 };
 
-__global__ void rendering(Scene* scene)
+__global__ void RenderingOnDevice(Scene* scene)
 {
 	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
 	PersCamera& camera = *scene->camera;
@@ -680,6 +687,7 @@ __global__ void rendering(Scene* scene)
 			break;
 		}
 	}
+	resultColor *= 255.0;
 	Float R = round(resultColor.r);
 	Float G = round(resultColor.g);
 	Float B = round(resultColor.b);
@@ -694,5 +702,70 @@ __global__ void rendering(Scene* scene)
 	//camera.renderTarget->buffer[globalIdx].b = 0;
 }
 
+
+void RenderingOnHost(Scene* scene)
+{
+	PersCamera& camera = *scene->camera;
+	CUM::PrimitiveVector<Geometry>& primitiveVec = *(scene->primitivesVectorPtr);
+	CUM::Vec2i size = camera.renderTarget->size;
+
+	Int length = size.x*size.y;
+	for (Int globalIdx = 0; globalIdx < length; globalIdx++)
+	{
+		if (globalIdx == length / 2)
+		{
+			Int k= 90;
+		}
+
+
+		Int x = globalIdx % size.x;
+		Int y = globalIdx / size.x;
+
+		Float u = Float(x) / Float(size.x);
+		Float v = Float(y) / Float(size.y);
+		CUM::Vec2f uv(u, v);
+
+		//camera.Call();
+		Ray ray = camera.GetRay(uv);
+
+		CUM::Color3f resultColor(1.0);
+		CUM::Color3f tempColor(1.0);
+
+		Bool haveHitPrimitives = false;
+		if (globalIdx == 1)
+		{
+			custd::OStream os;
+			os << resultColor.r << custd::endl;
+		}
+		for (Int i = 0; i < camera.sampleTime; i++)
+		{
+
+			if (primitiveVec.HitTest(ray))
+			{
+				tempColor = ray.record.sampledColor;
+				resultColor *= tempColor;
+				ray = ray.CalculateNextRay();
+			}
+			else
+			{
+				resultColor *= scene->GetSkyColor(ray.direction);
+				break;
+			}
+		}
+		resultColor *= 255.0;
+		Float R = round(resultColor.r);
+		Float G = round(resultColor.g);
+		Float B = round(resultColor.b);
+		Float A = round(255.0);
+		camera.renderTarget->buffer[globalIdx].r = R;
+		camera.renderTarget->buffer[globalIdx].g = G;
+		camera.renderTarget->buffer[globalIdx].b = B;
+		camera.renderTarget->buffer[globalIdx].a = A;
+
+		//camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
+		//camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
+		//camera.renderTarget->buffer[globalIdx].b = 0;
+	}
+}
 
 #endif // !__GEOMETRY__CUH__

@@ -170,9 +170,9 @@ int main(int argc, char* argv[])
 	//sps[1].centroid = CUM::Point3f(0.0, 0.0, 10.0);
 	//sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
 
-	Sphere* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
-	Sphere* sp1 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
-	Sphere* sp2 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
+	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
+	Geometry* sp1 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
+	Geometry* sp2 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
 	//for (Int i = 0; i < 3; i++)
@@ -187,20 +187,23 @@ int main(int argc, char* argv[])
 	Scene scene(camera, primitiveVec);
 	Scene* sceneDevice = scene.copyToDevice();
 
-	Int threadNum = 64;
+	Int threadNum = 32;
 	Int blockNum = imageLength / threadNum;
 
-	rendering << < blockNum, threadNum >> > (sceneDevice);
+	//RenderingOnDevice << < blockNum, threadNum >> > (sceneDevice);
+	RenderingOnHost(&scene);
 	cudaError_t error = cudaGetLastError();
 
 	if (error != cudaError_t::cudaSuccess)
 	{
 		printf("%s\n", cudaGetErrorString(error));
 	}
-	scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+	//scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
 	scene.camera->renderTarget->Save(imagePath.c_str());
+	custd::cout << "Now release host scene." << custd::endl;
 	scene.Release();
-	ReleaseIns << <1, 1 >> > (sceneDevice);
+	//custd::cout << "Now release device scene." << custd::endl;
+	//ReleaseIns << <1, 1 >> > (sceneDevice);
 
 	//CUM::Vec2i imageSize(1920, 1080);
 	//Int imageLength = imageSize.x*imageSize.y;
