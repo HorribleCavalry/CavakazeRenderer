@@ -171,8 +171,8 @@ int main(int argc, char* argv[])
 	//sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
 
 	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
-	Geometry* sp1 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
-	Geometry* sp2 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
+	Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
+	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
 	//for (Int i = 0; i < 3; i++)
@@ -181,8 +181,8 @@ int main(int argc, char* argv[])
 	//}
 
 	primitiveVec->push_back(*sp0);
+	primitiveVec->push_back(*box0);
 	primitiveVec->push_back(*sp1);
-	primitiveVec->push_back(*sp2);
 
 	Scene scene(camera, primitiveVec);
 	Scene* sceneDevice = scene.copyToDevice();

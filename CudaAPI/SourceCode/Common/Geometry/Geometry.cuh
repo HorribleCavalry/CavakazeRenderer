@@ -223,8 +223,8 @@ public:
 			ty_max = (pMin.y - oy) * b;
 		}
 
-		Float c = 1.0 / dy;
-		if (b >= 0)
+		Float c = 1.0 / dz;
+		if (c >= 0)
 		{
 			tz_min = (pMin.z - oz) * c;
 			tz_max = (pMax.z - oz) * c;
@@ -243,7 +243,7 @@ public:
 		t1 = tx_max < ty_max ? tx_max : ty_max;
 		t1 = tz_max < t1 ? tz_max : t1;
 
-		Bool isHit = t0 < t1 && t1 > Epsilon;
+		Bool isHit = t0 < t1 && t1 > 0.0;
 
 		if (isHit)
 		{
