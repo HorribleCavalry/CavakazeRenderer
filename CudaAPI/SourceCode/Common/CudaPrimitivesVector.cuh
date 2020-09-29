@@ -60,7 +60,10 @@ namespace CUM
 			return size;
 		}
 	public:
-		//To do...
+		__duel__ void GetMinMax(CUM::Point3f& pMin, CUM::Point3f& pMax)
+		{
+
+		}
 		__duel__ bool HitTest(Ray& ray)
 		{
 			Float times = FLT_MAX;

@@ -454,6 +454,13 @@ namespace CUM
 		return v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
 	}
 
+	template<typename T>
+	const Vec3<T> Lerp(const Vec3<T>& v0, const Vec3<T>& v1, const Float& n)
+	{
+		Vec3<T> dis = v1 - v0;
+		return v0 + n * dis;
+	}
+
 #pragma endregion
 
 #pragma region Vec3 same type operation
@@ -2245,6 +2252,13 @@ namespace CUM
 #pragma region Color process function
 
 	template<typename T>
+	const Color3<T> Lerp(const Color3<T>& c0, const Color3<T>& c1, const Float& n)
+	{
+		Color3<T> dis = c1 - c0;
+		return c0 + n * dis;
+	}
+
+	template<typename T>
 	__duel__ const Color3<Float> calculateGammaColor(const Color3<T>& color, const Float& gamma)
 	{
 		CHECK(gamma >= 1.0&&gamma <= 100.0, "The input gamma is out of range!");
@@ -3727,7 +3741,11 @@ namespace CUM
 		Quaternionf rotation;
 		Vec3f translation;
 	public:
+		__duel__ Transform(const Vec3f& _scale, const Quaternionf& _rotation, const Vec3f& _translation)
+			:scale(_scale), rotation(_rotation), translation(translation)
+		{
 
+		}
 	};
 }
 

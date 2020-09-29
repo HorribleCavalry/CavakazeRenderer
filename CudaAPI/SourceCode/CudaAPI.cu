@@ -170,11 +170,21 @@ int main(int argc, char* argv[])
 	//sps[1].centroid = CUM::Point3f(0.0, 0.0, 10.0);
 	//sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
 
+	CUM::Vec3f scale(1.0);
+	CUM::Vec3f translation(0.0,0.0,10.0);
+	CUM::Quaternionf rotation(CUM::Vec3f(1.0), 0.0);
+	CUM::Transform trans(scale, rotation, translation);
+
 	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
 	Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
 	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
+
+	Mesh* mesh = new Mesh(primitiveVec);
+	Object* obj = new Object;
+
+
 	//for (Int i = 0; i < 3; i++)
 	//{
 	//	primitiveVec->push_back(sps[i]);

@@ -139,7 +139,14 @@ private:
 	CUM::Point3f pMax;
 public:
 
-	__duel__ BBox() : Geometry(CUM::Point3f(0.0, 1.0, 6)) {}
+	__duel__ BBox() : Geometry(CUM::Point3f(0.0)) {}
+
+	__duel__ BBox(const CUM::Point3f& _pMin, CUM::Point3f& _pMax)
+		:pMin(_pMin), pMax(_pMax)
+	{
+		centroid = 0.5 * (pMin + pMax);
+		extent = 0.5 * (pMax - pMin);
+	}
 
 
 	__duel__ BBox(CUM::Point3f& _centroid, const CUM::Vec3f& _extent)
@@ -524,16 +531,33 @@ public:
 class Mesh
 {
 public:
-	CUM::PrimitiveVector<Triangle> primitives;
+	CUM::PrimitiveVector<Geometry>* primitivesVec;
+private:
+	BBox BboX;
+public:
+	__duel__ Mesh(CUM::PrimitiveVector<Geometry>* _primitivesVec)
+		:primitivesVec(_primitivesVec)
+	{
+		CUM::Point3f pMin, pMax;
+		primitivesVec->GetMinMax(pMin, pMax);
+		BboX = BBox(pMin, pMax);
+	}
 };
 
 class Object
 {
 public:
 	CUM::Transform transform;
-	Mesh mesh;
+	Mesh* mesh;
 	BBox bBox;
 	Material material;
+public:
+	__duel__ Object(const CUM::Transform& _transform, Mesh* _mesh, const Material& _material)
+		:transform(_transform), mesh(_mesh), material(_material)
+	{
+		//To do...
+		//bBox = mesh->GetBoundingBox();
+	}
 };
 
 struct HierarchyTreeNode
@@ -641,7 +665,9 @@ public:
 public:
 	__duel__ const CUM::Color3f GetSkyColor(const CUM::Vec3f& direction) const
 	{
-		return CUM::Color3f(1.0, 0.0, 1.0);
+		Float skyLerpFactor = max(direction.y,0.0);
+		
+		return CUM::Lerp(CUM::Color3f(1.0), CUM::Color3f(0.0, 0.0, 1.0), skyLerpFactor);
 	}
 
 };
@@ -710,7 +736,7 @@ void RenderingOnHost(Scene* scene)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
-	const Int aliasingTime = 2;
+	const Int aliasingTime = 4;
 	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / (aliasingTime*aliasingTime);
 
 	CUM::Vec2f uv;
@@ -771,6 +797,7 @@ void RenderingOnHost(Scene* scene)
 		}
 		resultColor /= (aliasingTime*aliasingTime);
 		resultColor *= 255.0;
+
 		R = round(resultColor.r);
 		G = round(resultColor.g);
 		B = round(resultColor.b);

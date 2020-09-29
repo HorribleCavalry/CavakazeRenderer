@@ -1,6 +1,7 @@
 ﻿#ifndef __CUDAUYILITY__CUH__
 #define __CUDAUYILITY__CUH__
 
+#include <math.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cuda_runtime.h>
