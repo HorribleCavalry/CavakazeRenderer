@@ -3697,12 +3697,38 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Vec3f applyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	__duel__ const Vec3<T> applyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
 	{
 		Vec3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
 		Quaternion<T> quaConj = conjugate(qua);
-		Quaternion<T> pRes = quaConj* pQua * pQua;
+		Quaternion<T> pRes = quaConj* pQua * qua;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		return result;
+	}
+
+	template<typename T>
+	__duel__ const Point3<T> applyQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
+	{
+		Vec3<T> result;
+		Quaternion<T> pQua(v.x, v.y, v.z, 0);
+		Quaternion<T> quaConj = conjugate(qua);
+		auto pRes = qua * pQua * quaConj;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		return result;
+	}
+
+	template<typename T>
+	__duel__ const Vec3<T> applyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	{
+		Vec3<T> result;
+		Quaternion<T> pQua(v.x, v.y, v.z, 0);
+		Quaternion<T> quaConj = conjugate(qua);
+		Quaternion<T> pRes = quaConj * pQua * qua;
 		result.x = pRes.x;
 		result.y = pRes.y;
 		result.z = pRes.z;

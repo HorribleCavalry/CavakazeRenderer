@@ -17,7 +17,7 @@ public:
 	CUM::Point3f position;
 	CUM::Normal3f normal;
 	CUM::Color3f sampledColor;
-	Material sampledMaterial;
+	Material* sampledMaterial;
 	Float times;
 public:
 	__duel__ Record():position(CUM::Point3f()),normal(),sampledColor(CUM::Color3f()),times(0.0) {}
@@ -30,16 +30,11 @@ public:
 		position = rec.position;
 		normal = rec.normal;
 		sampledColor = rec.sampledColor;
+		sampledMaterial = rec.sampledMaterial;
 		times = rec.times;
 		return *this;
 	}
-	//const Record operator=(Record&& rec)
-	//{
-	//	position = rec.position;
-	//	normal = rec.normal;
-	//	albedo = rec.albedo;
-	//	times = rec.times;
-	//}
+
 	__duel__ ~Record()
 	{
 

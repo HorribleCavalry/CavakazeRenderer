@@ -64,7 +64,7 @@ namespace CUM
 		{
 
 		}
-		__duel__ bool HitTest(Ray& ray)
+		__duel__ const bool HitTest(Ray& ray)
 		{
 			Float times = FLT_MAX;
 			Ray sampleRay(ray);

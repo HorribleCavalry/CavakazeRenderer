@@ -165,10 +165,7 @@ int main(int argc, char* argv[])
 	Pixel* buffer = new Pixel[imageLength];
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
 	PersCamera* camera = new PersCamera({ 0.0 }, { 0.0,1.0,0.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, 1, 0.5 * PI, RenderTarget);
-	//Sphere* sps = new Sphere[3];
-	//sps[0].centroid = CUM::Point3f(-5.0, 0.0, 10.0);
-	//sps[1].centroid = CUM::Point3f(0.0, 0.0, 10.0);
-	//sps[2].centroid = CUM::Point3f(5.0, 0.0, 10.0);
+	
 
 	CUM::Vec3f scale(1.0);
 	CUM::Vec3f translation(0.0,0.0,10.0);
@@ -180,21 +177,22 @@ int main(int argc, char* argv[])
 	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
-
-	Mesh* mesh = new Mesh(primitiveVec);
-	Object* obj = new Object;
-
-
-	//for (Int i = 0; i < 3; i++)
-	//{
-	//	primitiveVec->push_back(sps[i]);
-	//}
-
 	primitiveVec->push_back(*sp0);
 	primitiveVec->push_back(*box0);
 	primitiveVec->push_back(*sp1);
 
-	Scene scene(camera, primitiveVec);
+	Material* material = new Material;
+	Mesh* mesh = new Mesh(primitiveVec,material);
+	CUM::PrimitiveVector<Mesh>* meshVec = new CUM::PrimitiveVector<Mesh>;
+	meshVec->push_back(*mesh);
+
+	Object* object = new Object(trans, meshVec);
+
+	CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
+
+	objectVec->push_back(*object);
+
+	Scene scene(camera, objectVec);
 	Scene* sceneDevice = scene.copyToDevice();
 
 	Int threadNum = 32;

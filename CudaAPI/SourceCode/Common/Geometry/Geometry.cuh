@@ -532,15 +532,22 @@ class Mesh
 {
 public:
 	CUM::PrimitiveVector<Geometry>* primitivesVec;
+	Material* material;
 private:
 	BBox BboX;
 public:
-	__duel__ Mesh(CUM::PrimitiveVector<Geometry>* _primitivesVec)
-		:primitivesVec(_primitivesVec)
+	__duel__ Mesh(CUM::PrimitiveVector<Geometry>* _primitivesVec, Material* _material)
+		:primitivesVec(_primitivesVec), material(_material)
 	{
 		CUM::Point3f pMin, pMax;
 		primitivesVec->GetMinMax(pMin, pMax);
 		BboX = BBox(pMin, pMax);
+	}
+
+	__duel__ const Bool HitTest(Ray& ray)
+	{
+		ray.record.sampledMaterial = material;
+		return primitivesVec->HitTest(ray);
 	}
 };
 
@@ -548,45 +555,57 @@ class Object
 {
 public:
 	CUM::Transform transform;
-	Mesh* mesh;
+	CUM::PrimitiveVector<Mesh>* meshVec;
 	BBox bBox;
-	Material material;
 public:
-	__duel__ Object(const CUM::Transform& _transform, Mesh* _mesh, const Material& _material)
-		:transform(_transform), mesh(_mesh), material(_material)
+	__duel__ Object(const CUM::Transform& _transform, CUM::PrimitiveVector<Mesh>* _meshVec)
+		:transform(_transform), meshVec(_meshVec)
 	{
 		//To do...
 		//bBox = mesh->GetBoundingBox();
 	}
-};
 
-struct HierarchyTreeNode
-{
-	Object object;
-	custd::cuvector<HierarchyTreeNode*> childNodes;
-};
-
-class HierarchyTree
-{
-private:
-	static HierarchyTreeNode* headNod;
-public:
-	__duel__ const HierarchyTreeNode* GetInstance()
+	__duel__ const Bool HitTest(Ray& ray) const
 	{
-		if (!headNod)
-			headNod = new HierarchyTreeNode;
-		return headNod;
+
+		return meshVec->HitTest(ray);
+	}
+private:
+	__duel__ const Ray TransRay(const Ray& ray) const
+	{
+		Ray result;
+		result.origin -= transform.translation;
+		result.origin = CUM::applyInvQuaTransform(transform.rotation, result.origin);
+		result.origin /= transform.scale;
 	}
 };
+
+//struct HierarchyTreeNode
+//{
+//	Object object;
+//	custd::cuvector<HierarchyTreeNode*> childNodes;
+//};
+
+//class HierarchyTree
+//{
+//private:
+//	static HierarchyTreeNode* headNod;
+//public:
+//	__duel__ const HierarchyTreeNode* GetInstance()
+//	{
+//		if (!headNod)
+//			headNod = new HierarchyTreeNode;
+//		return headNod;
+//	}
+//};
 
 
 class Scene
 {
 public:
 	PersCamera*  camera;
+	CUM::PrimitiveVector<Object>* objectVec;
 
-	//HierarchyTree hierarchyTree;
-	CUM::PrimitiveVector<Geometry>* primitivesVectorPtr;
 public:
 	__duel__ void Call()
 	{
@@ -602,24 +621,12 @@ public:
 
 	}
 
-	__duel__ Scene(PersCamera* _camera, CUM::PrimitiveVector<Geometry>* _primitivesVectorPtr)
-		:camera(_camera), primitivesVectorPtr(_primitivesVectorPtr)
+	__duel__ Scene(PersCamera* _camera, CUM::PrimitiveVector<Object>* _objectVec)
+		:camera(_camera), objectVec(_objectVec)
 	{
 		
 	}
 public:
-	__duel__ void Rendering()
-	{
-		//CUM::Vec2i size(camera->imageSize);
-		//Int totalNum = size.x*size.y;
-
-		//Int threadNum = 1024;
-		//Int blockNum = Int(floor((Float(totalNum)/threadNum)) + Epsilon);
-		//rendering <<<blockNum, threadNum >>>
-		//	(cameraDevice,
-		//	primitivesVector_device);
-	}
-
 	__duel__ void EndRendering()
 	{
 
@@ -628,40 +635,40 @@ public:
 public:
 	Scene* copyToDevice()
 	{
-		Scene sceneInsWithDevicePtr(*this);
+		//Scene sceneInsWithDevicePtr(*this);
 
-		PersCamera* cameraDevice = camera->copyToDevice();
-		CUM::PrimitiveVector<Geometry>* primitivesVectorPtrDevice = primitivesVectorPtr->copyToDevice();
+		//PersCamera* cameraDevice = camera->copyToDevice();
+		//CUM::PrimitiveVector<Object>* primitivesVectorPtrDevice = objectVec->copyToDevice();
 
-		sceneInsWithDevicePtr.camera = cameraDevice;
-		sceneInsWithDevicePtr.primitivesVectorPtr = primitivesVectorPtrDevice;
+		//sceneInsWithDevicePtr.camera = cameraDevice;
+		//sceneInsWithDevicePtr.objectVec = primitivesVectorPtrDevice;
 
-		Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
-		return sceneDevice;
+		//Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
+		//return sceneDevice;
 	}
 	__duel__ void Release()
 	{
-		custd::OStream os;
-		os << "Called Scene::Release()!\n";
-		CHECK(camera, "Scene::Release() error: camera can not be nullptr!");
-		CHECK(primitivesVectorPtr, "Scene::Release() error: primitivesVectorPtr can not be nullptr!");
-		if (camera)
-		{
-			camera->Release();
-			camera = nullptr;
-		}
-		if (primitivesVectorPtr)
-		{
-			primitivesVectorPtr->Release();
-			primitivesVectorPtr = nullptr;
-		}
+		//custd::OStream os;
+		//os << "Called Scene::Release()!\n";
+		//CHECK(camera, "Scene::Release() error: camera can not be nullptr!");
+		//CHECK(objectVec, "Scene::Release() error: primitivesVectorPtr can not be nullptr!");
+		//if (camera)
+		//{
+		//	camera->Release();
+		//	camera = nullptr;
+		//}
+		//if (objectVec)
+		//{
+		//	objectVec->Release();
+		//	objectVec = nullptr;
+		//}
 		
 	}
 public:
-	void AddPrimitive(Geometry& geo)
-	{
-		(*primitivesVectorPtr).push_back(geo);
-	}
+	//void AddPrimitive(Geometry& geo)
+	//{
+	//	(*objectVec).push_back(geo);
+	//}
 public:
 	__duel__ const CUM::Color3f GetSkyColor(const CUM::Vec3f& direction) const
 	{
@@ -672,67 +679,67 @@ public:
 
 };
 
-__global__ void RenderingOnDevice(Scene* scene)
-{
-	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
-	PersCamera& camera = *scene->camera;
-	CUM::PrimitiveVector<Geometry>& primitiveVec = *(scene->primitivesVectorPtr);
-	CUM::Vec2i size = camera.renderTarget->size;
-
-	Int x = globalIdx % size.x;
-	Int y = globalIdx / size.x;
-
-	Float u = Float(x) / Float(size.x);
-	Float v = Float(y) / Float(size.y);
-	CUM::Vec2f uv(u,v);
-	
-	//camera.Call();
-	Ray ray = camera.GetRay(uv);
-
-	CUM::Color3f resultColor(1.0);
-	CUM::Color3f tempColor(1.0);
-
-	Bool haveHitPrimitives = false;
-	if (globalIdx==1)
-	{
-		custd::OStream os;
-		os << resultColor.r << custd::endl;
-	}
-	for (Int i = 0; i < camera.sampleTime; i++)
-	{
-
-		if (primitiveVec.HitTest(ray))
-		{
-			tempColor = ray.record.sampledColor;
-			resultColor *= tempColor;
-			ray = ray.CalculateNextRay();
-		}
-		else
-		{
-			resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
-			break;
-		}
-	}
-	resultColor *= 255.0;
-	Float R = round(resultColor.r);
-	Float G = round(resultColor.g);
-	Float B = round(resultColor.b);
-	Float A = round(255.0);
-	camera.renderTarget->buffer[globalIdx].r = R;
-	camera.renderTarget->buffer[globalIdx].g = G;
-	camera.renderTarget->buffer[globalIdx].b = B;
-	camera.renderTarget->buffer[globalIdx].a = A;
-
-	//camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
-	//camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
-	//camera.renderTarget->buffer[globalIdx].b = 0;
-}
+//__global__ void RenderingOnDevice(Scene* scene)
+//{
+//	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+//	PersCamera& camera = *scene->camera;
+//	CUM::PrimitiveVector<Mesh>& objectVec = *(scene->objectVec);
+//	CUM::Vec2i size = camera.renderTarget->size;
+//
+//	Int x = globalIdx % size.x;
+//	Int y = globalIdx / size.x;
+//
+//	Float u = Float(x) / Float(size.x);
+//	Float v = Float(y) / Float(size.y);
+//	CUM::Vec2f uv(u,v);
+//	
+//	//camera.Call();
+//	Ray ray = camera.GetRay(uv);
+//
+//	CUM::Color3f resultColor(1.0);
+//	CUM::Color3f tempColor(1.0);
+//
+//	Bool haveHitPrimitives = false;
+//	if (globalIdx==1)
+//	{
+//		custd::OStream os;
+//		os << resultColor.r << custd::endl;
+//	}
+//	for (Int i = 0; i < camera.sampleTime; i++)
+//	{
+//
+//		if (primitiveVec.HitTest(ray))
+//		{
+//			tempColor = ray.record.sampledColor;
+//			resultColor *= tempColor;
+//			ray = ray.CalculateNextRay();
+//		}
+//		else
+//		{
+//			resultColor *= CUM::Color3f(1.0, 0.0, 1.0);
+//			break;
+//		}
+//	}
+//	resultColor *= 255.0;
+//	Float R = round(resultColor.r);
+//	Float G = round(resultColor.g);
+//	Float B = round(resultColor.b);
+//	Float A = round(255.0);
+//	camera.renderTarget->buffer[globalIdx].r = R;
+//	camera.renderTarget->buffer[globalIdx].g = G;
+//	camera.renderTarget->buffer[globalIdx].b = B;
+//	camera.renderTarget->buffer[globalIdx].a = A;
+//
+//	//camera.renderTarget->buffer[globalIdx].r = Ushort(round(255.0 * uv.x));
+//	//camera.renderTarget->buffer[globalIdx].g = Ushort(round(255.0 * uv.y));
+//	//camera.renderTarget->buffer[globalIdx].b = 0;
+//}
 
 
 void RenderingOnHost(Scene* scene)
 {
 	PersCamera& camera = *scene->camera;
-	CUM::PrimitiveVector<Geometry>& primitiveVec = *(scene->primitivesVectorPtr);
+	CUM::PrimitiveVector<Object>& objectVec = *(scene->objectVec);
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
@@ -747,7 +754,7 @@ void RenderingOnHost(Scene* scene)
 	CUM::Color3f resultColor(0.0);
 	CUM::Color3f sampledColor(1.0);
 	CUM::Color3f tempColor(1.0);
-	Float R, G, B, A;
+	Ushort R, G, B, A;
 	for (Int globalIdx = 0; globalIdx < length; globalIdx++)
 	{
 		x = globalIdx % size.x;
@@ -780,7 +787,7 @@ void RenderingOnHost(Scene* scene)
 				for (Int i = 0; i < camera.sampleTime; i++)
 				{
 
-					if (primitiveVec.HitTest(ray))
+					if (objectVec.HitTest(ray))
 					{
 						tempColor = ray.record.sampledColor;
 						sampledColor *= tempColor;
