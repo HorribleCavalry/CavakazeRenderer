@@ -3712,7 +3712,7 @@ namespace CUM
 	template<typename T>
 	__duel__ const Point3<T> applyQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
 	{
-		Vec3<T> result;
+		Point3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
 		Quaternion<T> quaConj = conjugate(qua);
 		auto pRes = qua * pQua * quaConj;
@@ -3723,9 +3723,9 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Vec3<T> applyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	__duel__ const Point3<T> applyInvQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
 	{
-		Vec3<T> result;
+		Point3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
 		Quaternion<T> quaConj = conjugate(qua);
 		Quaternion<T> pRes = quaConj * pQua * qua;
