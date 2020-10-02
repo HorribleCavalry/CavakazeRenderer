@@ -74,7 +74,7 @@ public:
 	__duel__ const void CalculateNextRay()
 	{
 		origin = record.position;
-		record.times = 0.0;
+		record.times = FLT_MAX;
 		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
 	}
 };

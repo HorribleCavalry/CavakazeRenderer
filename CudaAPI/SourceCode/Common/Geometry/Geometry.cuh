@@ -93,9 +93,9 @@ public:
 			}
 			ray.record.times = times;
 			endPoint = ray.GetEndPoint(times);
-			normal = (endPoint - centroid) / radius;
+			normal = CUM::normalize(endPoint - centroid);
 
-			ray.record.sampledColor = CUM::Color3f(1.0, 0.0, 0.0);
+			ray.record.sampledColor = CUM::Color3f(0.8, 0.8, 0.8);
 			ray.record.times = times;
 			ray.record.position = endPoint;
 			ray.record.normal = normal;
@@ -258,7 +258,7 @@ public:
 			CUM::Point3f hitPositionB(originB + t0 * directionB);
 			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
 			rayB.record.sampledColor = CUM::Color3f(1.0, 0.0, 0.0);
-			rayB.record.normal = CUM::Vec3f(normalB.x, normalB.y, normalB.z);
+			rayB.record.normal = CUM::normalize(CUM::Vec3f(normalB.x, normalB.y, normalB.z));
 		}
 
 		return isHit;
@@ -770,7 +770,7 @@ void RenderingOnHost(Scene* scene)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
-	const Int aliasingTime = 4;
+	const Int aliasingTime = 1;
 	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / (aliasingTime*aliasingTime);
 
 	CUM::Vec2f uv;
@@ -795,6 +795,11 @@ void RenderingOnHost(Scene* scene)
 		resultColor.b=0.0;
 
 		Int bounceTimeMinus1 = camera.bounceTime - 1;
+
+		if (globalIdx == 19514)
+		{
+			Int k = 4;
+		}
 
 		for (Int i = 0; i < aliasingTime; i++)
 		{
@@ -821,10 +826,10 @@ void RenderingOnHost(Scene* scene)
 					}
 					else if (objectVec.HitTest(ray))
 					{
-						//tempColor = ray.record.sampledColor;
-						tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;
-						tempColor.g = ray.record.normal.y <= 0.0 ? 0.0 : ray.record.normal.y;
-						tempColor.b = ray.record.normal.z <= 0.0 ? 0.0 : ray.record.normal.z;
+						tempColor = ray.record.sampledColor;
+						//tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;
+						//tempColor.g = ray.record.normal.y <= 0.0 ? 0.0 : ray.record.normal.y;
+						//tempColor.b = ray.record.normal.z <= 0.0 ? 0.0 : ray.record.normal.z;
 						sampledColor *= tempColor;
 						ray.CalculateNextRay();
 					}
