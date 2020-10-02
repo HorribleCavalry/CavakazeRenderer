@@ -8,7 +8,19 @@
 
 class Material
 {
-
+public:
+	__duel__ Material* copyToDevice()
+	{
+		Material* materialDevice = CudaInsMemCpyHostToDevice(this);
+		return materialDevice;
+	}
+	__duel__ const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
+	{
+		CUM::Vec3f invDir(-inputDir);
+		CUM::Vec3f normalDir(normal.x, normal.y, normal.z);
+		Float projFactor = dot(invDir, normalDir);
+		return CUM::normalize(2.0 * normalDir - projFactor * invDir);
+	}
 };
 
 class Record
@@ -59,9 +71,11 @@ public:
 		return origin + times * direction;
 	}
 	//To do...
-	__duel__ const Ray CalculateNextRay()
+	__duel__ const void CalculateNextRay()
 	{
-		return Ray();
+		origin = record.position;
+		record.times = 0.0;
+		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
 	}
 };
 
@@ -181,22 +195,22 @@ public:
 	Float aspectRatio;
 	Float nearPlan;
 	Float farPlan;
-	Int sampleTime;
+	Int bounceTime;
 	Texture* renderTarget;
 public:
-	__duel__ Camera() : sampleTime(64)
+	__duel__ Camera() : bounceTime(64)
 	{
 
 	}
 
 	__duel__ Camera(const Camera& cam) : position(cam.position),direction(cam.direction),rotation(cam.rotation),imageSize(cam.imageSize),aspectRatio(cam.aspectRatio),
-		nearPlan(cam.nearPlan),farPlan(cam.farPlan),sampleTime(cam.sampleTime),renderTarget(cam.renderTarget)
+		nearPlan(cam.nearPlan),farPlan(cam.farPlan),bounceTime(cam.bounceTime),renderTarget(cam.renderTarget)
 	{
 
 	}
 
-	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, Texture* _renderTarget)
-		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan), sampleTime(_sampleTime),renderTarget(_renderTarget)
+	__duel__ Camera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _bounceTime, Texture* _renderTarget)
+		:position(_position), direction(_direction), rotation(_rotation), imageSize(_imageSize), nearPlan(_nearPlan), farPlan(_farPlan), bounceTime(_bounceTime),renderTarget(_renderTarget)
 	{
 		//Aspect ratio always width/height.
 		aspectRatio = Float(imageSize.x) / Float(imageSize.y);
@@ -204,7 +218,7 @@ public:
 
 	__duel__ const Camera& operator=(const Camera& cam)
 	{
-		sampleTime = cam.sampleTime;
+		bounceTime = cam.bounceTime;
 		return *this;
 	}
 
@@ -246,8 +260,8 @@ public:
 
 	__duel__ PersCamera() {}
 
-	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _sampleTime, const Float& _fovH, Texture* _renderTarget)
-		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _sampleTime,_renderTarget), fovH(_fovH) {}
+	__duel__ PersCamera(const CUM::Point3f& _position, const CUM::Vec3f& _direction, const CUM::Quaternionf& _rotation, const CUM::Vec2i& _imageSize, const Float& _nearPlan, const Float& _farPlan, const Int& _bounceTime, const Float& _fovH, Texture* _renderTarget)
+		: Camera(_position, _direction, _rotation, _imageSize, _nearPlan, _farPlan, _bounceTime,_renderTarget), fovH(_fovH) {}
 public:
 	__host__ virtual PersCamera* copyToDevice() override
 	{

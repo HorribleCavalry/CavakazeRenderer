@@ -1299,6 +1299,7 @@ namespace CUM
 		v.z /= n;
 		return v;
 	}
+
 	template<typename T, typename U>
 	__duel__ const Point3<T>& operator/=(Point3<T>& v0, const Point3<U>& v1)
 	{
@@ -3652,6 +3653,24 @@ namespace CUM
 	__duel__ const Point3<Float> operator+(const Point3<T>& p, const Vec3<U>& v)
 	{
 		return Point3<Float>(p.x + v.x, p.y + v.y, p.z + v.z);
+	}
+
+	template<typename T>
+	__duel__ const Point3<Float>& operator/=(Point3<T>& p, const Vec3<T>& v)
+	{
+		p.x /= v.x;
+		p.y /= v.y;
+		p.z /= v.z;
+		return p;
+	}
+
+	template<typename T>
+	__duel__ const Point3<Float>& operator-=(Point3<T>& p, const Vec3<T>& v)
+	{
+		p.x -= v.x;
+		p.y -= v.y;
+		p.z -= v.z;
+		return p;
 	}
 
 #pragma endregion

@@ -549,6 +549,20 @@ public:
 		ray.record.sampledMaterial = material;
 		return primitivesVec->HitTest(ray);
 	}
+public:
+	__duel__ Mesh* copyToDevice()
+	{
+		Mesh meshInsWithDevicePtr(*this);
+
+		CUM::PrimitiveVector<Geometry>* primitivesVecDevice = primitivesVec->copyToDevice();
+		Material* materialDevice = material->copyToDevice();
+
+		meshInsWithDevicePtr.primitivesVec = primitivesVecDevice;
+		meshInsWithDevicePtr.material = materialDevice;
+
+		Mesh* meshDevice = CudaInsMemCpyHostToDevice(&meshInsWithDevicePtr);
+		return meshDevice;
+	}
 };
 
 class Object
@@ -563,6 +577,19 @@ public:
 	{
 		//To do...
 		//bBox = mesh->GetBoundingBox();
+	}
+public:
+
+	__duel__ Object* copyToDevice()
+	{
+		Object objectInsWithDevicePtr(*this);
+
+		CUM::PrimitiveVector<Mesh>* meshVecDevice = meshVec->copyToDevice();
+
+		objectInsWithDevicePtr.meshVec = meshVecDevice;
+
+		Object* objectDevice = CudaInsMemCpyHostToDevice(&objectInsWithDevicePtr);
+		return objectDevice;
 	}
 
 	__duel__ const Bool HitTest(Ray& ray) const
@@ -635,16 +662,16 @@ public:
 public:
 	Scene* copyToDevice()
 	{
-		//Scene sceneInsWithDevicePtr(*this);
+		Scene sceneInsWithDevicePtr(*this);
 
-		//PersCamera* cameraDevice = camera->copyToDevice();
-		//CUM::PrimitiveVector<Object>* primitivesVectorPtrDevice = objectVec->copyToDevice();
+		PersCamera* cameraDevice = camera->copyToDevice();
+		CUM::PrimitiveVector<Object>* objectVecDevice = objectVec->copyToDevice();
 
-		//sceneInsWithDevicePtr.camera = cameraDevice;
-		//sceneInsWithDevicePtr.objectVec = primitivesVectorPtrDevice;
+		sceneInsWithDevicePtr.camera = cameraDevice;
+		sceneInsWithDevicePtr.objectVec = objectVecDevice;
 
-		//Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
-		//return sceneDevice;
+		Scene* sceneDevice = CudaInsMemCpyHostToDevice(&sceneInsWithDevicePtr);
+		return sceneDevice;
 	}
 	__duel__ void Release()
 	{
@@ -767,6 +794,8 @@ void RenderingOnHost(Scene* scene)
 		resultColor.g=0.0;
 		resultColor.b=0.0;
 
+		Int bounceTimeMinus1 = camera.bounceTime - 1;
+
 		for (Int i = 0; i < aliasingTime; i++)
 		{
 			for (Int j = 0; j < aliasingTime; j++)
@@ -784,14 +813,20 @@ void RenderingOnHost(Scene* scene)
 				tempColor.g = 1.0;
 				tempColor.b = 1.0;
 
-				for (Int i = 0; i < camera.sampleTime; i++)
+				for (Int i = 0; i < camera.bounceTime; i++)
 				{
-
-					if (objectVec.HitTest(ray))
+					if (i == bounceTimeMinus1 && bounceTimeMinus1 != 0)
 					{
-						tempColor = ray.record.sampledColor;
+						resultColor = CUM::Color3f(0.0);
+					}
+					else if (objectVec.HitTest(ray))
+					{
+						//tempColor = ray.record.sampledColor;
+						tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;
+						tempColor.g = ray.record.normal.y <= 0.0 ? 0.0 : ray.record.normal.y;
+						tempColor.b = ray.record.normal.z <= 0.0 ? 0.0 : ray.record.normal.z;
 						sampledColor *= tempColor;
-						ray = ray.CalculateNextRay();
+						ray.CalculateNextRay();
 					}
 					else
 					{

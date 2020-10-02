@@ -160,11 +160,13 @@ int main(int argc, char* argv[])
 
 	Int width = 256;
 	Int height = 144;
+	const Int bounceTime = 1;
+
 	CUM::Vec2i RenderTargetSize(width, height);
 	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
 	Pixel* buffer = new Pixel[imageLength];
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
-	PersCamera* camera = new PersCamera({ 0.0 }, { 0.0,1.0,0.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, 1, 0.5 * PI, RenderTarget);
+	PersCamera* camera = new PersCamera({ 0.0 }, { 0.0,1.0,0.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
 	
 
 	CUM::Vec3f scale(1.0);
@@ -193,7 +195,7 @@ int main(int argc, char* argv[])
 	objectVec->push_back(*object);
 
 	Scene scene(camera, objectVec);
-	Scene* sceneDevice = scene.copyToDevice();
+	//Scene* sceneDevice = scene.copyToDevice();
 
 	Int threadNum = 32;
 	Int blockNum = imageLength / threadNum;
