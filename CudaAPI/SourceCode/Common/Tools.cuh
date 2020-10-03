@@ -9,6 +9,11 @@
 class Material
 {
 public:
+	Float roughness;
+public:
+	static Float* randNums;
+	static Int randNumSize;
+public:
 	__host__ Material* copyToDevice()
 	{
 		Material* materialDevice = CudaInsMemCpyHostToDevice(this);

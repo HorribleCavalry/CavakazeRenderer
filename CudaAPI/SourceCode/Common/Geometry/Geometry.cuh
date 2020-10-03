@@ -163,29 +163,31 @@ public:
 private:
 	__duel__ const Int GetUnitVal(const Float& val)
 	{
-		return val >= 0.0 ? 1.0 : -1.0;
+		CHECK(val != 0.0, "BBox::GetUnitVal(const Float& val) error: the val can not be zero!");
+		return val > 0.0 ? 1.0 : -1.0;
 	}
 	__duel__ const CUM::Normal3f GetNormal(const CUM::Vec3f& v)
 	{
 		CHECK(!v.IsZero(), "BBox::GetNormal error: the v can not be a zero vec!");
+		CUM::Vec3f normalizedV(CUM::normalize(v));
 		Float unit;
-		switch (v.MaxAbsIdx())
+		switch (normalizedV.MaxAbsIdx())
 		{
 		case 0:
 		{
-			unit = GetUnitVal(v.x);
+			unit = GetUnitVal(normalizedV.x);
 			return CUM::Normal3f(unit, 0.0, 0.0);
 		}break;
 
 		case 1:
 		{
-			unit = GetUnitVal(v.y);
+			unit = GetUnitVal(normalizedV.y);
 			return CUM::Normal3f(0.0, unit, 0.0);
 		}break;
 
 		case 2:
 		{
-			unit = GetUnitVal(v.z);
+			unit = GetUnitVal(normalizedV.z);
 			return CUM::Normal3f(0.0, 0.0, unit);
 		}break;
 
@@ -207,17 +209,20 @@ public:
 
 		Float tx_min, ty_min, tz_min;
 		Float tx_max, ty_max, tz_max;
+		Float xn, yn, zn;
 
 		Float a = 1.0 / dx;
 		if (a >= 0)
 		{
 			tx_min = (pMin.x - ox) * a;
 			tx_max = (pMax.x - ox) * a;
+			xn = 1.0;
 		}
 		else
 		{
 			tx_min = (pMax.x - ox) * a;
 			tx_max = (pMin.x - ox) * a;
+			xn = -1.0;
 		}
 
 		Float b = 1.0 / dy;
@@ -225,11 +230,13 @@ public:
 		{
 			ty_min = (pMin.y - oy) * b;
 			ty_max = (pMax.y - oy) * b;
+			yn = 1.0;
 		}
 		else
 		{
 			ty_min = (pMax.y - oy) * b;
 			ty_max = (pMin.y - oy) * b;
+			yn = -1.0;
 		}
 
 		Float c = 1.0 / dz;
@@ -237,32 +244,58 @@ public:
 		{
 			tz_min = (pMin.z - oz) * c;
 			tz_max = (pMax.z - oz) * c;
+			zn = 1.0;
 		}
 		else
 		{
 			tz_min = (pMax.z - oz) * c;
 			tz_max = (pMin.z - oz) * c;
+			zn = -1.0;
 		}
 
 		Float t0, t1;
 
-		t0 = tx_min > ty_min ? tx_min : ty_min;
-		t0 = tz_min > 0.0 ? tz_min : t0;
+		CUM::Normal3f resultNormal;
+
+		if (tx_min > ty_min)
+		{
+			t0 = tx_min;
+			resultNormal = xn * CUM::Vec3f(-1.0, 0.0, 0.0);
+		}
+		else
+		{
+			t0 = ty_min;
+			resultNormal = yn * CUM::Vec3f(0.0, -1.0, 0.0);
+		}
+
+		if (tz_min > t0)
+		{
+			resultNormal = zn * CUM::Vec3f(0.0, 0.0, -1.0);
+		}
+		t0 = tz_min > t0 ? tz_min : t0;
+
+		//t0 = tx_min > ty_min ? tx_min : ty_min;
+		//t0 = tz_min > Epsilon ? tz_min : t0;
 
 		t1 = tx_max < ty_max ? tx_max : ty_max;
 		t1 = tz_max < t1 ? tz_max : t1;
 
-		Bool isHit = t0 < t1 && t1 > 0.0;
+
+		
+
+		Bool isHit = t0 < t1 && t1 > Epsilon;
 
 		if (isHit)
 		{
 			rayB.record.times = t0;
-			CUM::Point3f hitPositionB(originB + t0 * directionB);
-			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
+			rayB.record.position = rayB.GetEndPoint(t0);
 			rayB.record.sampledColor = CUM::Color3f(0.8, 0.8, 0.8);
-			rayB.record.normal = CUM::normalize(CUM::Vec3f(normalB.x, normalB.y, normalB.z));
+			rayB.record.normal = resultNormal;
 		}
-
+		else
+		{
+			rayB.record.times = FLT_MAX;
+		}
 		return isHit;
 	}
 	__duel__ virtual const Float GetArea() override
@@ -718,6 +751,10 @@ public:
 
 __duel__ void Rendering(Scene* scene, Int globalIdx)
 {
+	if (globalIdx == 22911)
+	{
+		Int k = 4;
+	}
 	Scene& sceneDevice = *scene;
 	PersCamera& camera = *scene->camera;
 	CUM::PrimitiveVector<Object>& objectVec = *(scene->objectVec);
@@ -747,13 +784,7 @@ __duel__ void Rendering(Scene* scene, Int globalIdx)
 	resultColor.g = 0.0;
 	resultColor.b = 0.0;
 
-	Int bounceTimeMinus1 = camera.bounceTime - 1;
-
-	if (globalIdx == 19391)
-	{
-		custd::OStream os;
-		os << camera.bounceTime << custd::endl;
-	}
+	Int bounceTimeMinus1 = camera.bounceTime - 1; 
 
 	for (Int i = 0; i < aliasingTime; i++)
 	{
@@ -785,6 +816,9 @@ __duel__ void Rendering(Scene* scene, Int globalIdx)
 					//tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;
 					//tempColor.g = ray.record.normal.y <= 0.0 ? 0.0 : ray.record.normal.y;
 					//tempColor.b = ray.record.normal.z <= 0.0 ? 0.0 : ray.record.normal.z;
+					//tempColor.r = 0.5*(ray.record.normal.x + 1.0);
+					//tempColor.g = 0.5*(ray.record.normal.y + 1.0);
+					//tempColor.b = 0.5*(ray.record.normal.z + 1.0);
 					sampledColor *= tempColor;
 					ray.CalculateNextRay();
 				}

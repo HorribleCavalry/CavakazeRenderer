@@ -78,6 +78,7 @@ namespace CUM
 					isHit = true;
 					if (sampleRay.record.times < times)
 					{
+						times = sampleRay.record.times;
 						resultRay = sampleRay;
 					}
 				}
