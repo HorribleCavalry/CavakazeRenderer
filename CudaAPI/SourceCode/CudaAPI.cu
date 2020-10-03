@@ -158,8 +158,8 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 1920;
-	Int height = 1080;
+	Int width = 256;
+	Int height = 144;
 	const Int bounceTime = 64;
 	//const Int aliasingTime = 16;
 
@@ -178,14 +178,14 @@ int main(int argc, char* argv[])
 	//Geometry* sp0 = new Sphere(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
 	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
 	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
-	//Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
-	//Geometry* box1 = new BBox(CUM::Point3f(0.0, -5.0, 10.0), CUM::Vec3f(15.0,0.1,15.0));
+	Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
+	Geometry* box1 = new BBox(CUM::Point3f(0.0, -5.0, 10.0), CUM::Vec3f(15.0,0.1,15.0));
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
 	primitiveVec->push_back(*sp0);
 	primitiveVec->push_back(*sp1);
-	//primitiveVec->push_back(*box0);
-	//primitiveVec->push_back(*box1);
+	primitiveVec->push_back(*box0);
+	primitiveVec->push_back(*box1);
 
 	Material* material = new Material;
 	Mesh* mesh = new Mesh(primitiveVec,material);
@@ -199,20 +199,20 @@ int main(int argc, char* argv[])
 	objectVec->push_back(*object);
 
 	Scene scene(camera, objectVec);
-	//Scene* sceneDevice = scene.copyToDevice();
+	Scene* sceneDevice = scene.copyToDevice();
 
 	Int threadNum = 32;
 	Int blockNum = imageLength / threadNum;
 
-	//RenderingOnDevice << < blockNum, threadNum >> > (sceneDevice);
-	RenderingOnHost(&scene);
+	RenderingOnDevice << < blockNum, threadNum >> > (sceneDevice);
+	//RenderingOnHost(&scene);
 	cudaError_t error = cudaGetLastError();
 
 	if (error != cudaError_t::cudaSuccess)
 	{
 		printf("%s\n", cudaGetErrorString(error));
 	}
-	//scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+	scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
 	scene.camera->renderTarget->Save(imagePath.c_str());
 	custd::cout << "Now release host scene." << custd::endl;
 	scene.Release();

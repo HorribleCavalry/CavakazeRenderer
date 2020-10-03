@@ -9,7 +9,7 @@
 class Material
 {
 public:
-	__duel__ Material* copyToDevice()
+	__host__ Material* copyToDevice()
 	{
 		Material* materialDevice = CudaInsMemCpyHostToDevice(this);
 		return materialDevice;

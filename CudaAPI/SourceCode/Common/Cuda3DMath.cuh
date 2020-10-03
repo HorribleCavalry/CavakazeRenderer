@@ -378,11 +378,11 @@ namespace CUM
 			}
 		}
 	public:
-		const Bool IsZero() const
+		__duel__ const Bool IsZero() const
 		{
 			return x == 0 && y == 0 && z == 0;
 		}
-		const Int MaxAbsIdx() const
+		__duel__ const Int MaxAbsIdx() const
 		{
 			T xa = x < 0.0 ? -x : x;
 			T ya = y < 0.0 ? -y : y;
@@ -2253,7 +2253,7 @@ namespace CUM
 #pragma region Color process function
 
 	template<typename T>
-	const Color3<T> Lerp(const Color3<T>& c0, const Color3<T>& c1, const Float& n)
+	__duel__ const Color3<T> Lerp(const Color3<T>& c0, const Color3<T>& c1, const Float& n)
 	{
 		Color3<T> dis = c1 - c0;
 		return c0 + n * dis;
@@ -3777,8 +3777,6 @@ namespace CUM
 #pragma region
 
 #pragma region  other utilities
-#pragma endregion
-
 	class Transform
 	{
 	public:
@@ -3792,6 +3790,23 @@ namespace CUM
 
 		}
 	};
+#pragma endregion
+
+#pragma region utility math
+
+	template<typename T>
+	__duel__ const T& min(const T& n0, const T& n1)
+	{
+		return n0 < n1 ? n0 : n1;
+	}
+
+	template<typename T>
+	__duel__ const T& max(const T& n0, const T& n1)
+	{
+		return n0 > n1 ? n0 : n1;
+	}
+
+#pragma endregion
 }
 
 
