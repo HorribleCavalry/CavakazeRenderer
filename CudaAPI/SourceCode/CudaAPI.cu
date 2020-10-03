@@ -216,24 +216,7 @@ int main(int argc, char* argv[])
 	scene.camera->renderTarget->Save(imagePath.c_str());
 	custd::cout << "Now release host scene." << custd::endl;
 	scene.Release();
-	//custd::cout << "Now release device scene." << custd::endl;
-	//ReleaseIns << <1, 1 >> > (sceneDevice);
-
-	//CUM::Vec2i imageSize(1920, 1080);
-	//Int imageLength = imageSize.x*imageSize.y;
-	//CUM::Color3f* uvBuffer = new CUM::Color3f[imageLength];
-	//Texture* renderTarget = new Texture(imageSize, uvBuffer);
-
-	//std::string exePath = argv[0];//获取当前程序所在的路径
-	//std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
-	//const char* imageName = "Image.ppm";
-	//std::string imagePath = hierarchyPath + imageName;
-
-	//Texture* renderTargetDevice = renderTarget->copyToDevice();
-	//Int threadNum = 1024;
-	//Int blockNum = imageLength / threadNum;
-	//renderUV << < blockNum, threadNum >> > (renderTargetDevice);
-	//renderTarget->CopyFromDevice(renderTargetDevice);
-	//renderTarget->Save(imagePath.c_str());
+	custd::cout << "Now release device scene." << custd::endl;
+	ReleaseIns << <1, 1 >> > (sceneDevice);
 
 }
