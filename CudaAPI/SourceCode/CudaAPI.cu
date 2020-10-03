@@ -6,6 +6,7 @@
 #include "Common/stb_image.h"
 #include <chrono>
 #include <string>
+#include <random>
 
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
@@ -149,6 +150,21 @@ __global__ void renderUV(Texture* renderTargetDevice)
 	renderTargetDevice->buffer[globalIdx].g = v;
 }
 
+__duel__ void outputStatic(Int globalIdx)
+{
+	static Int calledTime = 0;
+	++calledTime;
+	printf("Now called the globalIdx is %d, the calledTime is %d.\n", globalIdx, calledTime);
+}
+
+__global__ void callStaticTest()
+{
+	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+
+	outputStatic(globalIdx);
+	outputStatic(globalIdx);
+}
+
 int main(int argc, char* argv[])
 {
 	std::string exePath = argv[0];//获取当前程序所在的路径
@@ -156,9 +172,10 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 1920;
-	Int height = 1080;
+	Int width = 256;
+	Int height = 144;
 	const Int bounceTime = 64;
+	const Int ranNumSize = 2048;
 	//const Int aliasingTime = 16;
 
 	CUM::Vec2i RenderTargetSize(width, height);
@@ -187,6 +204,9 @@ int main(int argc, char* argv[])
 	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
 
 	primitiveVec1->push_back(*box1);
+
+	Material::randNumSize = ranNumSize;
+
 
 	Material* material0 = new Material;
 	Material* material1 = new Material;

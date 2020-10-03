@@ -14,10 +14,39 @@ public:
 	static Float* randNums;
 	static Int randNumSize;
 public:
+	__global__ void ApplyStaticMember(Float* randNumsDevice)
+	{
+		Material::randNums = randNumsDevice;
+	}
+	__host__ void InitializeRandAndCopyToDevice()
+	{
+		randNums = new Float[randNumSize];
+
+		std::default_random_engine randEngine(time(NULL));
+		std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
+		for (Int i = 0; i < randNumSize; i++)
+		{
+			randNums[i] = randGenerator;
+		}
+		Float* randNumsDevice;
+		cudaMalloc(&randNumsDevice, randNumSize * sizeof(Float));
+		cudaMemcpy(randNumsDevice, randNums, randNumSize * sizeof(Float), cudaMemcpyKind::cudaMemcpyHostToDevice);
+
+
+	}
+public:
 	__host__ Material* copyToDevice()
 	{
 		Material* materialDevice = CudaInsMemCpyHostToDevice(this);
 		return materialDevice;
+	}
+	__duel__ void Release()
+	{
+		if (randNums)
+		{
+			delete[] randNums;
+			randNums = nullptr;
+		}
 	}
 	__duel__ const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
 	{
