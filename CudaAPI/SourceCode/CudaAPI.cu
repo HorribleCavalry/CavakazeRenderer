@@ -158,15 +158,16 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 256;
-	Int height = 144;
-	const Int bounceTime = 4;
+	Int width = 1920;
+	Int height = 1080;
+	const Int bounceTime = 64;
+	//const Int aliasingTime = 16;
 
 	CUM::Vec2i RenderTargetSize(width, height);
 	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
 	Pixel* buffer = new Pixel[imageLength];
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
-	PersCamera* camera = new PersCamera({ 0.0 }, { 0.0,1.0,0.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
+	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
 	
 
 	CUM::Vec3f scale(1.0);
@@ -174,16 +175,17 @@ int main(int argc, char* argv[])
 	CUM::Quaternionf rotation(CUM::Vec3f(1.0), 0.0);
 	CUM::Transform trans(scale, rotation, translation);
 
+	//Geometry* sp0 = new Sphere(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
 	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
-	Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
-	Geometry* box1 = new BBox(CUM::Point3f(0.0, -2.0, 10.0), CUM::Vec3f(1000.0,0.1,1000.0));
 	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
+	//Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
+	//Geometry* box1 = new BBox(CUM::Point3f(0.0, -5.0, 10.0), CUM::Vec3f(15.0,0.1,15.0));
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec = new CUM::PrimitiveVector<Geometry>;
 	primitiveVec->push_back(*sp0);
-	primitiveVec->push_back(*box0);
-	primitiveVec->push_back(*box1);
 	primitiveVec->push_back(*sp1);
+	//primitiveVec->push_back(*box0);
+	//primitiveVec->push_back(*box1);
 
 	Material* material = new Material;
 	Mesh* mesh = new Mesh(primitiveVec,material);

@@ -73,21 +73,23 @@ public:
 		Float B = 2.0 * dot(ray.direction, CO);
 		Float C = CUM::dot(CO, CO) - radius * radius;
 		Float discriminant = B * B - 4.0*A*C;
+		Float sqrtDisc;
 		Float times = 0.0;
 
 		CUM::Point3f endPoint;
 		CUM::Normal3f normal;
 
-		if (discriminant <= 0.0)
+		if (discriminant < 0.0)
 		{
 			return false;
 		}
 		else
 		{
-			times = 0.5 *(-B - discriminant) / A;
+			sqrtDisc = sqrt(discriminant);
+			times = 0.5 *(-B - sqrtDisc) / A;
 			if (times < Epsilon)
 			{
-				times = 0.5 *(-B + discriminant) / A;
+				times = 0.5 *(-B + sqrtDisc) / A;
 				if (times < Epsilon)
 					return false;
 			}
@@ -257,7 +259,7 @@ public:
 			rayB.record.times = t0;
 			CUM::Point3f hitPositionB(originB + t0 * directionB);
 			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
-			rayB.record.sampledColor = CUM::Color3f(1.0, 0.0, 0.0);
+			rayB.record.sampledColor = CUM::Color3f(0.8, 0.8, 0.8);
 			rayB.record.normal = CUM::normalize(CUM::Vec3f(normalB.x, normalB.y, normalB.z));
 		}
 
@@ -770,8 +772,8 @@ void RenderingOnHost(Scene* scene)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
-	const Int aliasingTime = 1;
-	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / (aliasingTime*aliasingTime);
+	const Int aliasingTime = 16;
+	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / aliasingTime;
 
 	CUM::Vec2f uv;
 	Int x, y;
@@ -796,11 +798,6 @@ void RenderingOnHost(Scene* scene)
 
 		Int bounceTimeMinus1 = camera.bounceTime - 1;
 
-		if (globalIdx == 19514)
-		{
-			Int k = 4;
-		}
-
 		for (Int i = 0; i < aliasingTime; i++)
 		{
 			for (Int j = 0; j < aliasingTime; j++)
@@ -822,6 +819,7 @@ void RenderingOnHost(Scene* scene)
 				{
 					if (i == bounceTimeMinus1 && bounceTimeMinus1 != 0)
 					{
+						sampledColor = CUM::Color3f(0.0);
 						resultColor = CUM::Color3f(0.0);
 					}
 					else if (objectVec.HitTest(ray))

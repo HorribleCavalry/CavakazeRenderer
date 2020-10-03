@@ -75,9 +75,9 @@ namespace CUM
 				sampleRay = ray;
 				if (ptrList[i]->HitTest(sampleRay))
 				{
+					isHit = true;
 					if (sampleRay.record.times < times)
 					{
-						isHit = true;
 						resultRay = sampleRay;
 					}
 				}
