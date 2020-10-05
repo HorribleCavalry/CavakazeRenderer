@@ -26,7 +26,7 @@ public:
 		std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
 		for (Int i = 0; i < randNumSize; i++)
 		{
-			randNums[i] = randGenerator;
+			randNums[i] = randGenerator(randEngine);
 		}
 		Float* randNumsDevice;
 		cudaMalloc(&randNumsDevice, randNumSize * sizeof(Float));
