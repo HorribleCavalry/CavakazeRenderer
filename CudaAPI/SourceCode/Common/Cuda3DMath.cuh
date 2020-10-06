@@ -3656,11 +3656,11 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Point3<Float>& operator/=(Point3<T>& p, const Vec3<T>& v)
+	__duel__ const Point3<Float>& operator+=(Point3<T>& p, const Vec3<T>& v)
 	{
-		p.x /= v.x;
-		p.y /= v.y;
-		p.z /= v.z;
+		p.x += v.x;
+		p.y += v.y;
+		p.z += v.z;
 		return p;
 	}
 
@@ -3672,6 +3672,25 @@ namespace CUM
 		p.z -= v.z;
 		return p;
 	}
+
+	template<typename T>
+	__duel__ const Point3<Float>& operator*=(Point3<T>& p, const Vec3<T>& v)
+	{
+		p.x *= v.x;
+		p.y *= v.y;
+		p.z *= v.z;
+		return p;
+	}
+
+	template<typename T>
+	__duel__ const Point3<Float>& operator/=(Point3<T>& p, const Vec3<T>& v)
+	{
+		p.x /= v.x;
+		p.y /= v.y;
+		p.z /= v.z;
+		return p;
+	}
+
 
 #pragma endregion
 
@@ -3701,9 +3720,9 @@ namespace CUM
 	}
 #pragma endregion
 
-#pragma region Quaternion-Vec4
+#pragma region Quaternion-Vec3/Point3/Normal3
 	template<typename T>
-	__duel__ const Vec3<T> applyQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	__duel__ const Vec3<T> ApplyQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
 	{
 		Vec3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
@@ -3716,7 +3735,7 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Vec3<T> applyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
+	__duel__ const Vec3<T> ApplyInvQuaTransform(const Quaternion<T>& qua, const Vec3<T>& v)
 	{
 		Vec3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
@@ -3729,7 +3748,7 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Point3<T> applyQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
+	__duel__ const Point3<T> ApplyQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
 	{
 		Point3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
@@ -3742,9 +3761,35 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Point3<T> applyInvQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
+	__duel__ const Point3<T> ApplyInvQuaTransform(const Quaternion<T>& qua, const Point3<T>& v)
 	{
 		Point3<T> result;
+		Quaternion<T> pQua(v.x, v.y, v.z, 0);
+		Quaternion<T> quaConj = conjugate(qua);
+		Quaternion<T> pRes = quaConj * pQua * qua;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		return result;
+	}
+
+	template<typename T>
+	__duel__ const Normal3<T> ApplyQuaTransform(const Quaternion<T>& qua, const Normal3<T>& v)
+	{
+		Normal3<T> result;
+		Quaternion<T> pQua(v.x, v.y, v.z, 0);
+		Quaternion<T> quaConj = conjugate(qua);
+		auto pRes = qua * pQua * quaConj;
+		result.x = pRes.x;
+		result.y = pRes.y;
+		result.z = pRes.z;
+		return result;
+	}
+
+	template<typename T>
+	__duel__ const Normal3<T> ApplyInvQuaTransform(const Quaternion<T>& qua, const Normal3<T>& v)
+	{
+		Normal3<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, 0);
 		Quaternion<T> quaConj = conjugate(qua);
 		Quaternion<T> pRes = quaConj * pQua * qua;
@@ -3759,7 +3804,7 @@ namespace CUM
 
 #pragma region Quaternion-Vec4
 	template<typename T>
-	__duel__ const Vec4<T> applyQuaTransform(const Quaternion<T>& qua, const Vec4<T>& v)
+	__duel__ const Vec4<T> AapplyQuaTransform(const Quaternion<T>& qua, const Vec4<T>& v)
 	{
 		Vec4<T> result;
 		Quaternion<T> pQua(v.x, v.y, v.z, v.w);
@@ -3785,7 +3830,7 @@ namespace CUM
 		Vec3f translation;
 	public:
 		__duel__ Transform(const Vec3f& _scale, const Quaternionf& _rotation, const Vec3f& _translation)
-			:scale(_scale), rotation(_rotation), translation(translation)
+			:scale(_scale), rotation(_rotation), translation(_translation)
 		{
 
 		}

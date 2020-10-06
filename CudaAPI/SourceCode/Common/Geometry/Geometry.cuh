@@ -99,7 +99,7 @@ public:
 
 			ray.record.sampledColor = CUM::Color3f(0.8, 0.8, 0.8);
 			ray.record.times = times;
-			ray.record.position = endPoint;
+			ray.record.hitPoint = endPoint;
 			ray.record.normal = normal;
 			return true;
 		}
@@ -288,8 +288,7 @@ public:
 		if (isHit)
 		{
 			rayB.record.times = t0;
-			rayB.record.position = rayB.GetEndPoint(t0);
-			rayB.record.sampledColor = CUM::Color3f(0.8, 0.8, 0.8);
+			rayB.record.hitPoint = rayB.GetEndPoint(t0);
 			rayB.record.normal = resultNormal;
 		}
 		else
@@ -386,8 +385,8 @@ private:
 public:
 	__duel__ virtual const Bool HitTest(Ray& ray) override
 	{
-		CUM::Vec3f directionB = CUM::applyInvQuaTransform(rotation,ray.direction);
-		CUM::Point3f originB = CUM::applyInvQuaTransform(rotation, ray.origin - centroid);
+		CUM::Vec3f directionB = CUM::ApplyInvQuaTransform(rotation,ray.direction);
+		CUM::Point3f originB = CUM::ApplyInvQuaTransform(rotation, ray.origin - centroid);
 
 		Float ox = originB.x; Float oy = originB.y; Float oz = originB.z;
 		Float dx = directionB.x; Float dy = directionB.y; Float dz = directionB.z;
@@ -446,7 +445,7 @@ public:
 			ray.record.times = t0;
 			CUM::Point3f hitPositionB(originB + t0 * directionB);
 			CUM::Normal3f normalB(GetNormal(hitPositionB - 0.0));
-			CUM::Vec3f normal(CUM::applyQuaTransform(rotation, CUM::Vec3f(normalB.x, normalB.y, normalB.z)));
+			CUM::Vec3f normal(CUM::ApplyQuaTransform(rotation, CUM::Vec3f(normalB.x, normalB.y, normalB.z)));
 			ray.record.normal = normal;
 		}
 
@@ -533,7 +532,7 @@ public:
 
 		ray.record.times = t;
 		ray.record.normal = normal;
-		ray.record.position = ray.GetEndPoint(t);
+		ray.record.hitPoint = ray.GetEndPoint(t);
 		return true;
 	}
 	__duel__ virtual const Float GetArea()
@@ -639,19 +638,47 @@ public:
 		os << "Called Object::Release()!\n";
 		meshVec->Release();
 	}
-	__duel__ const Bool HitTest(Ray& ray) const
+	__duel__ const Bool HitTest(Ray& ray)
 	{
-		return meshVec->HitTest(ray);
+		Ray tempRay(ray);
+		tempRay = TransRay(tempRay);
+		Bool isHit = meshVec->HitTest(tempRay);
+		if (isHit)
+		{
+			ray = InvTransRay(tempRay);
+		}
+		return isHit;
 	}
 private:
 	//To do...
-	__duel__ const Ray TransRay(const Ray& ray) const
+	__duel__ const Ray TransRay(const Ray& ray)
 	{
-		Ray result;
+		Ray result(ray);
 		result.origin -= transform.translation;
-		result.origin = CUM::applyInvQuaTransform(transform.rotation, result.origin);
+		result.origin = CUM::ApplyInvQuaTransform(transform.rotation, result.origin);
 		result.origin /= transform.scale;
-		return Ray();
+
+		result.direction = CUM::ApplyInvQuaTransform(transform.rotation, result.direction);
+		result.direction /= transform.scale;
+
+		return result;
+	}
+	__duel__ const Ray InvTransRay(const Ray& ray)
+	{
+		Ray result(ray);
+		result.origin *= transform.scale;
+		result.origin = CUM::ApplyQuaTransform(transform.rotation, result.origin);
+		result.origin += transform.translation;
+
+		result.direction *= transform.scale;
+		result.direction = CUM::ApplyQuaTransform(transform.rotation, result.direction);
+
+		result.record.hitPoint *= transform.scale;
+		result.record.hitPoint = CUM::ApplyQuaTransform(transform.rotation, result.record.hitPoint);
+		result.record.hitPoint += transform.translation;
+
+		result.record.normal = CUM::ApplyQuaTransform(transform.rotation, result.record.normal);
+		return result;
 	}
 };
 
@@ -812,7 +839,7 @@ __duel__ void Rendering(Scene* scene, Int globalIdx)
 				}
 				else if (objectVec.HitTest(ray))
 				{
-					tempColor = ray.record.sampledColor;
+					tempColor = ray.record.sampledMaterial->Albedo;
 					//tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;
 					//tempColor.g = ray.record.normal.y <= 0.0 ? 0.0 : ray.record.normal.y;
 					//tempColor.b = ray.record.normal.z <= 0.0 ? 0.0 : ray.record.normal.z;

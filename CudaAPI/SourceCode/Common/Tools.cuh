@@ -3,49 +3,67 @@
 
 #include "../CudaSTD/CudaUtility.cuh"
 #include "Cuda3DMath.cuh"
+#include <random>
 #include <fstream>
 #include <iomanip>
 
 class Material
 {
 public:
-	Float roughness;
+	Float roughness = 0.5;
+	CUM::Color3f Albedo;
 public:
-	static Float* randNums;
-	static Int randNumSize;
+	Bool isHemisphere = false;
 public:
-	__global__ void ApplyStaticMember(Float* randNumsDevice)
+	CUM::Vec3f* randVecs;
+	Int randVecSize;
+public:
+	__duel__ Material()
 	{
-		Material::randNums = randNumsDevice;
+		randVecSize = 64;
 	}
-	__host__ void InitializeRandAndCopyToDevice()
+	__host__ virtual void InitializeRandVecs()
 	{
-		randNums = new Float[randNumSize];
+		CHECK(randVecSize > 0, "Material::InitializeRandVecs() error: the randVecSize can not less than 0!");
+		randVecs = new CUM::Vec3f[randVecSize];
 
 		std::default_random_engine randEngine(time(NULL));
 		std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
-		for (Int i = 0; i < randNumSize; i++)
+		Float xi1, xi2;
+		Float x, y, z;
+		Float Sqrt1MinusXi1Square;
+		for (Int i = 0; i < randVecSize; i++)
 		{
-			randNums[i] = randGenerator(randEngine);
+			xi1 = randGenerator(randEngine);
+			xi2 = randGenerator(randEngine);
+			Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
+			x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			y = xi1;
+			randVecs[i] = CUM::Vec3f(x, y, z);
 		}
-		Float* randNumsDevice;
-		cudaMalloc(&randNumsDevice, randNumSize * sizeof(Float));
-		cudaMemcpy(randNumsDevice, randNums, randNumSize * sizeof(Float), cudaMemcpyKind::cudaMemcpyHostToDevice);
-
 
 	}
 public:
 	__host__ Material* copyToDevice()
 	{
-		Material* materialDevice = CudaInsMemCpyHostToDevice(this);
+		Material materialInsWithDevicePtr(*this);
+		CUM::Vec3f* randVecsDevice;
+		
+		cudaMalloc(&randVecsDevice, randVecSize * sizeof(CUM::Vec3f));
+		cudaMemcpy(randVecsDevice, randVecs, randVecSize * sizeof(CUM::Vec3f), cudaMemcpyKind::cudaMemcpyHostToDevice);
+
+		materialInsWithDevicePtr.randVecs = randVecsDevice;
+
+		Material* materialDevice = CudaInsMemCpyHostToDevice(&materialInsWithDevicePtr);
 		return materialDevice;
 	}
 	__duel__ void Release()
 	{
-		if (randNums)
+		if (randVecs)
 		{
-			delete[] randNums;
-			randNums = nullptr;
+			delete[] randVecs;
+			randVecs = nullptr;
 		}
 	}
 	__duel__ const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
@@ -60,20 +78,20 @@ public:
 class Record
 {
 public:
-	CUM::Point3f position;
+	CUM::Point3f hitPoint;
 	CUM::Normal3f normal;
 	CUM::Color3f sampledColor;
 	Material* sampledMaterial;
 	Float times;
 public:
-	__duel__ Record():position(CUM::Point3f()),normal(),sampledColor(CUM::Color3f()),times(0.0) {}
+	__duel__ Record():hitPoint(CUM::Point3f()),normal(),sampledColor(CUM::Color3f()),times(0.0) {}
 	__duel__ Record(const CUM::Point3f& _position, const CUM::Normal3f& _normal, const CUM::Color3f& _albedo, const Float& _time)
-		:position(_position), normal(_normal), sampledColor(_albedo), times(_time) {}
+		:hitPoint(_position), normal(_normal), sampledColor(_albedo), times(_time) {}
 	//Record(CUM::Point3f&& _position, CUM::Normal&& _normal, CUM::Color3f&& _albedo, Float&& _time)
 	//	:position(_position), normal(_normal), albedo(_albedo), times(_time) {}
 	__duel__ const Record operator=(const Record& rec)
 	{
-		position = rec.position;
+		hitPoint = rec.hitPoint;
 		normal = rec.normal;
 		sampledColor = rec.sampledColor;
 		sampledMaterial = rec.sampledMaterial;
@@ -107,7 +125,7 @@ public:
 	//To do...
 	__duel__ const void CalculateNextRay()
 	{
-		origin = record.position;
+		origin = record.hitPoint;
 		record.times = FLT_MAX;
 		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
 	}

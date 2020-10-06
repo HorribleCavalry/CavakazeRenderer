@@ -185,11 +185,6 @@ int main(int argc, char* argv[])
 	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
 	
 
-	CUM::Vec3f scale(1.0);
-	CUM::Vec3f translation(0.0,0.0,10.0);
-	CUM::Quaternionf rotation(CUM::Vec3f(1.0), 0.0);
-	CUM::Transform trans(scale, rotation, translation);
-
 	//Geometry* sp0 = new Sphere(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
 	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
 	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
@@ -205,16 +200,23 @@ int main(int argc, char* argv[])
 
 	primitiveVec1->push_back(*box1);
 
-	Material::randNumSize = ranNumSize;
-
-
 	Material* material0 = new Material;
+	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+	material0->InitializeRandVecs();
 	Material* material1 = new Material;
+	material1->Albedo = CUM::Color3f(0.25, 0.75, 0.5);
+	material1->InitializeRandVecs();
+
 	Mesh* mesh0 = new Mesh(primitiveVec0,material0);
 	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
 	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
 	meshVec0->push_back(*mesh0);
 	meshVec0->push_back(*mesh1);
+
+	CUM::Vec3f scale(1.0, 1.0, 1.0);
+	CUM::Vec3f translation(0.0, 0.0, 0.0);
+	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.25 * PI);
+	CUM::Transform trans(scale, rotation, translation);
 
 	Object* object = new Object(trans, meshVec0);
 
