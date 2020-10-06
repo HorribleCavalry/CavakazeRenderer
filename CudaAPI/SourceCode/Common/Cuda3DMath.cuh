@@ -3851,6 +3851,17 @@ namespace CUM
 		return n0 > n1 ? n0 : n1;
 	}
 
+	template<typename T>
+	__duel__ const Float DegreeToRadian(const T& Degree)
+	{
+		return Degree / 180 * PI;
+	}
+
+	template<typename T>
+	__duel__ const Float RadianToDegree(const T& Radian)
+	{
+		return Radian / PI * 180;
+	}
 #pragma endregion
 }
 

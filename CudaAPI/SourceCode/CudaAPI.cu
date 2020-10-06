@@ -165,6 +165,15 @@ __global__ void callStaticTest()
 	outputStatic(globalIdx);
 }
 
+__global__ void TestMaterialRandVec(Scene* scene)
+{
+	//printf("Now testing material copy rand vec on device!\n");
+	(*(*scene->objectVec)[0].meshVec)[0].material->testForCopyRandVec();
+	(*(*scene->objectVec)[0].meshVec)[1].material->testForCopyRandVec();
+	//printf("Now end testing material copy rand vec on device!\n");
+}
+
+
 int main(int argc, char* argv[])
 {
 	std::string exePath = argv[0];//获取当前程序所在的路径
@@ -172,8 +181,8 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 256;
-	Int height = 144;
+	Int width = 2560;
+	Int height = 1440;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 	//const Int aliasingTime = 16;
@@ -194,7 +203,7 @@ int main(int argc, char* argv[])
 	primitiveVec0->push_back(*sp0);
 	primitiveVec0->push_back(*sp1);
 
-	Geometry* box1 = new BBox(CUM::Point3f(0.0, -2.0, 10.0), CUM::Vec3f(15.0, 0.1, 15.0));
+	Geometry* box1 = new BBox(CUM::Point3f(0.0, -1.11, 10.0), CUM::Vec3f(15.0, 0.1, 15.0));
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
 
@@ -203,8 +212,9 @@ int main(int argc, char* argv[])
 	Material* material0 = new Material;
 	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
 	material0->InitializeRandVecs();
+
 	Material* material1 = new Material;
-	material1->Albedo = CUM::Color3f(0.25, 0.75, 0.5);
+	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
 	material1->InitializeRandVecs();
 
 	Mesh* mesh0 = new Mesh(primitiveVec0,material0);
@@ -226,19 +236,12 @@ int main(int argc, char* argv[])
 
 	Scene scene(camera, objectVec);
 	Scene* sceneDevice = scene.copyToDevice();
+	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
 
-	Int threadNum = 32;
-	Int blockNum = imageLength / threadNum;
+	Bool isOnDevice = false;
+	Rendering(&scene, sceneDevice, imageLength, isOnDevice);
 
-	RenderingOnDevice << < blockNum, threadNum >> > (sceneDevice);
-	//RenderingOnHost(&scene);
-	cudaError_t error = cudaGetLastError();
 
-	if (error != cudaError_t::cudaSuccess)
-	{
-		printf("%s\n", cudaGetErrorString(error));
-	}
-	scene.camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
 	scene.camera->renderTarget->Save(imagePath.c_str());
 	custd::cout << "Now release host scene." << custd::endl;
 	scene.Release();

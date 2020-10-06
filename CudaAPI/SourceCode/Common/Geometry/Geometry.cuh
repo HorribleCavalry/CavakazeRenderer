@@ -771,17 +771,13 @@ public:
 	{
 		Float skyLerpFactor = CUM::max(direction.y,0.0);
 		
-		return CUM::Lerp(CUM::Color3f(1.0), CUM::Color3f(0.0, 0.0, 1.0), skyLerpFactor);
+		return CUM::Lerp(CUM::Color3f(1.0), CUM::Color3f(0.5, 0.5, 1.0), skyLerpFactor);
 	}
 
 };
 
-__duel__ void Rendering(Scene* scene, Int globalIdx)
+__duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
 {
-	if (globalIdx == 22911)
-	{
-		Int k = 4;
-	}
 	Scene& sceneDevice = *scene;
 	PersCamera& camera = *scene->camera;
 	CUM::PrimitiveVector<Object>& objectVec = *(scene->objectVec);
@@ -812,6 +808,8 @@ __duel__ void Rendering(Scene* scene, Int globalIdx)
 	resultColor.b = 0.0;
 
 	Int bounceTimeMinus1 = camera.bounceTime - 1; 
+
+	Int randOffsetIdx = globalIdx;
 
 	for (Int i = 0; i < aliasingTime; i++)
 	{
@@ -847,7 +845,9 @@ __duel__ void Rendering(Scene* scene, Int globalIdx)
 					//tempColor.g = 0.5*(ray.record.normal.y + 1.0);
 					//tempColor.b = 0.5*(ray.record.normal.z + 1.0);
 					sampledColor *= tempColor;
-					ray.CalculateNextRay();
+					
+					ray.CalculateNextRay(randOffsetIdx);
+					++randOffsetIdx;
 				}
 				else
 				{
@@ -880,7 +880,7 @@ __global__ void RenderingOnDevice(Scene* scene)
 {
 	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
 
-	Rendering(scene, globalIdx);
+	RenderingImplementation(scene, globalIdx);
 }
 
 
@@ -892,7 +892,27 @@ __host__ void RenderingOnHost(Scene* scene)
 
 	for (Int globalIdx = 0; globalIdx < length; globalIdx++)
 	{
-		Rendering(scene, globalIdx);
+		RenderingImplementation(scene, globalIdx);
+	}
+}
+
+__host__ void Rendering(Scene* sceneHost, Scene* sceneDevice, Int imageLength, Bool isOnDevice = true)
+{
+	if (isOnDevice)
+	{
+		Int threadNum = 32;
+		Int blockNum = imageLength / threadNum;
+		RenderingOnDevice << <blockNum, threadNum >> > (sceneDevice);
+		cudaError_t error = cudaGetLastError();
+		if (error != cudaError_t::cudaSuccess)
+		{
+			printf("%s\n", cudaGetErrorString(error));
+		}
+		sceneHost->camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+	}
+	else
+	{
+		RenderingOnHost(sceneHost);
 	}
 }
 

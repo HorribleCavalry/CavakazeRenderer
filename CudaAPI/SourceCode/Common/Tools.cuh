@@ -16,24 +16,30 @@ public:
 	Bool isHemisphere = false;
 public:
 	CUM::Vec3f* randVecs;
-	Int randVecSize;
+	Float* randNums;
+	Int interactTime;
+	Int randSize;
 public:
 	__duel__ Material()
 	{
-		randVecSize = 64;
+		interactTime = 0;
+		randSize = 64;
 	}
 	__host__ virtual void InitializeRandVecs()
 	{
-		CHECK(randVecSize > 0, "Material::InitializeRandVecs() error: the randVecSize can not less than 0!");
-		randVecs = new CUM::Vec3f[randVecSize];
+		CHECK(randSize > 0, "Material::InitializeRandVecs() error: the randVecSize can not less than 0!");
+		randVecs = new CUM::Vec3f[randSize];
+		randNums = new Float[randSize];
 
-		std::default_random_engine randEngine(time(NULL));
+		std::default_random_engine randEngine(rand());
 		std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
 		Float xi1, xi2;
 		Float x, y, z;
 		Float Sqrt1MinusXi1Square;
-		for (Int i = 0; i < randVecSize; i++)
+		for (Int i = 0; i < randSize; i++)
 		{
+			randNums[i] = randGenerator(randEngine);
+
 			xi1 = randGenerator(randEngine);
 			xi2 = randGenerator(randEngine);
 			Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
@@ -49,11 +55,16 @@ public:
 	{
 		Material materialInsWithDevicePtr(*this);
 		CUM::Vec3f* randVecsDevice;
+		Float* randNumsDevice;
 		
-		cudaMalloc(&randVecsDevice, randVecSize * sizeof(CUM::Vec3f));
-		cudaMemcpy(randVecsDevice, randVecs, randVecSize * sizeof(CUM::Vec3f), cudaMemcpyKind::cudaMemcpyHostToDevice);
+		cudaMalloc(&randVecsDevice, randSize * sizeof(CUM::Vec3f));
+		cudaMemcpy(randVecsDevice, randVecs, randSize * sizeof(CUM::Vec3f), cudaMemcpyKind::cudaMemcpyHostToDevice);
+
+		cudaMalloc(&randNumsDevice, randSize * sizeof(Float));
+		cudaMemcpy(randNumsDevice, randNums, randSize * sizeof(Float), cudaMemcpyKind::cudaMemcpyHostToDevice);
 
 		materialInsWithDevicePtr.randVecs = randVecsDevice;
+		materialInsWithDevicePtr.randNums = randNumsDevice;
 
 		Material* materialDevice = CudaInsMemCpyHostToDevice(&materialInsWithDevicePtr);
 		return materialDevice;
@@ -65,13 +76,44 @@ public:
 			delete[] randVecs;
 			randVecs = nullptr;
 		}
+
+		if (randNums)
+		{
+			delete[] randNums;
+			randNums = nullptr;
+		}
 	}
-	__duel__ const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
+	__duel__ virtual const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir, const Float& randN, const CUM::Vec3f& randV)
 	{
-		CUM::Vec3f invDir(-inputDir);
+		CUM::Vec3f viewDir(-inputDir);
 		CUM::Vec3f normalDir(normal.x, normal.y, normal.z);
-		Float projFactor = dot(invDir, normalDir);
-		return CUM::normalize(2.0 * normalDir - projFactor * invDir);
+		Float costheta = dot(viewDir, normalDir);
+		Float F0 = 0.0;
+		Float fresnel = F0 + (1.0 - F0)*pow(1.0 - costheta, 5);
+		if (randN <= fresnel)
+		{
+			return CUM::normalize(2.0 * normalDir - costheta * viewDir);
+		}
+		else
+		{
+			Float normalTheta = CUM::dot(normalDir, CUM::Vec3f(0.0, 1.0, 0.0));
+			if (normalTheta > 1.0 - Epsilon)
+			{
+				return randV;
+			}
+			else
+			{
+				CUM::Vec3f axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), normalDir));
+				return CUM::RodriguesRotate(axis, normalTheta, randV);
+			}
+		}
+	}
+public:
+	__duel__ void testForCopyRandVec()
+	{
+		custd::OStream os;
+		//os << "The first rand vec of the current material is:\n" << randVecs[0].x << "\t" << randVecs[0].y << "\t" << randVecs[0].z << "\t\n";
+		os << "The first rand num of the current material is:\n" << randNums[0] << "\n";
 	}
 };
 
@@ -123,11 +165,15 @@ public:
 		return origin + times * direction;
 	}
 	//To do...
-	__duel__ const void CalculateNextRay()
+	__duel__ const void CalculateNextRay(const Int& randOffsetIdx)
 	{
+		Int randSize = record.sampledMaterial->randSize;
+		Int randIdx = randOffsetIdx % randSize;
 		origin = record.hitPoint;
 		record.times = FLT_MAX;
-		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
+		Float& randN = record.sampledMaterial->randNums[randIdx];
+		CUM::Vec3f& randV = record.sampledMaterial->randVecs[randIdx];
+		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction, randN, randV);
 	}
 };
 
