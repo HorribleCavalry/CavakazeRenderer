@@ -181,8 +181,8 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 2560;
-	Int height = 1440;
+	Int width = 256;
+	Int height = 144;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 	//const Int aliasingTime = 16;
@@ -225,7 +225,7 @@ int main(int argc, char* argv[])
 
 	CUM::Vec3f scale(1.0, 1.0, 1.0);
 	CUM::Vec3f translation(0.0, 0.0, 0.0);
-	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.25 * PI);
+	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.0);
 	CUM::Transform trans(scale, rotation, translation);
 
 	Object* object = new Object(trans, meshVec0);
@@ -238,7 +238,7 @@ int main(int argc, char* argv[])
 	Scene* sceneDevice = scene.copyToDevice();
 	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
 
-	Bool isOnDevice = false;
+	Bool isOnDevice = true;
 	Rendering(&scene, sceneDevice, imageLength, isOnDevice);
 
 

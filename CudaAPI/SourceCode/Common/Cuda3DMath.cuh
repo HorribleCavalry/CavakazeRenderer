@@ -444,7 +444,7 @@ namespace CUM
 	}
 
 	template<typename T>
-	const Vec3<T> RodriguesRotate(const Vec3<T>& axis,const Float& theta, const Vec3<T>& v)
+	__duel__ const Vec3<T> RodriguesRotate(const Vec3<T>& axis,const Float& theta, const Vec3<T>& v)
 	{
 		if (norm(v) == 0)
 			return v;
@@ -455,7 +455,17 @@ namespace CUM
 	}
 
 	template<typename T>
-	const Vec3<T> Lerp(const Vec3<T>& v0, const Vec3<T>& v1, const Float& n)
+	__duel__ const Vec3<T> RodriguesRotateCosine(const Vec3<T>& axis, const Float& cosTheta, const Vec3<T>& v)
+	{
+		if (norm(v) == 0)
+			return v;
+		auto k = normalize(axis);
+		Float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+		return v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
+	}
+
+	template<typename T>
+	__duel__ const Vec3<T> Lerp(const Vec3<T>& v0, const Vec3<T>& v1, const Float& n)
 	{
 		Vec3<T> dis = v1 - v0;
 		return v0 + n * dis;

@@ -96,17 +96,18 @@ public:
 		}
 		else
 		{
-			Float normalTheta = CUM::dot(normalDir, CUM::Vec3f(0.0, 1.0, 0.0));
-			if (normalTheta > 1.0 - Epsilon)
+			costheta = CUM::dot(normalDir, CUM::Vec3f(0.0, 1.0, 0.0));
+			if (costheta > 1.0 - Epsilon)
 			{
 				return randV;
 			}
 			else
 			{
 				CUM::Vec3f axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), normalDir));
-				return CUM::RodriguesRotate(axis, normalTheta, randV);
+				return CUM::RodriguesRotateCosine(axis, costheta, randV);
 			}
 		}
+		return CUM::normalize(2.0 * normalDir - costheta * viewDir);
 	}
 public:
 	__duel__ void testForCopyRandVec()
