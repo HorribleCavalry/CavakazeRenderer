@@ -1,3 +1,3 @@
 ﻿#include "Tools.cuh"
 
-Texture* PersCamera::RenderTargetDevice = nullptr;
+Texture* Camera::RenderTargetDevice = nullptr;

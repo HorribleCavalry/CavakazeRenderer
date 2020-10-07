@@ -103,11 +103,11 @@ public:
 			}
 			else
 			{
-				CUM::Vec3f axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), normalDir));
+				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), normalDir));
 				return CUM::RodriguesRotateCosine(axis, costheta, randV);
 			}
 		}
-		return CUM::normalize(2.0 * normalDir - costheta * viewDir);
+		//return CUM::normalize(2.0 * normalDir - costheta * viewDir);
 	}
 public:
 	__duel__ void testForCopyRandVec()
@@ -169,11 +169,14 @@ public:
 	__duel__ const void CalculateNextRay(const Int& randOffsetIdx)
 	{
 		Int randSize = record.sampledMaterial->randSize;
-		Int randIdx = randOffsetIdx % randSize;
+		Int randNunIdx = randOffsetIdx % randSize;
+		Float& randN = record.sampledMaterial->randNums[randNunIdx];
+
+		Int randVecIdx = randOffsetIdx % randSize;
+		CUM::Vec3f& randV = record.sampledMaterial->randVecs[randVecIdx];
+
 		origin = record.hitPoint;
 		record.times = FLT_MAX;
-		Float& randN = record.sampledMaterial->randNums[randIdx];
-		CUM::Vec3f& randV = record.sampledMaterial->randVecs[randIdx];
 		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction, randN, randV);
 	}
 };

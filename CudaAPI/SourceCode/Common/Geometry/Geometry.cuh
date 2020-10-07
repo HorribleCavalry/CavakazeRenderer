@@ -776,6 +776,7 @@ public:
 
 };
 
+
 __duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
 {
 	Scene& sceneDevice = *scene;
@@ -784,7 +785,7 @@ __duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
-	const Int aliasingTime = 16;
+	const Int aliasingTime = 1;
 	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / aliasingTime;
 
 	CUM::Vec2f uv;
@@ -896,24 +897,41 @@ __host__ void RenderingOnHost(Scene* scene)
 	}
 }
 
-__host__ void Rendering(Scene* sceneHost, Scene* sceneDevice, Int imageLength, Bool isOnDevice = true)
+__host__ void Rendering(Scene* sceneHost, Scene* sceneDevice, Int imageLength)
 {
-	if (isOnDevice)
+
+#ifdef RUN_ON_DEVICE
+	Int threadNum = 32;
+	Int blockNum = imageLength / threadNum;
+	RenderingOnDevice << <blockNum, threadNum >> > (sceneDevice);
+	cudaError_t error = cudaGetLastError();
+	if (error != cudaError_t::cudaSuccess)
 	{
-		Int threadNum = 32;
-		Int blockNum = imageLength / threadNum;
-		RenderingOnDevice << <blockNum, threadNum >> > (sceneDevice);
-		cudaError_t error = cudaGetLastError();
-		if (error != cudaError_t::cudaSuccess)
-		{
-			printf("%s\n", cudaGetErrorString(error));
-		}
-		sceneHost->camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+		printf("%s\n", cudaGetErrorString(error));
 	}
-	else
-	{
-		RenderingOnHost(sceneHost);
-	}
+	sceneHost->camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+#endif // RUN_ON_DEVICE
+
+#ifdef RUN_ON_HOST
+	RenderingOnHost(sceneHost);
+#endif // RUN_ON_HOST
+
+	//if (isOnDevice)
+	//{
+	//	Int threadNum = 32;
+	//	Int blockNum = imageLength / threadNum;
+	//	RenderingOnDevice << <blockNum, threadNum >> > (sceneDevice);
+	//	cudaError_t error = cudaGetLastError();
+	//	if (error != cudaError_t::cudaSuccess)
+	//	{
+	//		printf("%s\n", cudaGetErrorString(error));
+	//	}
+	//	sceneHost->camera->renderTarget->CopyFromDevice(PersCamera::RenderTargetDevice);
+	//}
+	//else
+	//{
+	//	RenderingOnHost(sceneHost);
+	//}
 }
 
 #endif // !__GEOMETRY__CUH__

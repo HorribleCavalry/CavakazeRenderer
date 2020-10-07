@@ -6,8 +6,6 @@
 #include "Common/stb_image.h"
 #include <chrono>
 #include <string>
-#include <random>
-
 
 //To solve the problem that can not use "CHECK" from another file in __global__ function, just choose the project setting->CUDA C/C++->Generate Relocatable Device Code.
 //Refercenced website: https://www.cnblogs.com/qpswwww/p/11646593.html
@@ -173,78 +171,164 @@ __global__ void TestMaterialRandVec(Scene* scene)
 	//printf("Now end testing material copy rand vec on device!\n");
 }
 
+__global__ void setup_kernel(curandState *state)
+{
+	Int globalIdx = threadIdx.x + blockIdx.x * blockDim.x;
+	curand_init(1234, globalIdx, 0, &state[globalIdx]);
+}
+
+__global__ void testTheRand(curandState *state)
+{
+	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+	Int iteNum = globalIdx;
+	curandState localState = state[globalIdx];
+	printf("The %dth thread's rand num is: %f\nThe current blockIdx is: %d\nThe current threadIdx is: %d\n", globalIdx, curand_uniform(&localState), blockIdx.x, threadIdx.x);
+}
+
+//__duel__ void setup_kernelHost(curandState *state, Int globalIdx)
+//{
+//	curand_init(1234, globalIdx, 0, &state[globalIdx]);
+//}
+//
+//__duel__ void testTheRandHost(curandState *state, Int globalIdx)
+//{
+//	Int iteNum = globalIdx;
+//	curandState localState = state[globalIdx];
+//	printf("The %dth thread's rand num is: %f\n", globalIdx, curand_uniform(&localState));
+//}
+
+
+#ifdef RUN_ON_DEVICE
+__device__ curandState* deviceStates;
+
+__global__ void SetupDeviceStates()
+{
+	Int globalIdx = threadIdx.x + blockIdx.x * blockDim.x;
+	curand_init(1234, globalIdx, 0, &deviceStates[globalIdx]);
+}
+
+__host__ void InitDeviceStates(const Int& length)
+{
+	curandState* deviceStatesH = nullptr;
+	if (deviceStatesH)
+	{
+		cudaFree(deviceStatesH);
+		deviceStatesH = nullptr;
+	}
+	cudaMalloc(&deviceStatesH, length * sizeof(curandState));
+
+	cudaMemcpyToSymbol(deviceStates, &deviceStatesH, length * sizeof(curandState*));
+
+	cudaError_t error = cudaGetLastError();
+	if (error != cudaError_t::cudaSuccess)
+	{
+		printf("%s\n", cudaGetErrorString(error));
+	}
+
+	const Int threadNum = 32;
+	Int blockNum = length / threadNum;
+	SetupDeviceStates << <blockNum, threadNum >> > ();
+}
+__device__ Float GetUniformRand()
+{
+	const Int& globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+	curandState& localState = deviceStates[globalIdx];
+	return curand_uniform(&localState);
+}
+#endif // RUN_ON_DEVICE
+
+#ifdef RUN_ON_HOST
+__host__ Float GetUniformRand()
+{
+	static std::default_random_engine randEngine(rand());
+	static std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
+	return randGenerator(randEngine);
+}
+#endif // RUN_ON_HOST
+
+__global__ void TestSymbolRand()
+{
+	printf("Test\n");
+	printf("Get uniform: %f", GetUniformRand());
+}
 
 int main(int argc, char* argv[])
 {
-	std::string exePath = argv[0];//获取当前程序所在的路径
-	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
-	const char* imageName = "Image.ppm";
-	std::string imagePath = hierarchyPath + imageName;
+	const Int threadNum = 32;
+	const Int blockNum = 2;
+	InitDeviceStates(blockNum * threadNum);
 
-	Int width = 256;
-	Int height = 144;
-	const Int bounceTime = 64;
-	const Int ranNumSize = 2048;
-	//const Int aliasingTime = 16;
+	TestSymbolRand << < threadNum, blockNum >> > ();
 
-	CUM::Vec2i RenderTargetSize(width, height);
-	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
-	Pixel* buffer = new Pixel[imageLength];
-	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
-	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
-	
+	//std::string exePath = argv[0];//获取当前程序所在的路径
+	//std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
+	//const char* imageName = "Image.ppm";
+	//std::string imagePath = hierarchyPath + imageName;
 
-	//Geometry* sp0 = new Sphere(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
-	Geometry* sp0 = new Sphere(CUM::Point3f(-5.0, 0.0, 10.0), 1.0);
-	Geometry* sp1 = new Sphere(CUM::Point3f(5.0, 0.0, 10.0), 1.0);
-	//Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
+	//Int width = 1280;
+	//Int height = 720;
+	//const Int bounceTime = 64;
+	//const Int ranNumSize = 2048;
+	////const Int aliasingTime = 16;
 
-	CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
-	primitiveVec0->push_back(*sp0);
-	primitiveVec0->push_back(*sp1);
+	//CUM::Vec2i RenderTargetSize(width, height);
+	//Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
+	//Pixel* buffer = new Pixel[imageLength];
+	//Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
+	//PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
+	//
 
-	Geometry* box1 = new BBox(CUM::Point3f(0.0, -1.11, 10.0), CUM::Vec3f(15.0, 0.1, 15.0));
+	////Geometry* sp0 = new Sphere(CUM::Point3f(0.0, 0.0, 10.0), 1.0);
+	//Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, 0.0, 5.0), 1.0);
+	//Geometry* sp1 = new Sphere(CUM::Point3f(2.5, 0.0, 5.0), 1.0);
+	////Geometry* box0 = new BBox(CUM::Point3f(0.0, 0.0, 10.0), CUM::Vec3f(1.0));
 
-	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
+	//CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
+	//primitiveVec0->push_back(*sp0);
+	//primitiveVec0->push_back(*sp1);
 
-	primitiveVec1->push_back(*box1);
+	//Geometry* box1 = new BBox(CUM::Point3f(0.0, -1.11, 7.5), CUM::Vec3f(5.0, 0.1, 5.0));
 
-	Material* material0 = new Material;
-	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
-	material0->InitializeRandVecs();
+	//CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
 
-	Material* material1 = new Material;
-	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
-	material1->InitializeRandVecs();
+	//primitiveVec1->push_back(*box1);
 
-	Mesh* mesh0 = new Mesh(primitiveVec0,material0);
-	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
-	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
-	meshVec0->push_back(*mesh0);
-	meshVec0->push_back(*mesh1);
+	//Material* material0 = new Material;
+	//material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+	//material0->InitializeRandVecs();
 
-	CUM::Vec3f scale(1.0, 1.0, 1.0);
-	CUM::Vec3f translation(0.0, 0.0, 0.0);
-	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.0);
-	CUM::Transform trans(scale, rotation, translation);
+	//Material* material1 = new Material;
+	//material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
+	//material1->InitializeRandVecs();
 
-	Object* object = new Object(trans, meshVec0);
+	//Mesh* mesh0 = new Mesh(primitiveVec0,material0);
+	//Mesh* mesh1 = new Mesh(primitiveVec1, material1);
+	//CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
+	//meshVec0->push_back(*mesh0);
+	//meshVec0->push_back(*mesh1);
 
-	CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
+	//CUM::Vec3f scale(1.0, 1.0, 1.0);
+	//CUM::Vec3f translation(0.0, 0.0, 0.0);
+	//CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.0);
+	//CUM::Transform trans(scale, rotation, translation);
 
-	objectVec->push_back(*object);
+	//Object* object = new Object(trans, meshVec0);
 
-	Scene scene(camera, objectVec);
-	Scene* sceneDevice = scene.copyToDevice();
-	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
+	//CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
 
-	Bool isOnDevice = true;
-	Rendering(&scene, sceneDevice, imageLength, isOnDevice);
+	//objectVec->push_back(*object);
+
+	//Scene scene(camera, objectVec);
+	//Scene* sceneDevice = scene.copyToDevice();
+	////TestMaterialRandVec << <1, 1 >> > (sceneDevice);
+
+	//Bool isOnDevice = true;
+	//Rendering(&scene, sceneDevice, imageLength);
 
 
-	scene.camera->renderTarget->Save(imagePath.c_str());
-	custd::cout << "Now release host scene." << custd::endl;
-	scene.Release();
-	custd::cout << "Now release device scene." << custd::endl;
-	ReleaseIns << <1, 1 >> > (sceneDevice);
+	//scene.camera->renderTarget->Save(imagePath.c_str());
+	//custd::cout << "Now release host scene." << custd::endl;
+	//scene.Release();
+	//custd::cout << "Now release device scene." << custd::endl;
+	//ReleaseIns << <1, 1 >> > (sceneDevice);
 }

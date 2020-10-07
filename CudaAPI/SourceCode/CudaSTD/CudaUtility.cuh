@@ -3,8 +3,10 @@
 
 #include <math.h>
 #include <cstdio>
+#include <random>
 #include <cstdlib>
 #include <cuda_runtime.h>
+#include <curand_kernel.h>
 #include <cuda/std/cassert>
 #include <device_launch_parameters.h>
 
@@ -15,6 +17,8 @@ typedef unsigned int Uint;
 typedef unsigned short Ushort;
 
 #define __duel__ __host__ __device__
+
+#define RUN_ON_DEVICE
 
 //CHECK(bool isAssert, char* errorInfo);
 //This marco can run on host and device.
@@ -67,7 +71,7 @@ __global__ void ApplyDeviceVirtualPtr(T* devicePtr)
 	T* tempPtr = &temp;
 	Int insBytes = sizeof(T);
 	void* desUnit = (void*)devicePtr;
-	void* tempUnit = (void*)tempPtr;
+	//void* tempUnit = (void*)tempPtr;
 	memcpy(devicePtr, tempPtr, sizeof(T));
 }
 
