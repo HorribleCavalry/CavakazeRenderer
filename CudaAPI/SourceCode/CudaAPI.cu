@@ -185,71 +185,9 @@ __global__ void testTheRand(curandState *state)
 	printf("The %dth thread's rand num is: %f\nThe current blockIdx is: %d\nThe current threadIdx is: %d\n", globalIdx, curand_uniform(&localState), blockIdx.x, threadIdx.x);
 }
 
-//__duel__ void setup_kernelHost(curandState *state, Int globalIdx)
-//{
-//	curand_init(1234, globalIdx, 0, &state[globalIdx]);
-//}
-//
-//__duel__ void testTheRandHost(curandState *state, Int globalIdx)
-//{
-//	Int iteNum = globalIdx;
-//	curandState localState = state[globalIdx];
-//	printf("The %dth thread's rand num is: %f\n", globalIdx, curand_uniform(&localState));
-//}
-
-
-#ifdef RUN_ON_DEVICE
-__device__ curandState* deviceStates;
-
-__global__ void SetupDeviceStates()
-{
-	Int globalIdx = threadIdx.x + blockIdx.x * blockDim.x;
-	curand_init(1234, globalIdx, 0, &deviceStates[globalIdx]);
-}
-
-__host__ void InitDeviceStates(const Int& length)
-{
-	curandState* deviceStatesH = nullptr;
-	if (deviceStatesH)
-	{
-		cudaFree(deviceStatesH);
-		deviceStatesH = nullptr;
-	}
-	cudaMalloc(&deviceStatesH, length * sizeof(curandState));
-
-	cudaMemcpyToSymbol(deviceStates, &deviceStatesH, length * sizeof(curandState*));
-
-	cudaError_t error = cudaGetLastError();
-	if (error != cudaError_t::cudaSuccess)
-	{
-		printf("%s\n", cudaGetErrorString(error));
-	}
-
-	const Int threadNum = 32;
-	Int blockNum = length / threadNum;
-	SetupDeviceStates << <blockNum, threadNum >> > ();
-}
-__device__ Float GetUniformRand()
-{
-	const Int& globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
-	curandState& localState = deviceStates[globalIdx];
-	return curand_uniform(&localState);
-}
-#endif // RUN_ON_DEVICE
-
-#ifdef RUN_ON_HOST
-__host__ Float GetUniformRand()
-{
-	static std::default_random_engine randEngine(rand());
-	static std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
-	return randGenerator(randEngine);
-}
-#endif // RUN_ON_HOST
-
 __global__ void TestSymbolRand()
 {
-	printf("Test\n");
-	printf("Get uniform: %f", GetUniformRand());
+	printf("Get uniform: %f\n", GetUniformRand());
 }
 
 int main(int argc, char* argv[])

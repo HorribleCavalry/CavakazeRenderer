@@ -1,5 +1,6 @@
-﻿#ifndef __CUDAUYILITY__CUH__
-#define __CUDAUYILITY__CUH__
+﻿#pragma once
+//#ifndef __CUDAUYILITY__CUH__
+//#define __CUDAUYILITY__CUH__
 
 #include <math.h>
 #include <cstdio>
@@ -58,12 +59,6 @@ const Bool IsInRange(const T& n, const U& minN, const K& maxN)
 	return n >= minN && n <= maxN;
 }
 
-//template<typename T>
-//const T abs(const T& val)
-//{
-//	return val < 0 ? -val : val;
-//}
-
 template<typename T>
 __global__ void ApplyDeviceVirtualPtr(T* devicePtr)
 {
@@ -71,15 +66,8 @@ __global__ void ApplyDeviceVirtualPtr(T* devicePtr)
 	T* tempPtr = &temp;
 	Int insBytes = sizeof(T);
 	void* desUnit = (void*)devicePtr;
-	//void* tempUnit = (void*)tempPtr;
 	memcpy(devicePtr, tempPtr, sizeof(T));
 }
-
-//template<typename T>
-//__host__ void ApplyDeviceVirtualPtr(T* devicePtr)
-//{
-//	applyDeviceVirtualPtr<<<1,1>>> (devicePtr);
-//}
 
 template<typename T>
 __host__ T* CudaInsMemCpyHostToDevice(const T* insWithDevicePtr)
@@ -91,4 +79,16 @@ __host__ T* CudaInsMemCpyHostToDevice(const T* insWithDevicePtr)
 	return device;
 }
 
-#endif // !__CUDAUYILITY__CUH__
+#ifdef RUN_ON_DEVICE
+__device__ static curandState* deviceStates;
+
+__host__ void InitDeviceStates(const Int& length);
+
+__device__ Float GetUniformRand();
+#endif // RUN_ON_DEVICE
+
+#ifdef RUN_ON_HOST
+__host__ Float GetUniformRand();
+#endif // RUN_ON_HOST
+
+//#endif // !__CUDAUYILITY__CUH__

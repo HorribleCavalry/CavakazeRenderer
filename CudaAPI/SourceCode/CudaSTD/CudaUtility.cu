@@ -96,3 +96,57 @@ void error_check(cudaError_t err, const char * file, int line)
 		abort();
 	}
 }
+
+#ifdef RUN_ON_DEVICE
+
+__global__ void SetupDeviceStates()
+{
+	Int globalIdx = threadIdx.x + blockIdx.x * blockDim.x;
+	curand_init(1234, globalIdx, 0, &deviceStates[globalIdx]);
+}
+
+__host__ void InitDeviceStates(const Int& length)
+{
+	curandState* deviceStatesH = nullptr;
+	if (deviceStatesH)
+	{
+		cudaFree(deviceStatesH);
+		deviceStatesH = nullptr;
+	}
+	cudaMalloc(&deviceStatesH, length * sizeof(curandState));
+
+	cudaMemcpyToSymbol(deviceStates, &deviceStatesH, sizeof(curandState*));
+
+	cudaError_t error = cudaGetLastError();
+	if (error != cudaError_t::cudaSuccess)
+	{
+		printf("%s\n", cudaGetErrorString(error));
+	}
+
+	const Int threadNum = 32;
+	Int blockNum = length / threadNum;
+	SetupDeviceStates << <blockNum, threadNum >> > ();
+
+	error = cudaGetLastError();
+	if (error != cudaError_t::cudaSuccess)
+	{
+		printf("%s\n", cudaGetErrorString(error));
+	}
+}
+
+__device__ Float GetUniformRand()
+{
+	const Int& globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
+	curandState& localState = deviceStates[globalIdx];
+	return curand_uniform(&localState);
+}
+#endif // RUN_ON_DEVICE
+
+#ifdef RUN_ON_HOST
+__host__ Float GetUniformRand()
+{
+	static std::default_random_engine randEngine(rand());
+	static std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
+	return randGenerator(randEngine);
+}
+#endif // RUN_ON_HOST

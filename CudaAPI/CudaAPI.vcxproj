@@ -11,18 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SourceCode\Common\Cuda3DMath.cuh" />
-    <ClInclude Include="SourceCode\Common\CudaPrimitivesVector.cuh" />
-    <ClInclude Include="SourceCode\Common\Geometry\Geometry.cuh" />
-    <ClInclude Include="SourceCode\Common\Tools.cuh" />
+    <CudaCompile Include="SourceCode\Common\Cuda3DMath.cuh" />
+    <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cuh" />
+    <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cu" />
+    <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cuh" />
+    <CudaCompile Include="SourceCode\Common\Tools.cuh" />
     <ClInclude Include="SourceCode\Common\stb_image.h" />
-    <ClInclude Include="SourceCode\Common\Utility.cuh" />
-    <ClInclude Include="SourceCode\CudaAPI.cuh" />
-    <ClInclude Include="SourceCode\CudaAPI.h" />
-    <ClInclude Include="SourceCode\CudaSTD\cuarray.cuh" />
-    <ClInclude Include="SourceCode\CudaSTD\CudaUtility.cuh" />
-    <ClInclude Include="SourceCode\CudaSTD\cuiostream.cuh" />
-    <ClInclude Include="SourceCode\CudaSTD\cuvector.cuh" />
+    <CudaCompile Include="SourceCode\Common\Utility.cuh" />
+    <CudaCompile Include="SourceCode\CudaAPI.cuh" />
+    <CudaCompile Include="SourceCode\CudaAPI.h" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cuh" />
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cuh" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cuh" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuvector.cuh" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu" />

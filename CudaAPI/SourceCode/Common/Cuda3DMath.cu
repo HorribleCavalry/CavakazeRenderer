@@ -1,5 +1,5 @@
-﻿#include "Cuda3DMath.cuh"
-
-namespace CUM
-{
-}
+﻿//#include "Cuda3DMath.cuh"
+//
+//namespace CUM
+//{
+//}

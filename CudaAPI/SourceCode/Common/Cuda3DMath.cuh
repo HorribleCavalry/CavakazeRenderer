@@ -1,8 +1,8 @@
 ﻿#ifndef __CUDA3DMATH__CUH__
 #define __CUDA3DMATH__CUH__
 
-#include "../CudaSTD/CudaUtility.cuh"
-#include "../CudaSTD/cuvector.cuh"
+//#include "../CudaSTD/CudaUtility.cuh"
+//#include "../CudaSTD/cuvector.cuh"
 #include "../CudaSTD/cuiostream.cuh"
 #include <float.h>
 #include <math.h>

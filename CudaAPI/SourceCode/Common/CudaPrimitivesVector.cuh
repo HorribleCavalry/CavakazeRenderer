@@ -1,7 +1,6 @@
 ﻿#ifndef __CUDAPRIMITIVESVECTOR__CUH__
 #define __CUDAPRIMITIVESVECTOR__CUH__
 
-#include "../CudaSTD/CudaUtility.cuh"
 #include "Tools.cuh"
 
 

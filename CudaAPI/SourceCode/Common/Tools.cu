@@ -1,3 +1,2 @@
-﻿#include "Tools.cuh"
+﻿//#include "Tools.cuh"
 
-Texture* Camera::RenderTargetDevice = nullptr;
