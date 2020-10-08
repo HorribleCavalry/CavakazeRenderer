@@ -4,26 +4,84 @@
     <Filter Include="SourceCode">
       <UniqueIdentifier>{d4074090-9ce5-4d52-b642-78c39e693c0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SourceCode\Common">
+      <UniqueIdentifier>{89e05029-9663-4eae-9ca1-f06c68773d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceCode\CudaSTD">
+      <UniqueIdentifier>{251802fa-374f-4d75-9b72-7891e984ad26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceCode\Common\Geometry">
+      <UniqueIdentifier>{d20071fa-b39f-44da-af9c-380ee4e74907}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SourceCode\stb_image.h">
-      <Filter>SourceCode</Filter>
+    <ClInclude Include="SourceCode\Common\stb_image.h">
+      <Filter>SourceCode\Common</Filter>
     </ClInclude>
-    <ClInclude Include="SourceCode\CudaUtil.cuh">
-      <Filter>SourceCode</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceCode\CudaAPI.cuh">
-      <Filter>SourceCode</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="SourceCode\stb_image.cpp">
-      <Filter>SourceCode</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="SourceCode\CudaAPI.cu">
       <Filter>SourceCode</Filter>
     </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cu">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cu">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuvector.cu">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Tools.cu">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cuh">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cuh">
+      <Filter>SourceCode\Common\Geometry</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Cuda3DMath.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Tools.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\Common\Utility.cuh">
+      <Filter>SourceCode\Common</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cuh">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cuh">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaSTD\cuvector.cuh">
+      <Filter>SourceCode\CudaSTD</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaAPI.cuh">
+      <Filter>SourceCode</Filter>
+    </CudaCompile>
+    <CudaCompile Include="SourceCode\CudaAPI.h" />
+    <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cu">
+      <Filter>SourceCode\Common\Geometry</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SourceCode\Common\stb_image.cpp">
+      <Filter>SourceCode\Common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

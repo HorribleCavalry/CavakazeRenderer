@@ -11,15 +11,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SourceCode\CudaAPI.cuh" />
-    <ClInclude Include="SourceCode\CudaUtil.cuh" />
-    <ClInclude Include="SourceCode\stb_image.h" />
+    <CudaCompile Include="SourceCode\Common\Cuda3DMath.cuh" />
+    <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cuh" />
+    <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cu" />
+    <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cuh" />
+    <CudaCompile Include="SourceCode\Common\Tools.cuh" />
+    <ClInclude Include="SourceCode\Common\stb_image.h" />
+    <CudaCompile Include="SourceCode\Common\Utility.cuh" />
+    <CudaCompile Include="SourceCode\CudaAPI.cuh" />
+    <CudaCompile Include="SourceCode\CudaAPI.h" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cuh" />
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cuh" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cuh" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuvector.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SourceCode\stb_image.cpp" />
-  </ItemGroup>
-  <ItemGroup>
+    <CudaCompile Include="SourceCode\Common\Cuda3DMath.cu" />
+    <CudaCompile Include="SourceCode\Common\CudaPrimitivesVector.cu" />
+    <CudaCompile Include="SourceCode\Common\Tools.cu" />
     <CudaCompile Include="SourceCode\CudaAPI.cu" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuarray.cu" />
+    <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cu" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cu" />
+    <CudaCompile Include="SourceCode\CudaSTD\cuvector.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SourceCode\Common\stb_image.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A782D3AC-CF7C-402E-9326-9C5A564F4D75}</ProjectGuid>
@@ -28,7 +45,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v141</PlatformToolset>
@@ -53,7 +70,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetExt>.dll</TargetExt>
+    <TargetExt>.exe</TargetExt>
     <OutDir>..\Debug\</OutDir>
     <IntDir>.\Intermediate\Debug\</IntDir>
   </PropertyGroup>
@@ -75,6 +92,7 @@
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
