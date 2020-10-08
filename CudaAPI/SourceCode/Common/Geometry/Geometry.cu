@@ -15,7 +15,7 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 	CUM::Vec2i size = camera.renderTarget->size;
 
 	Int length = size.x*size.y;
-	const Int aliasingTime = 1;
+	const Int aliasingTime = 16;
 	CUM::Vec2f deltaSampleUV = camera.renderTarget->deltaUV / aliasingTime;
 
 	CUM::Vec2f uv;
@@ -86,7 +86,11 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 			resultColor += sampledColor;
 		}
 	}
+	const Float p = 1.0 / 2.2;
 	resultColor /= (aliasingTime*aliasingTime);
+	resultColor.r = pow(resultColor.r, p);
+	resultColor.g = pow(resultColor.g, p);
+	resultColor.b = pow(resultColor.b, p);
 	resultColor *= 255.0;
 
 	R = round(resultColor.r);
@@ -111,6 +115,8 @@ __global__ void RenderingOnDevice(Scene* scene)
 
 	RenderingImplementation(scene, globalIdx);
 }
+
+//__global__ void Median
 #endif // RUN_ON_DEVICE
 
 #ifdef RUN_ON_HOST

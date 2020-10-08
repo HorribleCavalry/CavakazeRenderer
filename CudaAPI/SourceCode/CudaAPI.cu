@@ -192,15 +192,17 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 1280;
-	Int height = 720;
+	Int width = 1920;
+	Int height = 1080;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
-	//const Int aliasingTime = 16;
 
 	CUM::Vec2i RenderTargetSize(width, height);
 	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
-	//InitDeviceStates(imageLength);
+#ifdef RUN_ON_DEVICE
+	InitDeviceStates(imageLength);
+#endif // RUN__ON__DEVICE
+
 	Pixel* buffer = new Pixel[imageLength];
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
 	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);

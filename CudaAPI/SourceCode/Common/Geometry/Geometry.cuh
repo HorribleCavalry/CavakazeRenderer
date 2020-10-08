@@ -160,44 +160,44 @@ public:
 		area = 2.0 * (extent.x*extent.y + extent.x*extent.z + extent.y*extent.z);
 		volume = extent.x * extent.y * extent.z;
 	}
-private:
-	__duel__ const Int GetUnitVal(const Float& val)
-	{
-		CHECK(val != 0.0, "BBox::GetUnitVal(const Float& val) error: the val can not be zero!");
-		return val > 0.0 ? 1.0 : -1.0;
-	}
-	__duel__ const CUM::Normal3f GetNormal(const CUM::Vec3f& v)
-	{
-		CHECK(!v.IsZero(), "BBox::GetNormal error: the v can not be a zero vec!");
-		CUM::Vec3f normalizedV(CUM::normalize(v));
-		Float unit;
-		switch (normalizedV.MaxAbsIdx())
-		{
-		case 0:
-		{
-			unit = GetUnitVal(normalizedV.x);
-			return CUM::Normal3f(unit, 0.0, 0.0);
-		}break;
-
-		case 1:
-		{
-			unit = GetUnitVal(normalizedV.y);
-			return CUM::Normal3f(0.0, unit, 0.0);
-		}break;
-
-		case 2:
-		{
-			unit = GetUnitVal(normalizedV.z);
-			return CUM::Normal3f(0.0, 0.0, unit);
-		}break;
-
-		default:
-			CHECK(false, "OBox::GetNormal error: can not run switch::default!");
-			break;
-		}
-		CHECK(false, "OBox::GetNormal error: can not run switch::default!");
-		return CUM::Normal3f(1.0, 0.0, 0.0);
-	}
+//private:
+//	__duel__ const Int GetUnitVal(const Float& val)
+//	{
+//		CHECK(val != 0.0, "BBox::GetUnitVal(const Float& val) error: the val can not be zero!");
+//		return val > 0.0 ? 1.0 : -1.0;
+//	}
+//	__duel__ const CUM::Normal3f GetNormal(const CUM::Vec3f& v)
+//	{
+//		CHECK(!v.IsZero(), "BBox::GetNormal error: the v can not be a zero vec!");
+//		CUM::Vec3f normalizedV(CUM::normalize(v));
+//		Float unit;
+//		switch (normalizedV.MaxAbsIdx())
+//		{
+//		case 0:
+//		{
+//			unit = GetUnitVal(normalizedV.x);
+//			return CUM::Normal3f(unit, 0.0, 0.0);
+//		}break;
+//
+//		case 1:
+//		{
+//			unit = GetUnitVal(normalizedV.y);
+//			return CUM::Normal3f(0.0, unit, 0.0);
+//		}break;
+//
+//		case 2:
+//		{
+//			unit = GetUnitVal(normalizedV.z);
+//			return CUM::Normal3f(0.0, 0.0, unit);
+//		}break;
+//
+//		default:
+//			CHECK(false, "OBox::GetNormal error: can not run switch::default!");
+//			break;
+//		}
+//		CHECK(false, "OBox::GetNormal error: can not run switch::default!");
+//		return CUM::Normal3f(1.0, 0.0, 0.0);
+//	}
 public:
 	__duel__ virtual const Bool HitTest(Ray& rayB) override
 	{

@@ -102,7 +102,7 @@ void error_check(cudaError_t err, const char * file, int line)
 __global__ void SetupDeviceStates()
 {
 	Int globalIdx = threadIdx.x + blockIdx.x * blockDim.x;
-	curand_init(1234, globalIdx, 0, &deviceStates[globalIdx]);
+	curand_init(10086, globalIdx, 0, &deviceStates[globalIdx]);
 }
 
 __host__ void InitDeviceStates(const Int& length)
