@@ -85,44 +85,120 @@ public:
 	}
 
 #ifdef RUN_ON_DEVICE
-	__device__
+__device__
 #endif // RUN_ON_DEVICE
 #ifdef RUN_ON_HOST
-	__host__
+__host__
 #endif // RUN_ON_HOST
-		virtual const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
+	const Float DistributionGGX(const CUM::Vec3f& N, const CUM::Vec3f& H, const Float& roughness)
 	{
-		CUM::Vec3f viewDir(-inputDir);
-		CUM::Vec3f normalDir(normal.x, normal.y, normal.z);
-		Float costheta = dot(viewDir, normalDir);
-		Float F0 = 0.0;
-		Float fresnel = F0 + (1.0 - F0)*pow(1.0 - costheta, 5);
-		if (GetUniformRand() <= fresnel)
+		Float a = roughness * roughness;
+		Float a2 = a * a;
+		Float NdotH = CUM::max(CUM::dot(N, H), 0.0);
+		Float NdotH2 = NdotH * NdotH;
+
+		Float nom = a2;
+		Float denom = NdotH2*(a2 - 1.0) + 1.0;
+		denom = PI * denom*denom;
+		return nom / denom;
+	}
+#ifdef RUN_ON_DEVICE
+__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+__host__
+#endif // RUN_ON_HOST
+	const Float GeometrySchlickGGX(Float NdotV, Float roughness)
+	{
+		Float r = (roughness + 1.0);
+		Float k = (r*r) / 8.0;
+	
+		Float nom = NdotV;
+		Float denom = NdotV * (1.0 - k) + k;
+	
+		return nom / denom;
+	}
+
+#ifdef RUN_ON_DEVICE
+__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+__host__
+#endif // RUN_ON_HOST
+	const Float GeometrySmith(const CUM::Vec3f& N, const CUM::Vec3f& V, const CUM::Vec3f& L, Float roughness)
+	{
+		Float NdotV = CUM::max(CUM::dot(N, V), 0.0);
+		Float NdotL = CUM::max(CUM::dot(N, L), 0.0);
+		Float ggx2 = GeometrySchlickGGX(NdotV, roughness);
+		Float ggx1 = GeometrySchlickGGX(NdotL, roughness);
+	
+		return ggx1 * ggx2;
+	}
+
+#ifdef RUN_ON_DEVICE
+__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+__host__
+#endif // RUN_ON_HOST
+	virtual const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
+	{
+		CUM::Vec3f V(-inputDir);
+		CUM::Vec3f N(normal.x, normal.y, normal.z);
+
+		Float xi1 = GetUniformRand();
+		Float xi2 = GetUniformRand();
+
+		Float Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
+		Float x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+		Float z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+		Float y = xi1;
+		CUM::Vec3f L(x, y, z);
+		Float NrDotNt = CUM::dot(N, CUM::Vec3f(0.0, 1.0, 0.0));
+		if (NrDotNt <= 1.0 - Epsilon)
 		{
-			return CUM::normalize(2.0 * normalDir - costheta * viewDir);
+			const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
+			L = CUM::RodriguesRotateCosine(axis, NrDotNt, L);
+		}
+		const CUM::Vec3f& halfDir = CUM::normalize(L + V);
+
+		Float NdotV = CUM::dot(N, V);
+		Float NdotH = CUM::dot(N, halfDir);
+		Float F0 = 0.05;
+		Float roughness = 0.5;
+
+		Float F = F0 + (1.0 - F0)*pow(1.0 - NdotH, 5.0);
+		Float NDF = DistributionGGX(N, halfDir, roughness);
+		Float G = GeometrySmith(N, V, L, roughness);
+		Float nominator = NDF * G * F;
+		Float denominator = 4.0 * CUM::max(CUM::dot(N, V), 0.0) * CUM::max(CUM::dot(N, L), 0.0) + 0.001;
+		Float specular = nominator / denominator;
+
+		if (GetUniformRand() <= specular)
+		{
+			return CUM::normalize(2.0 * N - NdotV * V);
 		}
 		else
 		{
-			costheta = CUM::dot(normalDir, CUM::Vec3f(0.0, 1.0, 0.0));
-			Float xi1 = GetUniformRand();
-			Float xi2 = GetUniformRand();
+			xi1 = GetUniformRand();
+			xi2 = GetUniformRand();
 
-			Float Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
-			Float x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-			Float z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-			Float y = xi1;
+			Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
+			x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			y = xi1;
 			CUM::Vec3f randV(x, y, z);
-			if (costheta > 1.0 - Epsilon)
+			if (NrDotNt > 1.0 - Epsilon)
 			{
 				return randV;
 			}
 			else
 			{
-				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), normalDir));
-				return CUM::RodriguesRotateCosine(axis, costheta, randV);
+				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
+				return CUM::RodriguesRotateCosine(axis, NdotV, randV);
 			}
 		}
-		return CUM::normalize(2.0 * normalDir - costheta * viewDir);
+		return CUM::normalize(2.0 * N - NdotV * V);
 	}
 public:
 	__duel__ void testForCopyRandVec()
