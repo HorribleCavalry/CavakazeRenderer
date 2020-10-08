@@ -776,8 +776,13 @@ public:
 
 };
 
-
-__duel__ void RenderingImplementation(Scene* scene, Int globalIdx);
+#ifdef RUN_ON_DEVICE
+__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+__host__
+#endif // RUN_ON_HOST
+void RenderingImplementation(Scene* scene, Int globalIdx);
 
 __global__ void RenderingOnDevice(Scene* scene);
 

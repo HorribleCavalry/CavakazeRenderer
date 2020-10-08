@@ -1,7 +1,13 @@
 ﻿#include "Geometry.cuh"
 Texture* Camera::RenderTargetDevice = nullptr;
 
-__duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
+#ifdef RUN_ON_DEVICE
+__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+__host__
+#endif // RUN_ON_HOST
+void RenderingImplementation(Scene* scene, Int globalIdx)
 {
 	Scene& sceneDevice = *scene;
 	PersCamera& camera = *scene->camera;
@@ -33,8 +39,6 @@ __duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
 	resultColor.b = 0.0;
 
 	Int bounceTimeMinus1 = camera.bounceTime - 1;
-
-	Int randOffsetIdx = globalIdx;
 
 	for (Int i = 0; i < aliasingTime; i++)
 	{
@@ -71,8 +75,7 @@ __duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
 					//tempColor.b = 0.5*(ray.record.normal.z + 1.0);
 					sampledColor *= tempColor;
 
-					ray.CalculateNextRay(randOffsetIdx);
-					++randOffsetIdx;
+					ray.CalculateNextRay();
 				}
 				else
 				{
@@ -101,14 +104,17 @@ __duel__ void RenderingImplementation(Scene* scene, Int globalIdx)
 	//camera.renderTarget->buffer[globalIdx].a = 255;
 }
 
+#ifdef RUN_ON_DEVICE
 __global__ void RenderingOnDevice(Scene* scene)
 {
 	Int globalIdx = blockIdx.x*blockDim.x + threadIdx.x;
 
 	RenderingImplementation(scene, globalIdx);
 }
+#endif // RUN_ON_DEVICE
 
-__host__ void RenderingOnHost(Scene* scene)
+#ifdef RUN_ON_HOST
+void RenderingOnHost(Scene* scene)
 {
 	PersCamera& camera = *scene->camera;
 	CUM::Vec2i size = camera.renderTarget->size;
@@ -119,10 +125,11 @@ __host__ void RenderingOnHost(Scene* scene)
 		RenderingImplementation(scene, globalIdx);
 	}
 }
+#endif // RUN_ON_HOST
+
 
 __host__ void Rendering(Scene* sceneHost, Scene* sceneDevice, Int imageLength)
 {
-
 #ifdef RUN_ON_DEVICE
 	Int threadNum = 32;
 	Int blockNum = imageLength / threadNum;

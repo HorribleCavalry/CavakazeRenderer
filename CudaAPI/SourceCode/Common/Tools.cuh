@@ -83,20 +83,35 @@ public:
 			randNums = nullptr;
 		}
 	}
-	__duel__ virtual const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir, const Float& randN, const CUM::Vec3f& randV)
+
+#ifdef RUN_ON_DEVICE
+	__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+	__host__
+#endif // RUN_ON_HOST
+		virtual const CUM::Vec3f GenerateNextDirection(const CUM::Normal3f& normal, const CUM::Vec3f& inputDir)
 	{
 		CUM::Vec3f viewDir(-inputDir);
 		CUM::Vec3f normalDir(normal.x, normal.y, normal.z);
 		Float costheta = dot(viewDir, normalDir);
 		Float F0 = 0.0;
 		Float fresnel = F0 + (1.0 - F0)*pow(1.0 - costheta, 5);
-		if (randN <= fresnel)
+		if (GetUniformRand() <= fresnel)
 		{
 			return CUM::normalize(2.0 * normalDir - costheta * viewDir);
 		}
 		else
 		{
 			costheta = CUM::dot(normalDir, CUM::Vec3f(0.0, 1.0, 0.0));
+			Float xi1 = GetUniformRand();
+			Float xi2 = GetUniformRand();
+
+			Float Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
+			Float x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			Float z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			Float y = xi1;
+			CUM::Vec3f randV(x, y, z);
 			if (costheta > 1.0 - Epsilon)
 			{
 				return randV;
@@ -107,7 +122,7 @@ public:
 				return CUM::RodriguesRotateCosine(axis, costheta, randV);
 			}
 		}
-		//return CUM::normalize(2.0 * normalDir - costheta * viewDir);
+		return CUM::normalize(2.0 * normalDir - costheta * viewDir);
 	}
 public:
 	__duel__ void testForCopyRandVec()
@@ -165,19 +180,18 @@ public:
 		//CHECK(record.times >= 0.0, "Ray::GetEndPoint(const Float& times) error: the times can not less than 0!");
 		return origin + times * direction;
 	}
-	//To do...
-	__duel__ const void CalculateNextRay(const Int& randOffsetIdx)
+
+#ifdef RUN_ON_DEVICE
+	__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+	__host__
+#endif // RUN_ON_HOST
+	void CalculateNextRay()
 	{
-		Int randSize = record.sampledMaterial->randSize;
-		Int randNunIdx = randOffsetIdx % randSize;
-		Float& randN = record.sampledMaterial->randNums[randNunIdx];
-
-		Int randVecIdx = randOffsetIdx % randSize;
-		CUM::Vec3f& randV = record.sampledMaterial->randVecs[randVecIdx];
-
 		origin = record.hitPoint;
 		record.times = FLT_MAX;
-		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction, randN, randV);
+		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
 	}
 };
 
