@@ -14,6 +14,34 @@ namespace CUM
 {
 #define LogData(data) logData(data)
 
+#pragma region utility math
+
+	template<typename T>
+	__duel__ const T& min(const T& n0, const T& n1)
+	{
+		return n0 < n1 ? n0 : n1;
+	}
+
+	template<typename T>
+	__duel__ const T& max(const T& n0, const T& n1)
+	{
+		return n0 > n1 ? n0 : n1;
+	}
+
+	template<typename T>
+	__duel__ const Float DegreeToRadian(const T& Degree)
+	{
+		return Degree / 180 * PI;
+	}
+
+	template<typename T>
+	__duel__ const Float RadianToDegree(const T& Radian)
+	{
+		return Radian / PI * 180;
+	}
+#pragma endregion
+
+
 #pragma region Vec2
 	template<typename T>
 	class Vec2
@@ -455,10 +483,11 @@ namespace CUM
 	}
 
 	template<typename T>
-	__duel__ const Vec3<T> RodriguesRotateCosine(const Vec3<T>& axis, const Float& cosTheta, const Vec3<T>& v)
+	__duel__ const Vec3<T> RodriguesRotateCosine(const Vec3<T>& axis, const Float& cosT, const Vec3<T>& v)
 	{
 		if (norm(v) == 0)
 			return v;
+		Float cosTheta = CUM::min(cosT, 1.0);
 		auto k = normalize(axis);
 		Float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
 		return v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
@@ -3847,32 +3876,6 @@ namespace CUM
 	};
 #pragma endregion
 
-#pragma region utility math
-
-	template<typename T>
-	__duel__ const T& min(const T& n0, const T& n1)
-	{
-		return n0 < n1 ? n0 : n1;
-	}
-
-	template<typename T>
-	__duel__ const T& max(const T& n0, const T& n1)
-	{
-		return n0 > n1 ? n0 : n1;
-	}
-
-	template<typename T>
-	__duel__ const Float DegreeToRadian(const T& Degree)
-	{
-		return Degree / 180 * PI;
-	}
-
-	template<typename T>
-	__duel__ const Float RadianToDegree(const T& Radian)
-	{
-		return Radian / PI * 180;
-	}
-#pragma endregion
 }
 
 

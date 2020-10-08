@@ -163,7 +163,8 @@ __host__
 		const CUM::Vec3f& halfDir = CUM::normalize(L + V);
 
 		Float NdotV = CUM::dot(N, V);
-		Float NdotH = CUM::dot(N, halfDir);
+		//Float NdotH = CUM::dot(N, halfDir);
+		Float NdotH = 1.0;
 		Float F0 = 0.05;
 		Float roughness = 0.5;
 
@@ -176,7 +177,7 @@ __host__
 
 		if (GetUniformRand() <= specular)
 		{
-			return CUM::normalize(2.0 * N - NdotV * V);
+			return CUM::normalize(2.0 * N - NdotV * V);;
 		}
 		else
 		{
@@ -195,7 +196,7 @@ __host__
 			else
 			{
 				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
-				return CUM::RodriguesRotateCosine(axis, NdotV, randV);
+				return CUM::RodriguesRotateCosine(axis, NdotV, randV);;
 			}
 		}
 		return CUM::normalize(2.0 * N - NdotV * V);
