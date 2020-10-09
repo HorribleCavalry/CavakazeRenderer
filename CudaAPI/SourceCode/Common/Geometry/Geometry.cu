@@ -66,7 +66,7 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 				}
 				else if (objectVec.HitTest(ray))
 				{
-					ray.InteractWithSampledResult();
+					ray.InteractWithSampledResultAndShadingFromLight();
 					tempColor = ray.record
 					tempColor = ray.record.sampledMaterial->Albedo;
 					//tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;

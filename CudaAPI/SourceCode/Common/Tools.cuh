@@ -216,12 +216,13 @@ public:
 	CUM::Point3f hitPoint;
 	CUM::Normal3f normal;
 	CUM::Color3f sampledColor;
+	CUM::Color3f sampledLightRadiance;
 	Material* sampledMaterial;
 	Float times;
 public:
-	__duel__ Record():hitPoint(CUM::Point3f()),normal(),sampledColor(CUM::Color3f()),times(0.0) {}
-	__duel__ Record(const CUM::Point3f& _position, const CUM::Normal3f& _normal, const CUM::Color3f& _albedo, const Float& _time)
-		:hitPoint(_position), normal(_normal), sampledColor(_albedo), times(_time) {}
+	__duel__ Record():hitPoint(),normal(),sampledColor(),sampledLightRadiance(),times(0.0) {}
+	__duel__ Record(const CUM::Point3f& _position, const CUM::Normal3f& _normal, const CUM::Color3f& _albedo, const CUM::Color3f& _lightRadiance,const Float& _time)
+		:hitPoint(_position), normal(_normal), sampledColor(_albedo), sampledLightRadiance(_lightRadiance), times(_time) {}
 	//Record(CUM::Point3f&& _position, CUM::Normal&& _normal, CUM::Color3f&& _albedo, Float&& _time)
 	//	:position(_position), normal(_normal), albedo(_albedo), times(_time) {}
 	__duel__ const Record operator=(const Record& rec)
@@ -229,6 +230,7 @@ public:
 		hitPoint = rec.hitPoint;
 		normal = rec.normal;
 		sampledColor = rec.sampledColor;
+		sampledLightRadiance = rec.sampledLightRadiance;
 		sampledMaterial = rec.sampledMaterial;
 		times = rec.times;
 		return *this;
@@ -256,6 +258,20 @@ public:
 	{
 		//CHECK(record.times >= 0.0, "Ray::GetEndPoint(const Float& times) error: the times can not less than 0!");
 		return origin + times * direction;
+	}
+
+#ifdef RUN_ON_DEVICE
+	__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+		__host__
+#endif // RUN_ON_HOST
+	void InteractWithSampledResultAndShadingFromLight()
+	{
+		//lightVec.Sampling(*this);
+		const CUM::Vec3f lightDir(0.0, 0.0, -1.0);
+
+		record.sampledLightRadiance;
 	}
 
 #ifdef RUN_ON_DEVICE
