@@ -1,4 +1,5 @@
 ﻿#include "Geometry.cuh"
+#include "../../CudaSTD/cuvector.cuh"
 Texture* Camera::RenderTargetDevice = nullptr;
 
 #ifdef RUN_ON_DEVICE
@@ -25,7 +26,6 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 	Ray ray;
 	CUM::Color3f resultColor(0.0);
 	CUM::Color3f sampledColor(1.0);
-	CUM::Color3f tempColor(1.0);
 	Ushort R, G, B, A;
 
 	x = globalIdx % size.x;
@@ -40,6 +40,9 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 
 	Int bounceTimeMinus1 = camera.bounceTime - 1;
 
+	custd::cuvector<CUM::Color3f> ColorList;
+	custd::cuvector<CUM::Color3f> LightRadianceList;
+
 	for (Int i = 0; i < aliasingTime; i++)
 	{
 		for (Int j = 0; j < aliasingTime; j++)
@@ -53,38 +56,26 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 			sampledColor.g = 1.0;
 			sampledColor.b = 1.0;
 
-			tempColor.r = 1.0;
-			tempColor.g = 1.0;
-			tempColor.b = 1.0;
-
+			ColorList.Release();
+			LightRadianceList.Release();
 			for (Int i = 0; i < camera.bounceTime; i++)
 			{
-				if (i == bounceTimeMinus1 && bounceTimeMinus1 != 0)
-				{
-					sampledColor = CUM::Color3f(0.0);
-					resultColor = CUM::Color3f(0.0);
-				}
-				else if (objectVec.HitTest(ray))
-				{
-					ray.InteractWithSampledResultAndShadingFromLight();
-					tempColor = ray.record
-					tempColor = ray.record.sampledMaterial->Albedo;
-					//tempColor.r = ray.record.normal.x <= 0.0 ? 0.0 : ray.record.normal.x;
-					//tempColor.g = ray.record.normal.y <= 0.0 ? 0.0 : ray.record.normal.y;
-					//tempColor.b = ray.record.normal.z <= 0.0 ? 0.0 : ray.record.normal.z;
-					//tempColor.r = 0.5*(ray.record.normal.x + 1.0);
-					//tempColor.g = 0.5*(ray.record.normal.y + 1.0);
-					//tempColor.b = 0.5*(ray.record.normal.z + 1.0);
-					sampledColor *= tempColor;
 
-					ray.CalculateNextRay();
+				if (objectVec.HitTest(ray))
+				{
+					ray.ProcessSampledResult();
+					ColorList.push_back(ray.record.sampledColor);
+					LightRadianceList.push_back(ray.record.sampledLightRadiance);
 				}
 				else
 				{
-					sampledColor *= sceneDevice.GetSkyColor(ray.direction);
+					ColorList.push_back(sceneDevice.GetSkyColor(ray.direction));
 					break;
 				}
 			}
+
+			sampledColor = CalculateSampledColor(&ColorList, &LightRadianceList);
+
 			resultColor += sampledColor;
 		}
 	}

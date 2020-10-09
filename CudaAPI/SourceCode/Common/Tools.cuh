@@ -269,9 +269,14 @@ public:
 	void InteractWithSampledResultAndShadingFromLight()
 	{
 		//lightVec.Sampling(*this);
-		const CUM::Vec3f lightDir(0.0, 0.0, -1.0);
+		const CUM::Vec3f L(0.0, 0.0, -1.0);
+		CUM::Vec3f N(record.normal.x, record.normal.y, record.normal.z);
+		CUM::Vec3f V(direction);
+		CUM::Vec3f H(CUM::normalize(L + V));
 
-		record.sampledLightRadiance;
+		CHECK(record.sampledMaterial, "Ray::InteractWithSampledResultAndShadingFromLight() error: the sampledMaterial can not be nullptr!");
+		CUM::Color3f shadedLightRadience =  record.sampledMaterial->ShadeWithDirectLight(N, V, H);
+
 	}
 
 #ifdef RUN_ON_DEVICE
