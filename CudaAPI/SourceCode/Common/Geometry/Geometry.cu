@@ -42,7 +42,7 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 
 	custd::cuvector<CUM::Color3f> ColorList;
 	custd::cuvector<CUM::Color3f> LightRadianceList;
-
+	Bool isCutOff = false;
 	for (Int i = 0; i < aliasingTime; i++)
 	{
 		for (Int j = 0; j < aliasingTime; j++)
@@ -58,9 +58,19 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 
 			ColorList.Release();
 			LightRadianceList.Release();
+
+			isCutOff = false;
+
 			for (Int i = 0; i < camera.bounceTime; i++)
 			{
-
+				if (i == bounceTimeMinus1)
+				{
+					isCutOff = true;
+					sampledColor.r = 0.0;
+					sampledColor.g = 0.0;
+					sampledColor.b = 0.0;
+					break;
+				}
 				if (objectVec.HitTest(ray))
 				{
 					ray.ProcessSampledResult();
@@ -74,7 +84,10 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 				}
 			}
 
-			sampledColor = CalculateSampledColor(&ColorList, &LightRadianceList);
+			if (!isCutOff)
+			{
+				sampledColor = CalculateSampledColor(&ColorList, &LightRadianceList);
+			}
 
 			resultColor += sampledColor;
 		}
