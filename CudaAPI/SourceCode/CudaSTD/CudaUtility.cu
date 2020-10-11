@@ -1,5 +1,5 @@
 ﻿#include "CudaUtility.cuh"
-__duel__ void check(const bool & isNotAssert, const char * errorInfo, const char * file, const int & line)
+__duel__ void check(const Bool & isNotAssert, const char * errorInfo, const char * file, const int & line)
 {
 	if (!isNotAssert)
 	{
@@ -12,7 +12,7 @@ __duel__ void check(const bool & isNotAssert, const char * errorInfo, const char
 	}
 }
 
-__duel__ void check(const bool & isAssert, const char * errorInfo, const Bool & val, const char * file, const int & line)
+__duel__ void check(const Bool & isAssert, const char * errorInfo, const Bool & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -22,14 +22,14 @@ __duel__ void check(const bool & isAssert, const char * errorInfo, const Bool & 
 		printf("Error info: %s\n", errorInfo);
 		const char* trueStr = "true";
 		const char* falseStr = "false";
-		const char* boolVal = val ? trueStr : falseStr;
-		printf("Error Int val: %s\n", boolVal);
+		const char* BoolVal = val ? trueStr : falseStr;
+		printf("Error Int val: %s\n", BoolVal);
 		printf("====================Error Occurred!====================\n");
 		assert(false);
 	}
 }
 
-__duel__ void check(const bool & isAssert, const char * errorInfo, const Int & val, const char * file, const int & line)
+__duel__ void check(const Bool & isAssert, const char * errorInfo, const Int & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -43,7 +43,7 @@ __duel__ void check(const bool & isAssert, const char * errorInfo, const Int & v
 	}
 }
 
-__duel__ void check(const bool & isAssert, const char * errorInfo, const Uint & val, const char * file, const int & line)
+__duel__ void check(const Bool & isAssert, const char * errorInfo, const Uint & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -57,7 +57,7 @@ __duel__ void check(const bool & isAssert, const char * errorInfo, const Uint & 
 	}
 }
 
-__duel__ void check(const bool & isAssert, const char * errorInfo, const Float & val, const char * file, const int & line)
+__duel__ void check(const Bool & isAssert, const char * errorInfo, const Float & val, const char * file, const int & line)
 {
 	if (!isAssert)
 	{
@@ -71,7 +71,7 @@ __duel__ void check(const bool & isAssert, const char * errorInfo, const Float &
 	}
 }
 
-__duel__ void check(const bool & isAssert, const char * errorInfo, const Int* valArry, const Uint & size, const char * file, const int & line)
+__duel__ void check(const Bool & isAssert, const char * errorInfo, const Int* valArry, const Uint & size, const char * file, const int & line)
 {
 	if (!isAssert)
 	{

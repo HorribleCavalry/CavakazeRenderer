@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iomanip>
 
+class Ray;
+
 class Material
 {
 public:
@@ -149,9 +151,9 @@ __host__
 
 		Float attenuation = CUM::min(1.0 / (lightDis*lightDis), 1.0);
 
-		Float NdotH = CUM::dot(N, H);
-		Float NdotV = CUM::dot(N, V);
-		Float NdotL = CUM::dot(N, L);
+		Float NdotH = CUM::max(CUM::dot(N, H), 0.0);
+		Float NdotV = CUM::max(CUM::dot(N, V), 0.0);
+		Float NdotL = CUM::max(CUM::dot(N, L), 0.0);
 
 		Float F = F0 + (1.0 - F0)*pow(1.0 - NdotH, 5.0);
 		Float NDF = DistributionGGX(N, H, roughness);
@@ -166,7 +168,9 @@ __host__
 		Kd *= 1.0 - metallic;
 
 		Lo += (Kd*Albedo / PI + specular)*LightRadiance*CUM::max(NdotL, 0.0);
-
+		Lo.r = CUM::max(Lo.r, 0.0);
+		Lo.g = CUM::max(Lo.g, 0.0);
+		Lo.b = CUM::max(Lo.b, 0.0);
 		return Lo;
 
 		//Float xi1 = GetUniformRand();
@@ -222,6 +226,49 @@ __host__
 		//	}
 		//}
 		//return CUM::normalize(2.0 * N - NdotV * V);
+	}
+
+#ifdef RUN_ON_DEVICE
+__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+__host__
+#endif // RUN_ON_HOST
+	virtual const CUM::Vec3f InteractWithRay(const CUM::Vec3f& N, const CUM::Vec3f& V) const
+	{
+		Float NdotV = CUM::dot(N, V);
+		Float F = F0 + (1.0 - F0)*pow(1.0 - NdotV, 5.0);
+
+		Float xi1, xi2;
+		Float Sqrt1MinusXi1Square;
+		Float x, y, z;
+		CUM::Vec3f nextDir;
+		
+		Float NrDotNt = CUM::dot(N, CUM::Vec3f(0.0, 1.0, 0.0));
+
+		if (GetUniformRand() > F)
+		{
+			nextDir = CUM::normalize(2.0 * N - NdotV * V);
+		}
+		else
+		{
+			xi1 = GetUniformRand();
+			xi2 = GetUniformRand();
+
+			Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
+			x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+			y = xi1;
+			nextDir.x = x;
+			nextDir.y = y;
+			nextDir.z = z;
+			if (NrDotNt < 1.0 - Epsilon)
+			{
+				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
+				nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
+			}
+		}
+		return nextDir;
 	}
 public:
 	__duel__ void testForCopyRandVec()
@@ -291,30 +338,34 @@ public:
 	void ProcessSampledResult()
 	{
 		//lightVec.Sampling(*this);
-		const CUM::Vec3f L(0.0, 0.0, -1.0);
+		const CUM::Vec3f L = CUM::normalize(CUM::Vec3f(1.0, 1.0, -1.0));
 		CUM::Vec3f N(record.normal.x, record.normal.y, record.normal.z);
 		CUM::Vec3f V(direction);
 		CUM::Vec3f H(CUM::normalize(L + V));
-		CUM::Color3f LightColor(1.0);
+		CUM::Color3f LightRadiance(1.0,0.8,0.25);
 		CHECK(record.sampledMaterial, "Ray::InteractWithSampledResultAndShadingFromLight() error: the sampledMaterial can not be nullptr!");
-		CUM::Color3f shadedLightRadience =  record.sampledMaterial->ShadeWithDirectLight(N, V, H, LightColor);
+		Float distance = 1.0;
+		CUM::Color3f shadedLightRadience =  record.sampledMaterial->ShadeWithDirectLight(N, V, H, L, 1.0, LightRadiance);
+
 		record.sampledLightRadiance = shadedLightRadience;
+		record.sampledColor = record.sampledMaterial->Albedo;
 
-		record.sampledMaterial->InteractWithRay(*this);
-	}
-
-#ifdef RUN_ON_DEVICE
-	__device__
-#endif // RUN_ON_DEVICE
-#ifdef RUN_ON_HOST
-	__host__
-#endif // RUN_ON_HOST
-	void CalculateNextRay()
-	{
+		direction = record.sampledMaterial->InteractWithRay(N, V);
 		origin = record.hitPoint;
-		record.times = FLT_MAX;
-		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
 	}
+
+//#ifdef RUN_ON_DEVICE
+//	__device__
+//#endif // RUN_ON_DEVICE
+//#ifdef RUN_ON_HOST
+//	__host__
+//#endif // RUN_ON_HOST
+//	void CalculateNextRay()
+//	{
+//		origin = record.hitPoint;
+//		record.times = FLT_MAX;
+//		direction = record.sampledMaterial->GenerateNextDirection(record.normal, direction);
+//	}
 };
 
 struct Pixel

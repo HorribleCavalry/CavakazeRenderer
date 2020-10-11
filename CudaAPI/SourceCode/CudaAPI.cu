@@ -228,6 +228,7 @@ int main(int argc, char* argv[])
 	material0->InitializeRandVecs();
 
 	Material* material1 = new Material;
+	material1->roughness = 0.8;
 	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
 	material1->InitializeRandVecs();
 

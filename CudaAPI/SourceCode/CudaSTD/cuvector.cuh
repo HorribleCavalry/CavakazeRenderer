@@ -2,7 +2,7 @@
 #define __CUVACTOR__CUH__
 
 #include "CudaUtility.cuh"
-
+#include "cuiostream.cuh"
 
 namespace custd
 {
@@ -23,36 +23,52 @@ namespace custd
 			:data(new T[_Size]), Size(_Size), Capacity(_Size)
 		{
 			CHECK(data, "The data initialization in construct function failed");
-
 		}
+
+		__duel__ void Release()
+		{
+			if (data)
+			{
+				if (Size == 0)
+					delete data;
+				else
+					delete[] data;
+				data = nullptr;
+			}
+
+			data = new T;
+			Size = 0;
+			Capacity = 0;
+		}
+
 		__duel__ ~cuvector()
 		{
 			if (data)
-				delete[] data;
+			{
+				if (Size == 0)
+					delete data;
+				else
+					delete[] data;
+				data = nullptr;
+			}
+			Capacity = 0;
+			Size = 0;
 		}
 
-		__duel__ Uint size();
-		__duel__ Uint capacity();
+		__duel__ Int size() const
+		{
+			return Size;
+		}
+		__duel__ Int capacity() const
+		{
+			return Capacity;
+		}
 
 		__duel__ void push_back(const T& val)
 		{
-			CHECK(data, "The data in current cuvector is nullptr!");
-			//Int* debugArray = new Int[3];
-			//debugArray[0] = Size;
-			//debugArray[1] = BackIdx;
-			//debugArray[2] = Capacity;
-			//check(Capacity > 0, "The capacity in current cuvector can not be a negative value!", debugArray, 3);
-			//check(Capacity >= Size, "The capacity must be greater equal to Size in current cuvector!", debugArray, 3);
-			//check(Size == BackIdx + 1, "The BackIdx is not match Size in current cuvector!", debugArray, 3);
-
-			//CHECK(Capacity > 0, "The capacity in current cuvector can not be a negative value!", debugArray, 3);
-			//CHECK(Capacity >= Size, "The capacity must be greater equal to Size in current cuvector!", debugArray, 3);
-			//CHECK(Size == BackIdx + 1, "The BackIdx is not match Size in current cuvector!", debugArray, 3);
-
-			T* newData = nullptr;
-
 			if (Size == Capacity)
 			{
+				T* newData = nullptr;
 				Capacity = Capacity <= 0 ? 1 : 2 * Capacity;
 				newData = new T[Capacity];
 
@@ -61,7 +77,13 @@ namespace custd
 					newData[i] = (*this)[i];
 				}
 
-				if (data) delete[] data;
+				if (data)
+				{
+					if (Size == 0)
+						delete data;
+					else
+						delete[] data;
+				}
 				data = newData;
 				newData = nullptr;
 			}
@@ -70,7 +92,7 @@ namespace custd
 		}
 		
 
-		__duel__ T& operator[](Int idx)
+		__duel__ T& operator[](Int idx) const
 		{
 			CHECK(idx < Size, "The input index in current cuvector is out of range!");
 			CHECK(idx >= 0, "The input index in a cuvector can not be a negative value!");

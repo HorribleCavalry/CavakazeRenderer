@@ -28,7 +28,7 @@ typedef unsigned short Ushort;
 //If isAssert is true, nothing will be happen.
 #define CHECK(isAssert, errorInfo) check(isAssert, errorInfo, __FILE__, __LINE__)
 //Try to avoid using this function, recommend marco CHECK to use.
-__duel__ void check(const bool& isAssert, const char* errorInfo, const char* file, const int& line);
+__duel__ void check(const Bool& isAssert, const char* errorInfo, const char* file, const int& line);
 
 //CHECK(bool isAssert, char* errorInfo, Number val);
 //This marco can run on host and device.

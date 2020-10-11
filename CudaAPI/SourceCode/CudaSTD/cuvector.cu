@@ -3,15 +3,15 @@
 namespace custd
 {
 
-	template<typename T>
-	__duel__ Uint cuvector<T>::size()
-	{
-		return Size;
-	}
-	template<typename T>
-	__duel__ Uint cuvector<T>::capacity()
-	{
-		return Capacity;
-	}
+	//template<typename T>
+	//__duel__ Int cuvector<T>::size()
+	//{
+	//	return Size;
+	//}
+	//template<typename T>
+	//__duel__ Int cuvector<T>::capacity()
+	//{
+	//	return Capacity;
+	//}
 
 }

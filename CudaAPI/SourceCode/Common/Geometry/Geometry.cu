@@ -2,6 +2,20 @@
 #include "../../CudaSTD/cuvector.cuh"
 Texture* Camera::RenderTargetDevice = nullptr;
 
+__duel__ const CUM::Color3f CalculateSampledColor(const custd::cuvector<CUM::Color3f>& ColorList, const custd::cuvector<CUM::Color3f>& LightRadianceList)
+{
+	CHECK(ColorList.size() == LightRadianceList.size(), "CalculateSampledColor(const custd::cuvector<CUM::Color3f>& ColorList, const custd::cuvector<CUM::Color3f>& LightRadianceList) error: the lenth of theses are different!");
+	Int listLength = ColorList.size();
+	CUM::Color3f currentColor(1.0);
+	for (Int i = listLength - 1; i >= 0; --i)
+	{
+		//auto tempC = ColorList[i];
+		//auto tempL = LightRadianceList[i];
+		currentColor = ColorList[i] * currentColor + LightRadianceList[i];
+	}
+	return currentColor;
+}
+
 #ifdef RUN_ON_DEVICE
 __device__
 #endif // RUN_ON_DEVICE
@@ -10,6 +24,11 @@ __host__
 #endif // RUN_ON_HOST
 void RenderingImplementation(Scene* scene, Int globalIdx)
 {
+	if (globalIdx == 17488)
+	{
+		Int k = 5;
+	}
+
 	Scene& sceneDevice = *scene;
 	PersCamera& camera = *scene->camera;
 	CUM::PrimitiveVector<Object>& objectVec = *(scene->objectVec);
@@ -63,32 +82,22 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 
 			for (Int i = 0; i < camera.bounceTime; i++)
 			{
-				if (i == bounceTimeMinus1)
-				{
-					isCutOff = true;
-					sampledColor.r = 0.0;
-					sampledColor.g = 0.0;
-					sampledColor.b = 0.0;
-					break;
-				}
-				if (objectVec.HitTest(ray))
+				if(objectVec.HitTest(ray))
 				{
 					ray.ProcessSampledResult();
 					ColorList.push_back(ray.record.sampledColor);
 					LightRadianceList.push_back(ray.record.sampledLightRadiance);
+					continue;
 				}
 				else
 				{
 					ColorList.push_back(sceneDevice.GetSkyColor(ray.direction));
+					LightRadianceList.push_back(0.0);
 					break;
 				}
 			}
 
-			if (!isCutOff)
-			{
-				sampledColor = CalculateSampledColor(&ColorList, &LightRadianceList);
-			}
-
+			sampledColor = CalculateSampledColor(ColorList, LightRadianceList);
 			resultColor += sampledColor;
 		}
 	}
@@ -107,11 +116,6 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 	camera.renderTarget->buffer[globalIdx].g = G;
 	camera.renderTarget->buffer[globalIdx].b = B;
 	camera.renderTarget->buffer[globalIdx].a = A;
-
-	//camera.renderTarget->buffer[globalIdx].r = 255;
-	//camera.renderTarget->buffer[globalIdx].g = 0;
-	//camera.renderTarget->buffer[globalIdx].b = 0;
-	//camera.renderTarget->buffer[globalIdx].a = 255;
 }
 
 #ifdef RUN_ON_DEVICE
