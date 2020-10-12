@@ -192,8 +192,8 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 256;
-	Int height = 144;
+	Int width = 1920;
+	Int height = 1080;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 

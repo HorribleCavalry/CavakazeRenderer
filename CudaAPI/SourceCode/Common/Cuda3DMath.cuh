@@ -488,9 +488,15 @@ namespace CUM
 		if (norm(v) == 0)
 			return v;
 		Float cosTheta = CUM::min(cosT, 1.0);
+		cosTheta = CUM::max(cosT, -1.0);
 		auto k = normalize(axis);
 		Float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
-		return v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
+		auto temp = v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
+		if (isnan(temp.x))
+		{
+			Int k = 9;
+		}
+		return temp;
 	}
 
 	template<typename T>

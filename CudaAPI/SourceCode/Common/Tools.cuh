@@ -173,59 +173,7 @@ __host__
 		Lo.b = CUM::max(Lo.b, 0.0);
 		return Lo;
 
-		//Float xi1 = GetUniformRand();
-		//Float xi2 = GetUniformRand();
 
-		//Float Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
-		//Float x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-		//Float z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-		//Float y = xi1;
-		//CUM::Vec3f L(x, y, z);
-		//Float NrDotNt = CUM::dot(N, CUM::Vec3f(0.0, 1.0, 0.0));
-		//if (NrDotNt <= 1.0 - Epsilon)
-		//{
-		//	const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
-		//	L = CUM::RodriguesRotateCosine(axis, NrDotNt, L);
-		//}
-		//const CUM::Vec3f& halfDir = CUM::normalize(L + V);
-
-		//Float NdotV = CUM::dot(N, V);
-		////Float NdotH = CUM::dot(N, halfDir);
-		//Float NdotH = 1.0;
-		//Float roughness = 0.5;
-
-		//Float F = F0 + (1.0 - F0)*pow(1.0 - NdotH, 5.0);
-		//Float NDF = DistributionGGX(N, halfDir, roughness);
-		//Float G = GeometrySmith(N, V, L, roughness);
-		//Float nominator = NDF * G * F;
-		//Float denominator = 4.0 * CUM::max(CUM::dot(N, V), 0.0) * CUM::max(CUM::dot(N, L), 0.0) + 0.001;
-		//Float specular = nominator / denominator;
-
-		//if (GetUniformRand() <= specular)
-		//{
-		//	return CUM::normalize(2.0 * N - NdotV * V);;
-		//}
-		//else
-		//{
-		//	xi1 = GetUniformRand();
-		//	xi2 = GetUniformRand();
-
-		//	Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
-		//	x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-		//	z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-		//	y = xi1;
-		//	CUM::Vec3f randV(x, y, z);
-		//	if (NrDotNt > 1.0 - Epsilon)
-		//	{
-		//		return randV;
-		//	}
-		//	else
-		//	{
-		//		const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
-		//		return CUM::RodriguesRotateCosine(axis, NdotV, randV);;
-		//	}
-		//}
-		//return CUM::normalize(2.0 * N - NdotV * V);
 	}
 
 #ifdef RUN_ON_DEVICE
@@ -265,7 +213,9 @@ __host__
 			if (NrDotNt < 1.0 - Epsilon)
 			{
 				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
+
 				nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
+
 			}
 		}
 		return nextDir;
