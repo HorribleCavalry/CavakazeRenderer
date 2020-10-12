@@ -13,10 +13,16 @@
     <Filter Include="SourceCode\Common\Geometry">
       <UniqueIdentifier>{d20071fa-b39f-44da-af9c-380ee4e74907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SourceCode\Common\Interactor">
+      <UniqueIdentifier>{266a1a25-3c57-4ba8-a195-703f861f910c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceCode\Common\stb_image.h">
       <Filter>SourceCode\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceCode\Common\Interactor\Interactor.cuh">
+      <Filter>SourceCode\Common\Interactor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

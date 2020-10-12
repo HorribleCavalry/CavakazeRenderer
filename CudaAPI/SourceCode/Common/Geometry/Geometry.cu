@@ -1,4 +1,5 @@
 ﻿#include "Geometry.cuh"
+#include "../Interactor/Interactor.cuh"
 #include "../../CudaSTD/cuvector.cuh"
 Texture* Camera::RenderTargetDevice = nullptr;
 
@@ -24,11 +25,6 @@ __host__
 #endif // RUN_ON_HOST
 void RenderingImplementation(Scene* scene, Int globalIdx)
 {
-	if (globalIdx == 17488)
-	{
-		Int k = 5;
-	}
-
 	Scene& sceneDevice = *scene;
 	PersCamera& camera = *scene->camera;
 	CUM::PrimitiveVector<Object>& objectVec = *(scene->objectVec);
@@ -62,6 +58,7 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 	custd::cuvector<CUM::Color3f> ColorList;
 	custd::cuvector<CUM::Color3f> LightRadianceList;
 	Bool isCutOff = false;
+	RayProcessor processor;
 	for (Int i = 0; i < aliasingTime; i++)
 	{
 		for (Int j = 0; j < aliasingTime; j++)
@@ -84,7 +81,8 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 			{
 				if(objectVec.HitTest(ray))
 				{
-					ray.ProcessSampledResult();
+					//ray.ProcessSampledResult(&objectVec);
+					processor.Processing(objectVec, ray);
 					ColorList.push_back(ray.record.sampledColor);
 					LightRadianceList.push_back(ray.record.sampledLightRadiance);
 					continue;

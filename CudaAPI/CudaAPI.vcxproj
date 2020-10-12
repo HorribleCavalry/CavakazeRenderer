@@ -16,6 +16,7 @@
     <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cu" />
     <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cuh" />
     <CudaCompile Include="SourceCode\Common\Tools.cuh" />
+    <ClInclude Include="SourceCode\Common\Interactor\Interactor.cuh" />
     <ClInclude Include="SourceCode\Common\stb_image.h" />
     <CudaCompile Include="SourceCode\Common\Utility.cuh" />
     <CudaCompile Include="SourceCode\CudaAPI.cuh" />

@@ -573,6 +573,11 @@ public:
 	CUM::PrimitiveVector<Mesh>* meshVec;
 	BBox bBox;
 public:
+	__duel__ Object()
+	{
+		meshVec = nullptr;
+	}
+
 	__duel__ Object(const CUM::Transform& _transform, CUM::PrimitiveVector<Mesh>* _meshVec)
 		:transform(_transform), meshVec(_meshVec)
 	{

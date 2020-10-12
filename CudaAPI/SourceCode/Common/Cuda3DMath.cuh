@@ -3874,6 +3874,10 @@ namespace CUM
 		Quaternionf rotation;
 		Vec3f translation;
 	public:
+		__duel__ Transform()
+		{
+
+		}
 		__duel__ Transform(const Vec3f& _scale, const Quaternionf& _rotation, const Vec3f& _translation)
 			:scale(_scale), rotation(_rotation), translation(_translation)
 		{

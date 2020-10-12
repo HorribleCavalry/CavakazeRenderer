@@ -172,8 +172,6 @@ __host__
 		Lo.g = CUM::max(Lo.g, 0.0);
 		Lo.b = CUM::max(Lo.b, 0.0);
 		return Lo;
-
-
 	}
 
 #ifdef RUN_ON_DEVICE
@@ -279,30 +277,44 @@ public:
 		return origin + times * direction;
 	}
 
-#ifdef RUN_ON_DEVICE
-	__device__
-#endif // RUN_ON_DEVICE
-#ifdef RUN_ON_HOST
-		__host__
-#endif // RUN_ON_HOST
-	void ProcessSampledResult()
-	{
-		//lightVec.Sampling(*this);
-		const CUM::Vec3f L = CUM::normalize(CUM::Vec3f(1.0, 1.0, -1.0));
-		CUM::Vec3f N(record.normal.x, record.normal.y, record.normal.z);
-		CUM::Vec3f V(direction);
-		CUM::Vec3f H(CUM::normalize(L + V));
-		CUM::Color3f LightRadiance(1.0,0.8,0.25);
-		CHECK(record.sampledMaterial, "Ray::InteractWithSampledResultAndShadingFromLight() error: the sampledMaterial can not be nullptr!");
-		Float distance = 1.0;
-		CUM::Color3f shadedLightRadience =  record.sampledMaterial->ShadeWithDirectLight(N, V, H, L, 1.0, LightRadiance);
-
-		record.sampledLightRadiance = shadedLightRadience;
-		record.sampledColor = record.sampledMaterial->Albedo;
-
-		direction = record.sampledMaterial->InteractWithRay(N, V);
-		origin = record.hitPoint;
-	}
+//#ifdef RUN_ON_DEVICE
+//	__device__
+//#endif // RUN_ON_DEVICE
+//#ifdef RUN_ON_HOST
+//	__host__
+//#endif // RUN_ON_HOST
+//	void ProcessSampledResult(CUM::PrimitiveVector<Object>* objects)
+//	{
+//		//lightVec.Sampling(*this);
+//		const CUM::Vec3f L = CUM::normalize(CUM::Vec3f(1.0, 1.0, -1.0));
+//		CUM::Vec3f N(record.normal.x, record.normal.y, record.normal.z);
+//		CUM::Vec3f V(direction);
+//		CUM::Vec3f H(CUM::normalize(L + V));
+//		CUM::Color3f LightRadiance(1.0,0.8,0.25);
+//		CHECK(record.sampledMaterial, "Ray::InteractWithSampledResultAndShadingFromLight() error: the sampledMaterial can not be nullptr!");
+//		Float distance = 1.0;
+//
+//		Ray shadowRay;
+//		shadowRay.origin = record.hitPoint;
+//		shadowRay.direction = L;
+//
+//		Bool isHit = objects->HitTest(shadowRay);
+//		CUM::Color3f shadedLightRadience;
+//		if (isHit)
+//		{
+//			shadedLightRadience = CUM::Color3f(0.0);
+//		}
+//		else
+//		{
+//			shadedLightRadience = record.sampledMaterial->ShadeWithDirectLight(N, V, H, L, 1.0, LightRadiance);
+//		}
+//
+//		record.sampledLightRadiance = shadedLightRadience;
+//		record.sampledColor = record.sampledMaterial->Albedo;
+//
+//		direction = record.sampledMaterial->InteractWithRay(N, V);
+//		origin = record.hitPoint;
+//	}
 
 //#ifdef RUN_ON_DEVICE
 //	__device__
