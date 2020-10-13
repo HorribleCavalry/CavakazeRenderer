@@ -174,12 +174,26 @@ __host__
 			nextDir.x = x;
 			nextDir.y = y;
 			nextDir.z = z;
-			if (NrDotNt < 1.0 - Epsilon)
+			if (NrDotNt > 0.0)
 			{
-				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
+				if (NrDotNt < 1.0 - Epsilon)
+				{
+					const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
 
-				nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
+					nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
 
+				}
+			}
+			else
+			{
+				nextDir = -nextDir;
+				if (NrDotNt > 1.0 + Epsilon)
+				{
+					const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, -1.0, 0.0), -N));
+
+					nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
+
+				}
 			}
 		}
 

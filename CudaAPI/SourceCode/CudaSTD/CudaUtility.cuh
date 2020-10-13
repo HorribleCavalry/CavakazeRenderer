@@ -19,8 +19,8 @@ typedef unsigned short Ushort;
 
 #define __duel__ __host__ __device__
 
-#define RUN_ON_DEVICE
-//#define RUN_ON_HOST
+//#define RUN_ON_DEVICE
+#define RUN_ON_HOST
 
 //CHECK(bool isAssert, char* errorInfo);
 //This marco can run on host and device.

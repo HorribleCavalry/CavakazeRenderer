@@ -1,6 +1,7 @@
 ﻿#include "Geometry.cuh"
 #include "../Interactor/Interactor.cuh"
 #include "../../CudaSTD/cuvector.cuh"
+#include <thread>
 Texture* Camera::RenderTargetDevice = nullptr;
 
 __duel__ const CUM::Color3f CalculateSampledColor(const custd::cuvector<CUM::Color3f>& ColorList, const custd::cuvector<CUM::Color3f>& LightRadianceList)
@@ -127,16 +128,77 @@ __global__ void RenderingOnDevice(Scene* scene)
 #endif // RUN_ON_DEVICE
 
 #ifdef RUN_ON_HOST
+
+struct RenderingOperator
+{
+	Int idx;
+	Int startIdx;
+	Int endIdx;
+	Bool* runnable;
+	Scene* scene;
+	RenderingOperator()
+	{
+	}
+	RenderingOperator(const Int& _idx,const Int& _startIdx, const Int& _endIdx, Scene* _scene)
+		:idx(_idx), startIdx(_startIdx), endIdx(_endIdx), scene(_scene) {}
+	void operator()()
+	{
+		runnable[idx] = true;
+		for (Int i = startIdx; i < endIdx; i++)
+		{
+			RenderingImplementation(scene, i);
+		}
+		runnable[idx] = false;
+	}
+};
+
+
 void RenderingOnHost(Scene* scene)
 {
 	PersCamera& camera = *scene->camera;
 	CUM::Vec2i size = camera.renderTarget->size;
 	Int length = size.x*size.y;
 
-	for (Int globalIdx = 0; globalIdx < length; globalIdx++)
+	Int threadNum = 4;
+	std::thread* threads= new std::thread[threadNum];
+	RenderingOperator* renderingOperators = new RenderingOperator();
+	Bool* runnable = new Bool[threadNum];
+
+	Int idxsPerThread = length / threadNum;
+	Int startIdx = 0;
+	for (Int i = 0; i < threadNum; i++)
 	{
-		RenderingImplementation(scene, globalIdx);
+		runnable[i] = true;
+
+		startIdx = i * idxsPerThread;
+
+		renderingOperators[i].idx = i;
+		renderingOperators[i].startIdx = startIdx;
+		renderingOperators[i].endIdx = startIdx + idxsPerThread;
+		renderingOperators[i].runnable = runnable;
+		renderingOperators[i].scene = scene;
+		threads[i] = std::thread(renderingOperators[i]);
+		threads[i].detach();
 	}
+	Bool isFinished = false;
+	while (!isFinished)
+	{
+		isFinished = false;
+		for (Int i = 0; i < threadNum; i++)
+		{
+			isFinished = isFinished || runnable[i];
+		}
+	}
+	//for (Int globalIdx = 0; globalIdx < length; globalIdx++)
+	//{
+	//	RenderingImplementation(scene, globalIdx);
+	//}
+	delete[] threads;
+	threads = nullptr;
+	delete[] renderingOperators;
+	renderingOperators = nullptr;
+	delete[] runnable;
+	runnable = nullptr;
 }
 #endif // RUN_ON_HOST
 
