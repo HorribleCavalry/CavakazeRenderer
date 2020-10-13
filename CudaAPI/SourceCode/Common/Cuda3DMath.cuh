@@ -425,6 +425,12 @@ namespace CUM
 #pragma region Vec3 vector operation
 
 	template<typename T>
+	__duel__ const Vec3<T> mix(const Vec3<T>& v0, const Vec3<T>& v1, const Vec3<T>& n)
+	{
+		return v0 * (1.0 - n) + v1 * n;
+	}
+
+	template<typename T>
 	__duel__ const Vec3<T> abs(const Vec3<T>& v)
 	{
 		return Vec3<T>(v.x, v.y, v.z);
@@ -487,15 +493,11 @@ namespace CUM
 	{
 		if (norm(v) == 0)
 			return v;
-		Float cosTheta = CUM::min(cosT, 1.0);
-		cosTheta = CUM::max(cosT, -1.0);
+		Float cosTheta = cosT <= 1.0 ? cosT : 1.0;
+		cosTheta = cosTheta >= -1.0 ? cosTheta : -1.0;
 		auto k = normalize(axis);
 		Float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
 		auto temp = v * cosTheta + cross(k, v)*sinTheta + k * dot(k, v)*(1.0 - cosTheta);
-		if (isnan(temp.x))
-		{
-			Int k = 9;
-		}
 		return temp;
 	}
 

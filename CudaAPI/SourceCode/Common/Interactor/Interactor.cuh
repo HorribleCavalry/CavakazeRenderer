@@ -1,4 +1,4 @@
-#ifndef __INTERACTOR__CUH__
+﻿#ifndef __INTERACTOR__CUH__
 #define __INTERACTOR__CUH__
 
 #include "../CudaPrimitivesVector.cuh"
@@ -15,9 +15,9 @@ public:
 	void Processing(CUM::PrimitiveVector<Object>& objects, Ray& ray)
 	{
 		//lightVec.Sampling(*this);
-		const CUM::Vec3f L = CUM::normalize(CUM::Vec3f(1.0, 1.0, -1.0));
+		const CUM::Vec3f L = CUM::normalize(CUM::Vec3f(0.0, 1.0, -1.0));
 		CUM::Vec3f N(ray.record.normal.x, ray.record.normal.y, ray.record.normal.z);
-		CUM::Vec3f V(ray.direction);
+		CUM::Vec3f V(-ray.direction);
 		CUM::Vec3f H(CUM::normalize(L + V));
 		CUM::Color3f LightRadiance(1.0, 0.8, 0.25);
 		CHECK(ray.record.sampledMaterial, "Ray::InteractWithSampledResultAndShadingFromLight() error: the sampledMaterial can not be nullptr!");

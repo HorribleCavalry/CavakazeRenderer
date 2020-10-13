@@ -81,7 +81,6 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 			{
 				if(objectVec.HitTest(ray))
 				{
-					//ray.ProcessSampledResult(&objectVec);
 					processor.Processing(objectVec, ray);
 					ColorList.push_back(ray.record.sampledColor);
 					LightRadianceList.push_back(ray.record.sampledLightRadiance);

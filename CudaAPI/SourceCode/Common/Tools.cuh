@@ -13,79 +13,23 @@ class Material
 {
 public:
 	Float metallic = 0.0;
-	Float roughness = 0.5;
-	Float F0 = 0.05;
+	Float roughness = 1.0;
 	CUM::Color3f Albedo;
 public:
 	Bool isHemisphere = false;
-public:
-	CUM::Vec3f* randVecs;
-	Float* randNums;
-	Int interactTime;
-	Int randSize;
+
 public:
 	__duel__ Material()
 	{
-		interactTime = 0;
-		randSize = 64;
-	}
-	__host__ virtual void InitializeRandVecs()
-	{
-		CHECK(randSize > 0, "Material::InitializeRandVecs() error: the randVecSize can not less than 0!");
-		randVecs = new CUM::Vec3f[randSize];
-		randNums = new Float[randSize];
-
-		std::default_random_engine randEngine(rand());
-		std::uniform_real_distribution<Float> randGenerator(0.0, 1.0);
-		Float xi1, xi2;
-		Float x, y, z;
-		Float Sqrt1MinusXi1Square;
-		for (Int i = 0; i < randSize; i++)
-		{
-			randNums[i] = randGenerator(randEngine);
-
-			xi1 = randGenerator(randEngine);
-			xi2 = randGenerator(randEngine);
-			Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
-			x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-			z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
-			y = xi1;
-			randVecs[i] = CUM::Vec3f(x, y, z);
-		}
-
 	}
 public:
 	__host__ Material* copyToDevice()
 	{
-		Material materialInsWithDevicePtr(*this);
-		CUM::Vec3f* randVecsDevice;
-		Float* randNumsDevice;
-		
-		cudaMalloc(&randVecsDevice, randSize * sizeof(CUM::Vec3f));
-		cudaMemcpy(randVecsDevice, randVecs, randSize * sizeof(CUM::Vec3f), cudaMemcpyKind::cudaMemcpyHostToDevice);
-
-		cudaMalloc(&randNumsDevice, randSize * sizeof(Float));
-		cudaMemcpy(randNumsDevice, randNums, randSize * sizeof(Float), cudaMemcpyKind::cudaMemcpyHostToDevice);
-
-		materialInsWithDevicePtr.randVecs = randVecsDevice;
-		materialInsWithDevicePtr.randNums = randNumsDevice;
-
-		Material* materialDevice = CudaInsMemCpyHostToDevice(&materialInsWithDevicePtr);
+		Material* materialDevice = CudaInsMemCpyHostToDevice(this);
 		return materialDevice;
 	}
 	__duel__ void Release()
 	{
-		if (randVecs)
-		{
-			delete[] randVecs;
-			randVecs = nullptr;
-		}
-
-		if (randNums)
-		{
-			delete[] randNums;
-			randNums = nullptr;
-		}
 	}
 
 #ifdef RUN_ON_DEVICE
@@ -147,7 +91,7 @@ __host__
 #endif // RUN_ON_HOST
 	virtual const CUM::Color3f ShadeWithDirectLight(const CUM::Vec3f& N, const CUM::Vec3f& V, const CUM::Vec3f& H, const CUM::Vec3f& L, const Float& lightDis,const CUM::Color3f& LightRadiance)
 	{
-		CUM::Color3f Lo(0.0);
+		CUM::Vec3f Lo(0.0);
 
 		Float attenuation = CUM::min(1.0 / (lightDis*lightDis), 1.0);
 
@@ -155,23 +99,34 @@ __host__
 		Float NdotV = CUM::max(CUM::dot(N, V), 0.0);
 		Float NdotL = CUM::max(CUM::dot(N, L), 0.0);
 
-		Float F = F0 + (1.0 - F0)*pow(1.0 - NdotH, 5.0);
+		CUM::Vec3f albedo;
+		albedo.x = Albedo.r;
+		albedo.y = Albedo.g;
+		albedo.z = Albedo.b;
+
+		CUM::Vec3f lightRadiance;
+		lightRadiance.x = LightRadiance.r;
+		lightRadiance.y = LightRadiance.g;
+		lightRadiance.z = LightRadiance.b;
+
+		CUM::Vec3f F0 = CUM::mix(CUM::Vec3f(0.04), albedo, CUM::Vec3f(metallic));
+		CUM::Vec3f F = F0 + (1.0 - F0)*pow(1.0 - NdotH, 5.0);
 		Float NDF = DistributionGGX(N, H, roughness);
 		Float G = GeometrySmith(N, V, L, roughness);
 
-		Float nominator = NDF * G * F;
+		CUM::Vec3f nominator = NDF * G * F;
 		Float denominator = 4.0 * CUM::max(NdotV, 0.0) * CUM::max(NdotL, 0.0) + 0.001;
-		Float specular = nominator / denominator;
+		CUM::Vec3f specular = nominator / denominator;
 
-		Float Ks = F;
-		Float Kd = 1.0 - Ks;
+		CUM::Vec3f Ks = F;
+		CUM::Vec3f Kd = 1.0 - Ks;
 		Kd *= 1.0 - metallic;
 
-		Lo += (Kd*Albedo / PI + specular)*LightRadiance*CUM::max(NdotL, 0.0);
-		Lo.r = CUM::max(Lo.r, 0.0);
-		Lo.g = CUM::max(Lo.g, 0.0);
-		Lo.b = CUM::max(Lo.b, 0.0);
-		return Lo;
+		Lo += (Kd*albedo / PI + specular)*lightRadiance*CUM::max(NdotL, 0.0);
+		Lo.x = CUM::max(Lo.x, 0.0);
+		Lo.y = CUM::max(Lo.y, 0.0);
+		Lo.z = CUM::max(Lo.z, 0.0);
+		return CUM::Color3f(Lo.x, Lo.y, Lo.z);
 	}
 
 #ifdef RUN_ON_DEVICE
@@ -183,7 +138,17 @@ __host__
 	virtual const CUM::Vec3f InteractWithRay(const CUM::Vec3f& N, const CUM::Vec3f& V) const
 	{
 		Float NdotV = CUM::dot(N, V);
-		Float F = F0 + (1.0 - F0)*pow(1.0 - NdotV, 5.0);
+
+		CUM::Vec3f albedo;
+		albedo.x = Albedo.r;
+		albedo.y = Albedo.g;
+		albedo.z = Albedo.b;
+
+		CUM::Vec3f F0 = CUM::mix(CUM::Vec3f(0.04), albedo, CUM::Vec3f(metallic));
+
+		Float meanF0 = (F0.x + F0.y + F0.z) / 3.0;
+
+		Float F = meanF0 + (1.0 - meanF0)*pow(1.0 - NdotV, 5.0);
 
 		Float xi1, xi2;
 		Float Sqrt1MinusXi1Square;
@@ -192,7 +157,8 @@ __host__
 		
 		Float NrDotNt = CUM::dot(N, CUM::Vec3f(0.0, 1.0, 0.0));
 
-		if (GetUniformRand() > F)
+
+		if (GetUniformRand() <= F)
 		{
 			nextDir = CUM::normalize(2.0 * N - NdotV * V);
 		}
@@ -216,14 +182,13 @@ __host__
 
 			}
 		}
+
 		return nextDir;
 	}
 public:
 	__duel__ void testForCopyRandVec()
 	{
-		custd::OStream os;
-		//os << "The first rand vec of the current material is:\n" << randVecs[0].x << "\t" << randVecs[0].y << "\t" << randVecs[0].z << "\t\n";
-		os << "The first rand num of the current material is:\n" << randNums[0] << "\n";
+
 	}
 };
 

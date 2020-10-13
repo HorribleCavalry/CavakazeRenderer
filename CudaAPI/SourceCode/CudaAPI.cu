@@ -192,8 +192,8 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 256;
-	Int height = 144;
+	Int width = 1920;
+	Int height = 1080;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 
@@ -224,13 +224,14 @@ int main(int argc, char* argv[])
 	primitiveVec1->push_back(*box1);
 
 	Material* material0 = new Material;
+	material0->metallic = 0.0;
 	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
-	material0->InitializeRandVecs();
+	material0->roughness = 0.25;
 
 	Material* material1 = new Material;
-	material1->roughness = 0.8;
+	material1->roughness = 1.0;
+	material1->metallic = 0.0;
 	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
-	material1->InitializeRandVecs();
 
 	Mesh* mesh0 = new Mesh(primitiveVec0,material0);
 	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
