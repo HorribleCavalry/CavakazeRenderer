@@ -15,9 +15,9 @@ namespace custd
 		Uint Capacity;
 	public:
 		__duel__ cuvector()
-			:data(new T), Size(0), Capacity(0)
+			:data(nullptr), Size(0), Capacity(0)
 		{
-			CHECK(data, "The data initialization in construct function failed");
+			//CHECK(data, "The data initialization in construct function failed");
 		}
 		__duel__ cuvector(const Uint& _Size)
 			:data(new T[_Size]), Size(_Size), Capacity(_Size)
@@ -28,15 +28,9 @@ namespace custd
 		__duel__ void Release()
 		{
 			if (data)
-			{
-				if (Size == 0)
-					delete data;
-				else
-					delete[] data;
-				data = nullptr;
-			}
+				delete[] data;
 
-			data = new T;
+			data = nullptr;
 			Size = 0;
 			Capacity = 0;
 		}
@@ -44,13 +38,8 @@ namespace custd
 		__duel__ ~cuvector()
 		{
 			if (data)
-			{
-				if (Size == 0)
-					delete data;
-				else
-					delete[] data;
-				data = nullptr;
-			}
+				delete[] data;
+			data = nullptr;
 			Capacity = 0;
 			Size = 0;
 		}
@@ -69,7 +58,8 @@ namespace custd
 			if (Size == Capacity)
 			{
 				T* newData = nullptr;
-				Capacity = Capacity <= 0 ? 1 : 2 * Capacity;
+				Capacity = Capacity <= 0 ? 2 : 2 * Capacity;
+
 				newData = new T[Capacity];
 
 				for (Uint i = 0; i < Size; i++)
@@ -78,12 +68,7 @@ namespace custd
 				}
 
 				if (data)
-				{
-					if (Size == 0)
-						delete data;
-					else
-						delete[] data;
-				}
+					delete[] data;
 				data = newData;
 				newData = nullptr;
 			}

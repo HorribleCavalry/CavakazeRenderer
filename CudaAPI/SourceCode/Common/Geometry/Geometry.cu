@@ -134,7 +134,7 @@ struct RenderingOperator
 	Int idx;
 	Int startIdx;
 	Int endIdx;
-	Bool* runnable;
+	volatile Bool* runnable;
 	Scene* scene;
 	RenderingOperator()
 	{
@@ -159,9 +159,9 @@ void RenderingOnHost(Scene* scene)
 	CUM::Vec2i size = camera.renderTarget->size;
 	Int length = size.x*size.y;
 
-	Int threadNum = 4;
+	Int threadNum = 32;
 	std::thread* threads= new std::thread[threadNum];
-	RenderingOperator* renderingOperators = new RenderingOperator();
+	RenderingOperator* renderingOperators = new RenderingOperator[threadNum];
 	Bool* runnable = new Bool[threadNum];
 
 	Int idxsPerThread = length / threadNum;
@@ -180,13 +180,14 @@ void RenderingOnHost(Scene* scene)
 		threads[i] = std::thread(renderingOperators[i]);
 		threads[i].detach();
 	}
-	Bool isFinished = false;
-	while (!isFinished)
+	volatile Bool isRunning = true;
+	while (isRunning)
 	{
-		isFinished = false;
+		isRunning = true;
+		isRunning = isRunning && runnable[0];
 		for (Int i = 0; i < threadNum; i++)
 		{
-			isFinished = isFinished || runnable[i];
+			isRunning = isRunning || runnable[i];
 		}
 	}
 	//for (Int globalIdx = 0; globalIdx < length; globalIdx++)

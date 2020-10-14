@@ -186,91 +186,134 @@ __global__ void testTheRand(curandState *state)
 	printf("The %dth thread's rand num is: %f\nThe current blockIdx is: %d\nThe current threadIdx is: %d\n", globalIdx, curand_uniform(&localState), blockIdx.x, threadIdx.x);
 }
 
+struct cuvecTest
+{
+	Int idx;
+	Bool* isRunning;
+	cuvecTest(Int i, Bool* _isRunning) : idx(i), isRunning(_isRunning){}
+	void operator()()
+	{
+		isRunning[idx] = true;
+		custd::cuvector<Int> IntVec;
+		for (Int i = 0; i < 10; i++)
+		{
+			IntVec.push_back(i);
+			printf("The %dth thread printf is: %d\n", idx, IntVec[i]);
+		}
+		printf("Now release the %dth vec\n", idx);
+		IntVec.Release();
+		for (Int i = 0; i < 10; i++)
+		{
+			IntVec.push_back(i);
+			printf("The %dth thread printf is: %d\n", idx, IntVec[i]);
+		}
+		isRunning[idx] = false;
+
+	}
+};
+
 int main(int argc, char* argv[])
 {
-	std::thread thread0;
-	thread0.detach();
-//	std::string exePath = argv[0];//获取当前程序所在的路径
-//	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
-//	const char* imageName = "Image.ppm";
-//	std::string imagePath = hierarchyPath + imageName;
-//
-//	Int width = 256;
-//	Int height = 144;
-//	const Int bounceTime = 64;
-//	const Int ranNumSize = 2048;
-//
-//	CUM::Vec2i RenderTargetSize(width, height);
-//	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
-//#ifdef RUN_ON_DEVICE
-//	InitDeviceStates(imageLength);
-//#endif // RUN__ON__DEVICE
-//
-//	Pixel* buffer = new Pixel[imageLength];
-//	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
-//	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
-//	
-//	Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, 0.0, 5.0), 1.0);
-//	Geometry* sp1 = new Sphere(CUM::Point3f(2.5, 0.0, 5.0), 1.0);
-//
-//	CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
-//	primitiveVec0->push_back(*sp0);
-//	primitiveVec0->push_back(*sp1);
-//
-//	Geometry* box0 = new BBox(CUM::Point3f(0.0, -1.11, 7.5), CUM::Vec3f(5.0, 0.1, 5.0));
-//	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
-//	primitiveVec1->push_back(*box0);
-//
-//	Geometry* box1 = new BBox(CUM::Point3f(-4.9, 0.14, 7.5), CUM::Vec3f(0.1, 2.5, 5.0));
-//	CUM::PrimitiveVector<Geometry>* primitiveVec2 = new CUM::PrimitiveVector<Geometry>;
-//	primitiveVec2->push_back(*box1);
-//
-//
-//	Material* material0 = new Material;
-//	material0->metallic = 0.0;
-//	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
-//	material0->roughness = 0.25;
-//
-//	Material* material1 = new Material;
-//	material1->roughness = 1.0;
-//	material1->metallic = 0.0;
-//	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
-//
-//	Material* material2 = new Material;
-//	material2->roughness = 1.0;
-//	material2->metallic = 0.0;
-//	material2->Albedo = CUM::Color3f(1.0, 0.5, 0.5);
-//
-//	Mesh* mesh0 = new Mesh(primitiveVec0,material0);
-//	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
-//	Mesh* mesh2 = new Mesh(primitiveVec2, material2);
-//	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
-//	meshVec0->push_back(*mesh0);
-//	meshVec0->push_back(*mesh1);
-//	meshVec0->push_back(*mesh2);
-//
-//	CUM::Vec3f scale(1.0, 1.0, 1.0);
-//	CUM::Vec3f translation(0.0, 0.0, 2.0);
-//	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.0);
-//	CUM::Transform trans(scale, rotation, translation);
-//
-//	Object* object = new Object(trans, meshVec0);
-//
-//	CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
-//
-//	objectVec->push_back(*object);
-//
-//	Scene scene(camera, objectVec);
-//	Scene* sceneDevice = scene.copyToDevice();
-//	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
-//
-//	Bool isOnDevice = true;
-//	Rendering(&scene, sceneDevice, imageLength);
-//
-//
-//	scene.camera->renderTarget->Save(imagePath.c_str());
-//	custd::cout << "Now release host scene." << custd::endl;
-//	scene.Release();
-//	custd::cout << "Now release device scene." << custd::endl;
-//	ReleaseIns << <1, 1 >> > (sceneDevice);
+	//Bool* isRun = new Bool[2];
+	//std::thread thread0(cuvecTest(0, isRun));
+	//std::thread thread1(cuvecTest(1, isRun));
+
+	//thread0.detach();
+	//thread1.detach();
+	//Bool isRunning = true;
+	//while (isRunning)
+	//{
+	//	isRunning = true;
+	//	isRunning = isRunning && isRun[0];
+	//	for (Int i = 0; i < 2; i++)
+	//	{
+	//		isRunning = isRunning || isRun[i];
+	//	}
+	//}
+	//delete[] isRun;
+	std::string exePath = argv[0];//获取当前程序所在的路径
+	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
+	const char* imageName = "Image.ppm";
+	std::string imagePath = hierarchyPath + imageName;
+
+	Int width = 256;
+	Int height = 144;
+	const Int bounceTime = 64;
+	const Int ranNumSize = 2048;
+
+	CUM::Vec2i RenderTargetSize(width, height);
+	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
+#ifdef RUN_ON_DEVICE
+	InitDeviceStates(imageLength);
+#endif // RUN__ON__DEVICE
+
+	Pixel* buffer = new Pixel[imageLength];
+	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
+	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
+
+	Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, 0.0, 5.0), 1.0);
+	Geometry* sp1 = new Sphere(CUM::Point3f(2.5, 0.0, 5.0), 1.0);
+
+	CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec0->push_back(*sp0);
+	primitiveVec0->push_back(*sp1);
+
+	Geometry* box0 = new BBox(CUM::Point3f(0.0, -1.11, 7.5), CUM::Vec3f(5.0, 0.1, 5.0));
+	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec1->push_back(*box0);
+
+	Geometry* box1 = new BBox(CUM::Point3f(-4.9, 0.14, 7.5), CUM::Vec3f(0.1, 2.5, 5.0));
+	CUM::PrimitiveVector<Geometry>* primitiveVec2 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec2->push_back(*box1);
+
+
+	Material* material0 = new Material;
+	material0->metallic = 0.0;
+	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+	material0->roughness = 0.25;
+
+	Material* material1 = new Material;
+	material1->roughness = 1.0;
+	material1->metallic = 0.0;
+	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
+
+	Material* material2 = new Material;
+	material2->roughness = 1.0;
+	material2->metallic = 0.0;
+	material2->Albedo = CUM::Color3f(1.0, 0.5, 0.5);
+
+	Mesh* mesh0 = new Mesh(primitiveVec0, material0);
+	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
+	Mesh* mesh2 = new Mesh(primitiveVec2, material2);
+	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
+	meshVec0->push_back(*mesh0);
+	meshVec0->push_back(*mesh1);
+	meshVec0->push_back(*mesh2);
+
+	CUM::Vec3f scale(1.0, 1.0, 1.0);
+	CUM::Vec3f translation(0.0, 0.0, 2.0);
+	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.0);
+	CUM::Transform trans(scale, rotation, translation);
+
+	Object* object = new Object(trans, meshVec0);
+
+	CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
+
+	objectVec->push_back(*object);
+
+	Scene scene(camera, objectVec);
+	Scene* sceneDevice = scene.copyToDevice();
+	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
+
+	auto start = std::chrono::steady_clock::now();
+	Rendering(&scene, sceneDevice, imageLength);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
+	custd::cout << duration.count() << custd::endl;
+
+	scene.camera->renderTarget->Save(imagePath.c_str());
+	custd::cout << "Now release host scene." << custd::endl;
+	scene.Release();
+	custd::cout << "Now release device scene." << custd::endl;
+	ReleaseIns << <1, 1 >> > (sceneDevice);
 }
