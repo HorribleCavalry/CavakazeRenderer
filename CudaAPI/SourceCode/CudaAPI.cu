@@ -236,8 +236,8 @@ int main(int argc, char* argv[])
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 256;
-	Int height = 144;
+	Int width = 2560;
+	Int height = 1440;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 
@@ -251,21 +251,44 @@ int main(int argc, char* argv[])
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
 	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
 
-	Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, 0.0, 5.0), 1.0);
-	Geometry* sp1 = new Sphere(CUM::Point3f(2.5, 0.0, 5.0), 1.0);
+	//Int spherePerDimNum = 10;
+	//Float sphereRadius = 0.25;
+	//Float inValPerNum = 1.0 / spherePerDimNum;
+	//Float incTransPerNum = 5.0 / spherePerDimNum;
+	//for (Int i = 0; i < spherePerDimNum; i++)
+	//{
+	//	for (Int i = 0; i < spherePerDimNum; i++)
+	//	{
+
+	//	}
+	//}
+
+	Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, -1.65, 5.0), 0.25);
+	Geometry* sp1 = new Sphere(CUM::Point3f(2.5, -1.65, 5.0), 0.25);
 
 	CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
 	primitiveVec0->push_back(*sp0);
 	primitiveVec0->push_back(*sp1);
 
-	Geometry* box0 = new BBox(CUM::Point3f(0.0, -1.11, 7.5), CUM::Vec3f(5.0, 0.1, 5.0));
+	Geometry* box0 = new BBox(CUM::Point3f(0.0, -2.1, 7.5), CUM::Vec3f(5.2, 0.1, 5.2));
 	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
 	primitiveVec1->push_back(*box0);
 
-	Geometry* box1 = new BBox(CUM::Point3f(-4.9, 0.14, 7.5), CUM::Vec3f(0.1, 2.5, 5.0));
+	Geometry* box1 = new BBox(CUM::Point3f(-5.1, 0.0, 7.5), CUM::Vec3f(0.1, 2.0, 5.0));
 	CUM::PrimitiveVector<Geometry>* primitiveVec2 = new CUM::PrimitiveVector<Geometry>;
 	primitiveVec2->push_back(*box1);
 
+	Geometry* box2 = new BBox(CUM::Point3f(5.1, 0.0, 7.5), CUM::Vec3f(0.1, 2.0, 5.0));
+	CUM::PrimitiveVector<Geometry>* primitiveVec3 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec3->push_back(*box2);
+
+	Geometry* box3 = new BBox(CUM::Point3f(0.0, 2.1, 7.5), CUM::Vec3f(5.2, 0.1, 5.2));
+	CUM::PrimitiveVector<Geometry>* primitiveVec4 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec4->push_back(*box3);
+
+	Geometry* box4 = new BBox(CUM::Point3f(0.0, 0.0, 12.6), CUM::Vec3f(5.2, 2.0, 0.1));
+	CUM::PrimitiveVector<Geometry>* primitiveVec5 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec5->push_back(*box4);
 
 	Material* material0 = new Material;
 	material0->metallic = 0.0;
@@ -282,13 +305,35 @@ int main(int argc, char* argv[])
 	material2->metallic = 0.0;
 	material2->Albedo = CUM::Color3f(1.0, 0.5, 0.5);
 
+	Material* material3 = new Material;
+	material3->roughness = 1.0;
+	material3->metallic = 0.0;
+	material3->Albedo = CUM::Color3f(0.5, 1.0, 0.5);
+
+	Material* material4 = new Material;
+	material4->roughness = 1.0;
+	material4->metallic = 0.0;
+	material4->Albedo = CUM::Color3f(0.5, 0.5, 1.0);
+
+	Material* material5 = new Material;
+	material5->roughness = 1.0;
+	material5->metallic = 0.0;
+	material5->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
+
 	Mesh* mesh0 = new Mesh(primitiveVec0, material0);
 	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
 	Mesh* mesh2 = new Mesh(primitiveVec2, material2);
+	Mesh* mesh3 = new Mesh(primitiveVec3, material3);
+	Mesh* mesh4 = new Mesh(primitiveVec4, material4);
+	Mesh* mesh5 = new Mesh(primitiveVec5, material5);
+
 	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
 	meshVec0->push_back(*mesh0);
 	meshVec0->push_back(*mesh1);
 	meshVec0->push_back(*mesh2);
+	meshVec0->push_back(*mesh3);
+	meshVec0->push_back(*mesh4);
+	meshVec0->push_back(*mesh5);
 
 	CUM::Vec3f scale(1.0, 1.0, 1.0);
 	CUM::Vec3f translation(0.0, 0.0, 2.0);

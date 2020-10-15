@@ -8,7 +8,7 @@
 #include <math.h>
 
 #define PI 3.14159265358979323846
-#define Epsilon 0.0009765625
+#define Epsilon 2.384185791015625e-7
 
 namespace CUM
 {
