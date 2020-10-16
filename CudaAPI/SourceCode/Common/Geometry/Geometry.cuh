@@ -737,6 +737,7 @@ public:
 		Float skyLerpFactor = CUM::max(direction.y,0.0);
 		
 		return CUM::Lerp(CUM::Color3f(1.0), CUM::Color3f(0.5, 0.5, 1.0), skyLerpFactor);
+		//return CUM::Color3f(0.0);
 	}
 
 };

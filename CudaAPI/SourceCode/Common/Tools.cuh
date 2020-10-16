@@ -157,8 +157,7 @@ __host__
 		
 		Float NrDotNt = CUM::dot(N, CUM::Vec3f(0.0, 1.0, 0.0));
 
-
-		if (GetUniformRand() <= F)
+		if (GetUniformRand() < F)
 		{
 			nextDir = CUM::normalize(2.0 * N - NdotV * V);
 		}
@@ -203,6 +202,108 @@ public:
 	__duel__ void testForCopyRandVec()
 	{
 
+	}
+};
+
+class Lambert : public Material
+{
+public:
+#ifdef RUN_ON_DEVICE
+	__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+		__host__
+#endif // RUN_ON_HOST
+		virtual const CUM::Color3f ShadeWithDirectLight(const CUM::Vec3f& N, const CUM::Vec3f& V, const CUM::Vec3f& H, const CUM::Vec3f& L, const Float& lightDis, const CUM::Color3f& LightRadiance) override final
+	{
+		CUM::Vec3f Lo(0.0);
+
+		Float attenuation = CUM::min(1.0 / (lightDis*lightDis), 1.0);
+
+		Float NdotH = CUM::max(CUM::dot(N, H), 0.0);
+		Float NdotV = CUM::max(CUM::dot(N, V), 0.0);
+		Float NdotL = CUM::max(CUM::dot(N, L), 0.0);
+
+		CUM::Vec3f albedo;
+		albedo.x = Albedo.r;
+		albedo.y = Albedo.g;
+		albedo.z = Albedo.b;
+
+		CUM::Vec3f lightRadiance;
+		lightRadiance.x = LightRadiance.r;
+		lightRadiance.y = LightRadiance.g;
+		lightRadiance.z = LightRadiance.b;
+
+		CUM::Vec3f F0 = CUM::mix(CUM::Vec3f(0.04), albedo, CUM::Vec3f(metallic));
+		CUM::Vec3f F = F0 + (1.0 - F0)*pow(1.0 - NdotH, 5.0);
+		Float NDF = DistributionGGX(N, H, roughness);
+		Float G = GeometrySmith(N, V, L, roughness);
+
+		CUM::Vec3f nominator = NDF * G * F;
+		Float denominator = 4.0 * CUM::max(NdotV, 0.0) * CUM::max(NdotL, 0.0) + 0.001;
+		CUM::Vec3f specular = nominator / denominator;
+
+		CUM::Vec3f Ks = F;
+		CUM::Vec3f Kd = 1.0 - Ks;
+		Kd *= 1.0 - metallic;
+
+		Lo += (Kd*albedo / PI + specular)*lightRadiance*CUM::max(NdotL, 0.0);
+		Lo.x = CUM::max(Lo.x, 0.0);
+		Lo.y = CUM::max(Lo.y, 0.0);
+		Lo.z = CUM::max(Lo.z, 0.0);
+		return CUM::Color3f(Lo.x, Lo.y, Lo.z);
+	}
+
+#ifdef RUN_ON_DEVICE
+	__device__
+#endif // RUN_ON_DEVICE
+#ifdef RUN_ON_HOST
+		__host__
+#endif // RUN_ON_HOST
+		virtual const CUM::Vec3f InteractWithRay(const CUM::Vec3f& N, const CUM::Vec3f& V) const override final
+	{
+		Float NdotV = CUM::dot(N, V);
+
+		Float xi1, xi2;
+		Float Sqrt1MinusXi1Square;
+		Float x, y, z;
+		CUM::Vec3f nextDir;
+
+		Float NrDotNt = CUM::dot(N, CUM::Vec3f(0.0, 1.0, 0.0));
+
+		xi1 = GetUniformRand();
+		xi2 = GetUniformRand();
+
+		Sqrt1MinusXi1Square = sqrt(1.0 - xi1 * xi1);
+		x = cos(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+		z = sin(2.0*PI*xi2)*Sqrt1MinusXi1Square;
+		y = xi1;
+		nextDir.x = x;
+		nextDir.y = y;
+		nextDir.z = z;
+		if (NrDotNt > 0.0)
+		{
+			if (NrDotNt < 1.0 - Epsilon)
+			{
+				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, 1.0, 0.0), N));
+
+				nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
+
+			}
+		}
+		else
+		{
+			nextDir = -nextDir;
+			if (NrDotNt > 1.0 + Epsilon)
+			{
+				const CUM::Vec3f& axis = CUM::normalize(CUM::cross(CUM::Vec3f(0.0, -1.0, 0.0), -N));
+
+				nextDir = CUM::RodriguesRotateCosine(axis, NdotV, nextDir);
+
+			}
+		}
+
+		return nextDir;
 	}
 };
 

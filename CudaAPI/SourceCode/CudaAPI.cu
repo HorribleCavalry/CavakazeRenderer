@@ -263,12 +263,12 @@ int main(int argc, char* argv[])
 	//	}
 	//}
 
-	Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, -1.65, 5.0), 0.25);
-	Geometry* sp1 = new Sphere(CUM::Point3f(2.5, -1.65, 5.0), 0.25);
+	//Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, -1.65, 5.0), 0.25);
+	//Geometry* sp1 = new Sphere(CUM::Point3f(2.5, -1.65, 5.0), 0.25);
 
-	CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
-	primitiveVec0->push_back(*sp0);
-	primitiveVec0->push_back(*sp1);
+	//CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
+	//primitiveVec0->push_back(*sp0);
+	//primitiveVec0->push_back(*sp1);
 
 	Geometry* box0 = new BBox(CUM::Point3f(0.0, -2.1, 7.5), CUM::Vec3f(5.2, 0.1, 5.2));
 	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
@@ -290,37 +290,37 @@ int main(int argc, char* argv[])
 	CUM::PrimitiveVector<Geometry>* primitiveVec5 = new CUM::PrimitiveVector<Geometry>;
 	primitiveVec5->push_back(*box4);
 
-	Material* material0 = new Material;
-	material0->metallic = 0.0;
-	material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
-	material0->roughness = 0.25;
+	//Material* material0 = new Material;
+	//material0->metallic = 0.0;
+	//material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+	//material0->roughness = 0.25;
 
-	Material* material1 = new Material;
+	Material* material1 = new Lambert;
 	material1->roughness = 1.0;
 	material1->metallic = 0.0;
 	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
 
-	Material* material2 = new Material;
+	Material* material2 = new Lambert;
 	material2->roughness = 1.0;
 	material2->metallic = 0.0;
 	material2->Albedo = CUM::Color3f(1.0, 0.5, 0.5);
 
-	Material* material3 = new Material;
+	Material* material3 = new Lambert;
 	material3->roughness = 1.0;
 	material3->metallic = 0.0;
 	material3->Albedo = CUM::Color3f(0.5, 1.0, 0.5);
 
-	Material* material4 = new Material;
+	Material* material4 = new Lambert;
 	material4->roughness = 1.0;
 	material4->metallic = 0.0;
 	material4->Albedo = CUM::Color3f(0.5, 0.5, 1.0);
 
-	Material* material5 = new Material;
+	Material* material5 = new Lambert;
 	material5->roughness = 1.0;
 	material5->metallic = 0.0;
 	material5->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
 
-	Mesh* mesh0 = new Mesh(primitiveVec0, material0);
+	//Mesh* mesh0 = new Mesh(primitiveVec0, material0);
 	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
 	Mesh* mesh2 = new Mesh(primitiveVec2, material2);
 	Mesh* mesh3 = new Mesh(primitiveVec3, material3);
@@ -328,7 +328,7 @@ int main(int argc, char* argv[])
 	Mesh* mesh5 = new Mesh(primitiveVec5, material5);
 
 	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
-	meshVec0->push_back(*mesh0);
+	//meshVec0->push_back(*mesh0);
 	meshVec0->push_back(*mesh1);
 	meshVec0->push_back(*mesh2);
 	meshVec0->push_back(*mesh3);
@@ -343,6 +343,23 @@ int main(int argc, char* argv[])
 	Object* object = new Object(trans, meshVec0);
 
 	CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
+	Float W = 10;
+
+	for (Int i = 0; i < 5; i++)
+	{
+		for (Int j = 0; j < 5; j++)
+		{
+			Geometry* spR = new Sphere(CUM::Point3f(2.0* i + 0.25 - 5.0, -1.65, 2.0 * j + 0.25 + 0.5 * 7.5), 0.25);
+			CUM::PrimitiveVector<Geometry>* geoVec = new CUM::PrimitiveVector<Geometry>;
+			geoVec->push_back(*spR);
+			Material* mat = new Material;
+			mat->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+			mat->roughness = i / 5.0;
+			mat->metallic = j / 5.0;
+			Mesh* mesh = new Mesh(geoVec, mat);
+			meshVec0->push_back(*mesh);
+		}
+	}
 
 	objectVec->push_back(*object);
 
