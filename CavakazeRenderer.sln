@@ -5,16 +5,30 @@ VisualStudioVersion = 15.0.28307.1231
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaAPI", "CudaAPI\CudaAPI.vcxproj", "{A782D3AC-CF7C-402E-9326-9C5A564F4D75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CavakazeRenderer", "CavakazeRenderer\CavakazeRendererC#Form\CavakazeRenderer.csproj", "{3430E2CF-A0DB-490C-9913-574455B86F00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A782D3AC-CF7C-402E-9326-9C5A564F4D75}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{A782D3AC-CF7C-402E-9326-9C5A564F4D75}.Debug|x64.ActiveCfg = Debug|x64
 		{A782D3AC-CF7C-402E-9326-9C5A564F4D75}.Debug|x64.Build.0 = Debug|x64
+		{A782D3AC-CF7C-402E-9326-9C5A564F4D75}.Release|Any CPU.ActiveCfg = Release|x64
 		{A782D3AC-CF7C-402E-9326-9C5A564F4D75}.Release|x64.ActiveCfg = Release|x64
 		{A782D3AC-CF7C-402E-9326-9C5A564F4D75}.Release|x64.Build.0 = Release|x64
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Debug|x64.Build.0 = Debug|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Release|x64.ActiveCfg = Release|Any CPU
+		{3430E2CF-A0DB-490C-9913-574455B86F00}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
