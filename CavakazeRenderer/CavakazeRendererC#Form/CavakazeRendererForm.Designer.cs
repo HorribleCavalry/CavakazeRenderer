@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("World");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("World");
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.RenderButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
@@ -81,6 +81,7 @@
             this.RenderButton.TabIndex = 1;
             this.RenderButton.Text = "Start Rendering";
             this.RenderButton.UseVisualStyleBackColor = true;
+            this.RenderButton.Click += new System.EventHandler(this.RenderButton_Click);
             // 
             // AddButton
             // 
@@ -106,10 +107,10 @@
             // 
             this.Hierarchy.Location = new System.Drawing.Point(12, 27);
             this.Hierarchy.Name = "Hierarchy";
-            treeNode4.Name = "节点6";
-            treeNode4.Text = "World";
+            treeNode1.Name = "节点6";
+            treeNode1.Text = "World";
             this.Hierarchy.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode1});
             this.Hierarchy.Size = new System.Drawing.Size(174, 200);
             this.Hierarchy.TabIndex = 4;
             this.Hierarchy.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -257,7 +258,7 @@
             this.button2.Text = "Reset Object";
             this.button2.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // CavakazeRendererMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -285,7 +286,7 @@
             this.Controls.Add(this.AddButton);
             this.Controls.Add(this.RenderButton);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "Form1";
+            this.Name = "CavakazeRendererMainForm";
             this.Text = "Cavakaze Renderer";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

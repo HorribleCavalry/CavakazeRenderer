@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using CavakazeRenderer.CudaAPI;
+
 namespace CavakazeRenderer
 {
     public partial class CavakazeRendererMainForm : Form
@@ -70,6 +72,11 @@ namespace CavakazeRenderer
         private void button1_Click(object sender, EventArgs e)
         {
             Hierarchy.SelectedNode.Remove();
+        }
+
+        private void RenderButton_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
