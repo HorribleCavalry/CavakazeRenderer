@@ -381,6 +381,17 @@ int main(int argc, char* argv[])
 	ReleaseIns << <1, 1 >> > (sceneDevice);
 }
 
+CUDA_API void OpenDebugConsole()
+{
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+}
+
+CUDA_API void CloseDebugConsole()
+{
+	FreeConsole();
+}
+
 CUDA_API void StartRendering()
 {
 	std::string exePath = "D:\GitSpace\CavakazeRenderer\Release\CavakazeRenderer.exe";
