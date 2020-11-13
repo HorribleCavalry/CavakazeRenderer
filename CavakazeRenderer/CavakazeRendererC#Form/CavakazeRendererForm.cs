@@ -76,7 +76,7 @@ namespace CavakazeRenderer
 
         private void RenderButton_Click(object sender, EventArgs e)
         {
-            
+            RenderManager.StartRendering();
         }
     }
 }

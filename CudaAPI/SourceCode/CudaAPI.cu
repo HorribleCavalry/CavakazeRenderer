@@ -4,6 +4,7 @@
 #include "Common/Geometry/Geometry.cuh"
 #include "cuda/std/limits"
 #include "Common/stb_image.h"
+#include "CudaAPI.cuh"
 #include <chrono>
 #include <string>
 #include <thread>
@@ -238,6 +239,157 @@ int main(int argc, char* argv[])
 
 	Int width = 2560;
 	Int height = 1440;
+	const Int bounceTime = 64;
+	const Int ranNumSize = 2048;
+
+	CUM::Vec2i RenderTargetSize(width, height);
+	Int imageLength = RenderTargetSize.x * RenderTargetSize.y;
+#ifdef RUN_ON_DEVICE
+	InitDeviceStates(imageLength);
+#endif // RUN__ON__DEVICE
+
+	Pixel* buffer = new Pixel[imageLength];
+	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
+	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
+
+	//Int spherePerDimNum = 10;
+	//Float sphereRadius = 0.25;
+	//Float inValPerNum = 1.0 / spherePerDimNum;
+	//Float incTransPerNum = 5.0 / spherePerDimNum;
+	//for (Int i = 0; i < spherePerDimNum; i++)
+	//{
+	//	for (Int i = 0; i < spherePerDimNum; i++)
+	//	{
+
+	//	}
+	//}
+
+	//Geometry* sp0 = new Sphere(CUM::Point3f(-2.5, -1.65, 5.0), 0.25);
+	//Geometry* sp1 = new Sphere(CUM::Point3f(2.5, -1.65, 5.0), 0.25);
+
+	//CUM::PrimitiveVector<Geometry>* primitiveVec0 = new CUM::PrimitiveVector<Geometry>;
+	//primitiveVec0->push_back(*sp0);
+	//primitiveVec0->push_back(*sp1);
+
+	Geometry* box0 = new BBox(CUM::Point3f(0.0, -2.1, 7.5), CUM::Vec3f(5.2, 0.1, 5.2));
+	CUM::PrimitiveVector<Geometry>* primitiveVec1 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec1->push_back(*box0);
+
+	Geometry* box1 = new BBox(CUM::Point3f(-5.1, 0.0, 7.5), CUM::Vec3f(0.1, 2.0, 5.0));
+	CUM::PrimitiveVector<Geometry>* primitiveVec2 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec2->push_back(*box1);
+
+	Geometry* box2 = new BBox(CUM::Point3f(5.1, 0.0, 7.5), CUM::Vec3f(0.1, 2.0, 5.0));
+	CUM::PrimitiveVector<Geometry>* primitiveVec3 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec3->push_back(*box2);
+
+	Geometry* box3 = new BBox(CUM::Point3f(0.0, 2.1, 7.5), CUM::Vec3f(5.2, 0.1, 5.2));
+	CUM::PrimitiveVector<Geometry>* primitiveVec4 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec4->push_back(*box3);
+
+	Geometry* box4 = new BBox(CUM::Point3f(0.0, 0.0, 12.6), CUM::Vec3f(5.2, 2.0, 0.1));
+	CUM::PrimitiveVector<Geometry>* primitiveVec5 = new CUM::PrimitiveVector<Geometry>;
+	primitiveVec5->push_back(*box4);
+
+	//Material* material0 = new Material;
+	//material0->metallic = 0.0;
+	//material0->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+	//material0->roughness = 0.25;
+
+	Material* material1 = new Lambert;
+	material1->roughness = 1.0;
+	material1->metallic = 0.0;
+	material1->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
+
+	Material* material2 = new Lambert;
+	material2->roughness = 1.0;
+	material2->metallic = 0.0;
+	material2->Albedo = CUM::Color3f(1.0, 0.5, 0.5);
+
+	Material* material3 = new Lambert;
+	material3->roughness = 1.0;
+	material3->metallic = 0.0;
+	material3->Albedo = CUM::Color3f(0.5, 1.0, 0.5);
+
+	Material* material4 = new Lambert;
+	material4->roughness = 1.0;
+	material4->metallic = 0.0;
+	material4->Albedo = CUM::Color3f(0.5, 0.5, 1.0);
+
+	Material* material5 = new Lambert;
+	material5->roughness = 1.0;
+	material5->metallic = 0.0;
+	material5->Albedo = CUM::Color3f(0.85, 0.85, 0.85);
+
+	//Mesh* mesh0 = new Mesh(primitiveVec0, material0);
+	Mesh* mesh1 = new Mesh(primitiveVec1, material1);
+	Mesh* mesh2 = new Mesh(primitiveVec2, material2);
+	Mesh* mesh3 = new Mesh(primitiveVec3, material3);
+	Mesh* mesh4 = new Mesh(primitiveVec4, material4);
+	Mesh* mesh5 = new Mesh(primitiveVec5, material5);
+
+	CUM::PrimitiveVector<Mesh>* meshVec0 = new CUM::PrimitiveVector<Mesh>;
+	//meshVec0->push_back(*mesh0);
+	meshVec0->push_back(*mesh1);
+	meshVec0->push_back(*mesh2);
+	meshVec0->push_back(*mesh3);
+	meshVec0->push_back(*mesh4);
+	meshVec0->push_back(*mesh5);
+
+	CUM::Vec3f scale(1.0, 1.0, 1.0);
+	CUM::Vec3f translation(0.0, 0.0, 2.0);
+	CUM::Quaternionf rotation(CUM::Vec3f(0.0, 1.0, 0.0), 0.0);
+	CUM::Transform trans(scale, rotation, translation);
+
+	Object* object = new Object(trans, meshVec0);
+
+	CUM::PrimitiveVector<Object>* objectVec = new CUM::PrimitiveVector<Object>;
+	Float W = 10;
+
+	for (Int i = 0; i < 5; i++)
+	{
+		for (Int j = 0; j < 5; j++)
+		{
+			Geometry* spR = new Sphere(CUM::Point3f(2.0* i + 0.25 - 5.0, -1.65, 2.0 * j + 0.25 + 0.5 * 7.5), 0.25);
+			CUM::PrimitiveVector<Geometry>* geoVec = new CUM::PrimitiveVector<Geometry>;
+			geoVec->push_back(*spR);
+			Material* mat = new Material;
+			mat->Albedo = CUM::Color3f(0.4, 0.8, 0.8);
+			mat->roughness = i / 5.0;
+			mat->metallic = j / 5.0;
+			Mesh* mesh = new Mesh(geoVec, mat);
+			meshVec0->push_back(*mesh);
+		}
+	}
+
+	objectVec->push_back(*object);
+
+	Scene scene(camera, objectVec);
+	Scene* sceneDevice = scene.copyToDevice();
+	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
+
+	auto start = std::chrono::steady_clock::now();
+	Rendering(&scene, sceneDevice, imageLength);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
+	custd::cout << duration.count() << custd::endl;
+
+	scene.camera->renderTarget->Save(imagePath.c_str());
+	custd::cout << "Now release host scene." << custd::endl;
+	scene.Release();
+	custd::cout << "Now release device scene." << custd::endl;
+	ReleaseIns << <1, 1 >> > (sceneDevice);
+}
+
+CUDA_API void StartRendering()
+{
+	std::string exePath = "D:\GitSpace\CavakazeRenderer\Release\CavakazeRenderer.exe";
+	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
+	const char* imageName = "Image.ppm";
+	std::string imagePath = hierarchyPath + imageName;
+
+	Int width = 256;
+	Int height = 144;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 

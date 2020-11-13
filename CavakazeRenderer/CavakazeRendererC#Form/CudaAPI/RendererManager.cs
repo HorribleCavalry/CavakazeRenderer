@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+
 
 namespace CavakazeRenderer.CudaAPI
 {
-    class RendererManager
+    class RenderManager
     {
-        public RendererManager rendererManager;
+        public RenderManager rendererManager;
+
+        [DllImport("CudaAPI", EntryPoint = "StartRendering", CallingConvention = CallingConvention.Cdecl)]
+        extern public static void StartRendering();
     }
 }
