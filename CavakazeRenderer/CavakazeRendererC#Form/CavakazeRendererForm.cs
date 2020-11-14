@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 
-using CavakazeRenderer.CudaAPI;
+using CavakazeRenderer.CrossPlatformDllManager;
 
 namespace CavakazeRenderer
 {
@@ -20,8 +20,8 @@ namespace CavakazeRenderer
         public CavakazeRendererMainForm()
         {
             InitializeComponent();
-            RenderManager.OpenDebugConsole();
-            renderingStart = new ThreadStart(RenderManager.StartRendering);
+            CrossPlatformDllManager.CudaAPI.OpenDebugConsole();
+            renderingStart = new ThreadStart(CrossPlatformDllManager.CudaAPI.StartRendering);
             startRenderingThread = new Thread(renderingStart);
         }
 

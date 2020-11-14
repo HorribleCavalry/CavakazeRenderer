@@ -67,7 +67,11 @@
     <Compile Include="CavakazeRendererForm.Designer.cs">
       <DependentUpon>CavakazeRendererForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CudaAPI\RendererManager.cs" />
+    <Compile Include="CrossPlatformAPI\CudaAPI.cs" />
+    <Compile Include="IDGenerator\IDGenerator.cs" />
+    <Compile Include="IDGenerator\OrderedIDGenerator.cs" />
+    <Compile Include="Managers\Manager.cs" />
+    <Compile Include="Managers\RenderManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CavakazeRendererForm.resx">
@@ -107,5 +111,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

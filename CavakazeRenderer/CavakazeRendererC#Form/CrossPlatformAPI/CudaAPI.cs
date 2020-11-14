@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 
 
-namespace CavakazeRenderer.CudaAPI
+namespace CavakazeRenderer.CrossPlatformDllManager
 {
-    class RenderManager
+    class CudaAPI
     {
         /// <summary>
         /// Allocate and open Debug console.
