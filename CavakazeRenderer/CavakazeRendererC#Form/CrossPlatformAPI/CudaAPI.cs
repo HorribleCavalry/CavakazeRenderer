@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 
-namespace CavakazeRenderer.CrossPlatformDllManager
+namespace CavakazeRenderer.CrossPlatformAPIManager
 {
     class CudaAPI
     {
@@ -25,6 +25,6 @@ namespace CavakazeRenderer.CrossPlatformDllManager
         extern public static void InitializeResources();
 
         [DllImport("CudaAPI", EntryPoint = "StartRendering", CallingConvention = CallingConvention.Cdecl)]
-        extern public static void StartRendering();
+        unsafe extern public static void StartRendering(int width, int height, void* imagePtr);
     }
 }

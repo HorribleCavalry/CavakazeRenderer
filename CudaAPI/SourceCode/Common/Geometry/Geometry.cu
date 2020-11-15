@@ -42,7 +42,7 @@ void RenderingImplementation(Scene* scene, Int globalIdx)
 	Ray ray;
 	CUM::Color3f resultColor(0.0);
 	CUM::Color3f sampledColor(1.0);
-	Ushort R, G, B, A;
+	Uchar R, G, B, A;
 
 	x = globalIdx % size.x;
 	y = globalIdx / size.x;

@@ -15,6 +15,7 @@ typedef int Int;
 typedef bool Bool;
 typedef double Float;
 typedef unsigned int Uint;
+typedef unsigned char Uchar;
 typedef unsigned short Ushort;
 
 #define __duel__ __host__ __device__

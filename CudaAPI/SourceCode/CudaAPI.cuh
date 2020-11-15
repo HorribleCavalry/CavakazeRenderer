@@ -11,7 +11,7 @@ extern "C"
 
 	CUDA_API void InitializeResources();
 	CUDA_API void PrepareScene();
-	CUDA_API void StartRendering();
+	CUDA_API void StartRendering(int width, int height, void* imagePtr);
 	CUDA_API void ImageCopyToForm();
 }
 #endif // !__CUDAAPI__CUH__

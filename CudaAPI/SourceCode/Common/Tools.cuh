@@ -412,7 +412,7 @@ public:
 
 struct Pixel
 {
-	Ushort r, g, b, a;
+	Uchar r, g, b, a;
 };
 
 class Texture
@@ -508,7 +508,7 @@ public:
 			//R = round(maxVal* buffer[i].r);
 			//G = round(maxVal* buffer[i].g);
 			//B = round(maxVal* buffer[i].b);
-			image << buffer[i].r << " " << buffer[i].g << " " << buffer[i].b << "\n";
+			image << (Ushort)buffer[i].r << " " << (Ushort)buffer[i].g << " " << (Ushort)buffer[i].b << "\n";
 		}
 		image.close();
 	}

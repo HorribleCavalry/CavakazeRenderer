@@ -392,15 +392,13 @@ CUDA_API void CloseDebugConsole()
 	FreeConsole();
 }
 
-CUDA_API void StartRendering()
+CUDA_API void StartRendering(Int width, Int height, void* imagePtr)
 {
 	std::string exePath = "D:\GitSpace\CavakazeRenderer\Release\CavakazeRenderer.exe";
 	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
 	const char* imageName = "Image.ppm";
 	std::string imagePath = hierarchyPath + imageName;
 
-	Int width = 256;
-	Int height = 144;
 	const Int bounceTime = 64;
 	const Int ranNumSize = 2048;
 
@@ -410,7 +408,8 @@ CUDA_API void StartRendering()
 	InitDeviceStates(imageLength);
 #endif // RUN__ON__DEVICE
 
-	Pixel* buffer = new Pixel[imageLength];
+	//Pixel* buffer = new Pixel[imageLength];
+	Pixel* buffer = (Pixel*)imagePtr;
 	Texture* RenderTarget = new Texture(RenderTargetSize, buffer);
 	PersCamera* camera = new PersCamera(CUM::Point3f(0.0, 0.0, 0.0), { 0.0,0.0,1.0 }, CUM::Quaternionf({ 0.0,1.0,0.0 }, 0.0, true), RenderTargetSize, 0.1, 10000.0, bounceTime, 0.5 * PI, RenderTarget);
 
@@ -527,8 +526,10 @@ CUDA_API void StartRendering()
 	objectVec->push_back(*object);
 
 	Scene scene(camera, objectVec);
-	Scene* sceneDevice = scene.copyToDevice();
-	//TestMaterialRandVec << <1, 1 >> > (sceneDevice);
+	Scene* sceneDevice;
+#ifdef RUN_ON_DEVICE
+	sceneDevice = scene.copyToDevice();
+#endif // RUN__ON__DEVICE
 
 	auto start = std::chrono::steady_clock::now();
 	Rendering(&scene, sceneDevice, imageLength);
@@ -536,9 +537,11 @@ CUDA_API void StartRendering()
 	std::chrono::duration<double> duration = end - start;
 	custd::cout << duration.count() << custd::endl;
 
-	scene.camera->renderTarget->Save(imagePath.c_str());
+	//scene.camera->renderTarget->Save(imagePath.c_str());
 	custd::cout << "Now release host scene." << custd::endl;
 	scene.Release();
+#ifdef RUN_ON_DEVICE
 	custd::cout << "Now release device scene." << custd::endl;
 	ReleaseIns << <1, 1 >> > (sceneDevice);
+#endif // RUN__ON__DEVICE
 }

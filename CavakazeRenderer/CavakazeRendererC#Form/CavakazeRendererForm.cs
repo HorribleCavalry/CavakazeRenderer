@@ -9,20 +9,22 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 
-using CavakazeRenderer.CrossPlatformDllManager;
+using CavakazeRenderer.CrossPlatformAPIManager;
+using CavakazeRenderer.Managers;
 
 namespace CavakazeRenderer
 {
     public partial class CavakazeRendererMainForm : Form
     {
-        Thread startRenderingThread;
-        ThreadStart renderingStart;
+        private RenderManager renderManager;
+        private Bitmap renderImage;
         public CavakazeRendererMainForm()
         {
             InitializeComponent();
-            CrossPlatformDllManager.CudaAPI.OpenDebugConsole();
-            renderingStart = new ThreadStart(CrossPlatformDllManager.CudaAPI.StartRendering);
-            startRenderingThread = new Thread(renderingStart);
+            CrossPlatformAPIManager.CudaAPI.OpenDebugConsole();
+            renderManager = new RenderManager();
+            renderImage = new Bitmap(RenderImage.Width, RenderImage.Height);
+            RenderImage.Image = renderImage;
         }
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -82,32 +84,9 @@ namespace CavakazeRenderer
 
         private void RenderButton_Click(object sender, EventArgs e)
         {
-            switch (startRenderingThread.ThreadState)
-            {
-                case ThreadState.Running:
-                    break;
-                case ThreadState.StopRequested:
-                    break;
-                case ThreadState.SuspendRequested:
-                    break;
-                case ThreadState.Background:
-                    break;
-                case ThreadState.Unstarted:
-                    startRenderingThread.Start();
-                    break;
-                case ThreadState.Stopped:
-                    break;
-                case ThreadState.WaitSleepJoin:
-                    break;
-                case ThreadState.Suspended:
-                    break;
-                case ThreadState.AbortRequested:
-                    break;
-                case ThreadState.Aborted:
-                    break;
-                default:
-                    break;
-            }
+            //renderManager.StartRendering(renderImage.Width,renderImage.Height,renderImage.GetHbitmap());
+            renderManager.StartRendering(256,144,renderImage.GetHbitmap());
+            RenderImage.Update();
         }
     }
 }

@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("World");
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("World");
+            this.RenderImage = new System.Windows.Forms.PictureBox();
             this.RenderButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
@@ -52,7 +52,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RenderImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -64,14 +64,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // RenderImage
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(192, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1280, 720);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.RenderImage.Location = new System.Drawing.Point(192, 12);
+            this.RenderImage.Name = "RenderImage";
+            this.RenderImage.Size = new System.Drawing.Size(256, 144);
+            this.RenderImage.TabIndex = 0;
+            this.RenderImage.TabStop = false;
+            this.RenderImage.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // RenderButton
             // 
@@ -107,10 +107,10 @@
             // 
             this.Hierarchy.Location = new System.Drawing.Point(12, 27);
             this.Hierarchy.Name = "Hierarchy";
-            treeNode1.Name = "节点6";
-            treeNode1.Text = "World";
+            treeNode2.Name = "节点6";
+            treeNode2.Text = "World";
             this.Hierarchy.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.Hierarchy.Size = new System.Drawing.Size(174, 200);
             this.Hierarchy.TabIndex = 4;
             this.Hierarchy.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -285,11 +285,11 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.AddButton);
             this.Controls.Add(this.RenderButton);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.RenderImage);
             this.Name = "CavakazeRendererMainForm";
             this.Text = "Cavakaze Renderer";
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RenderImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
@@ -306,7 +306,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox RenderImage;
         private System.Windows.Forms.Button RenderButton;
         private System.Windows.Forms.Button AddButton;
         private System.Windows.Forms.Button button1;
