@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("World");
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("World");
             this.RenderImage = new System.Windows.Forms.PictureBox();
             this.RenderButton = new System.Windows.Forms.Button();
             this.AddButton = new System.Windows.Forms.Button();
@@ -52,6 +53,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
+            this.UpdateTicker = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.RenderImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -68,7 +70,7 @@
             // 
             this.RenderImage.Location = new System.Drawing.Point(192, 12);
             this.RenderImage.Name = "RenderImage";
-            this.RenderImage.Size = new System.Drawing.Size(256, 144);
+            this.RenderImage.Size = new System.Drawing.Size(1280, 720);
             this.RenderImage.TabIndex = 0;
             this.RenderImage.TabStop = false;
             this.RenderImage.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -107,10 +109,10 @@
             // 
             this.Hierarchy.Location = new System.Drawing.Point(12, 27);
             this.Hierarchy.Name = "Hierarchy";
-            treeNode2.Name = "节点6";
-            treeNode2.Text = "World";
+            treeNode3.Name = "节点6";
+            treeNode3.Text = "World";
             this.Hierarchy.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode3});
             this.Hierarchy.Size = new System.Drawing.Size(174, 200);
             this.Hierarchy.TabIndex = 4;
             this.Hierarchy.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -258,6 +260,11 @@
             this.button2.Text = "Reset Object";
             this.button2.UseVisualStyleBackColor = true;
             // 
+            // UpdateTicker
+            // 
+            this.UpdateTicker.Interval = 20;
+            this.UpdateTicker.Tick += new System.EventHandler(this.UpdateTicker_Tick);
+            // 
             // CavakazeRendererMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -329,6 +336,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Timer UpdateTicker;
     }
 }
 

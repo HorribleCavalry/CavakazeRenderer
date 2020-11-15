@@ -19,16 +19,26 @@ namespace CavakazeRenderer
         private RenderManager renderManager;
         private System.Drawing.Imaging.BitmapData renderImage_data;
         private Bitmap renderImage;
-        public CavakazeRendererMainForm()
+
+        unsafe public CavakazeRendererMainForm()
         {
             InitializeComponent();
             CrossPlatformAPIManager.CudaAPI.OpenDebugConsole();
-            renderManager = new RenderManager();
             renderImage = new Bitmap(RenderImage.Width, RenderImage.Height);
             renderImage_data = renderImage.LockBits(new System.Drawing.Rectangle(0, 0, renderImage.Width, renderImage.Height), System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             renderImage.UnlockBits(renderImage_data);
             RenderImage.Image = renderImage;
 
+            ImageParam imageParam = new ImageParam();
+            imageParam.width = RenderImage.Width;
+            imageParam.height = RenderImage.Height;
+            imageParam.imagePtr = renderImage_data.Scan0.ToPointer();
+            renderManager = new RenderManager(imageParam, ref RenderImage);
+        }
+
+        private void UpdateImageCallBack(object state)
+        {
+            RenderImage.Refresh();
         }
 
         private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -88,8 +98,12 @@ namespace CavakazeRenderer
 
         private void RenderButton_Click(object sender, EventArgs e)
         {
-            //renderManager.StartRendering(renderImage.Width,renderImage.Height,renderImage.GetHbitmap());
-            renderManager.StartRendering(renderImage.Width, renderImage.Height, renderImage_data.Scan0);
+            renderManager.StartRendering();
+            UpdateTicker.Start();
+        }
+
+        private void UpdateTicker_Tick(object sender, EventArgs e)
+        {
             RenderImage.Refresh();
         }
     }
