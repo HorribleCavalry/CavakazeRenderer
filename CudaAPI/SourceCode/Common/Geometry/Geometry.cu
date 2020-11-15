@@ -190,10 +190,7 @@ void RenderingOnHost(Scene* scene)
 			isRunning = isRunning || runnable[i];
 		}
 	}
-	//for (Int globalIdx = 0; globalIdx < length; globalIdx++)
-	//{
-	//	RenderingImplementation(scene, globalIdx);
-	//}
+
 	delete[] threads;
 	threads = nullptr;
 	delete[] renderingOperators;

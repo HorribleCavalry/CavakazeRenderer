@@ -719,11 +719,11 @@ public:
 		os << "Called Scene::Release()!\n";
 		CHECK(camera, "Scene::Release() error: camera can not be nullptr!");
 		CHECK(objectVec, "Scene::Release() error: primitivesVectorPtr can not be nullptr!");
-		if (camera)
-		{
-			camera->Release();
-			camera = nullptr;
-		}
+		//if (camera)
+		//{
+		//	camera->Release();
+		//	camera = nullptr;
+		//}
 		if (objectVec)
 		{
 			objectVec->Release();

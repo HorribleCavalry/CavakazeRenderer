@@ -72,12 +72,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.dll</TargetExt>
-    <OutDir>..\Debug\</OutDir>
-    <IntDir>.\Intermediate\Debug\</IntDir>
+    <OutDir>../Debug/</OutDir>
+    <IntDir>./Intermediate/Debug/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\Release</OutDir>
-    <IntDir>.\Intermediate\Release</IntDir>
+    <OutDir>../Release/</OutDir>
+    <IntDir>./Intermediate/Release/</IntDir>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

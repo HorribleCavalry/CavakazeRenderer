@@ -394,6 +394,21 @@ CUDA_API void CloseDebugConsole()
 
 CUDA_API void StartRendering(Int width, Int height, void* imagePtr)
 {
+	//custd::cout << imagePtr << custd::endl;
+	//Pixel* buffer = (Pixel*)imagePtr;
+	//for (Int i = 0; i < height; i++)
+	//{
+	//	for (Int j = 0; j < width; j++)
+	//	{
+	//		buffer[i*width + j].r = 0;
+	//		buffer[i*width + j].g = 0;
+	//		buffer[i*width + j].b = 255;
+	//		buffer[i*width + j].a = 255;
+	//		//custd::cout << "Current row idx is" << i << ", current column is" << j << custd::endl;
+	//		//custd::cout << (Ushort)buffer[i*width + j].r << "\t" << (Ushort)buffer[i*width + j].g << "\t" << (Ushort)buffer[i*width + j].b << "\t" << (Ushort)buffer[i*width + j].a << custd::endl;
+	//	}
+	//}
+
 	std::string exePath = "D:\GitSpace\CavakazeRenderer\Release\CavakazeRenderer.exe";
 	std::string hierarchyPath = exePath.substr(0, exePath.find_last_of("\\") + 1);
 	const char* imageName = "Image.ppm";
@@ -536,12 +551,12 @@ CUDA_API void StartRendering(Int width, Int height, void* imagePtr)
 	auto end = std::chrono::steady_clock::now();
 	std::chrono::duration<double> duration = end - start;
 	custd::cout << duration.count() << custd::endl;
-
-	//scene.camera->renderTarget->Save(imagePath.c_str());
-	custd::cout << "Now release host scene." << custd::endl;
-	scene.Release();
-#ifdef RUN_ON_DEVICE
-	custd::cout << "Now release device scene." << custd::endl;
-	ReleaseIns << <1, 1 >> > (sceneDevice);
-#endif // RUN__ON__DEVICE
+//
+//	//scene.camera->renderTarget->Save(imagePath.c_str());
+//	custd::cout << "Now release host scene." << custd::endl;
+//	scene.Release();
+//#ifdef RUN_ON_DEVICE
+//	custd::cout << "Now release device scene." << custd::endl;
+//	ReleaseIns << <1, 1 >> > (sceneDevice);
+//#endif // RUN__ON__DEVICE
 }

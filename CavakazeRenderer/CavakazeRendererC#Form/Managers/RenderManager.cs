@@ -35,7 +35,7 @@ namespace CavakazeRenderer.Managers
 
         unsafe public void StartRendering(int width, int height, IntPtr imagePtr)
         {
-            CudaAPI.StartRendering(width, height, imagePtr.ToPointer());
+            CudaAPI.StartRendering(width, height, (void*)imagePtr);
 
             //Thread renderThread = threadPool[renderThreadID];
             //switch (renderThread.ThreadState)

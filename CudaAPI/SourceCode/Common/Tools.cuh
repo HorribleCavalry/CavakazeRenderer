@@ -412,7 +412,7 @@ public:
 
 struct Pixel
 {
-	Uchar r, g, b, a;
+	Uchar b, g, r, a;
 };
 
 class Texture
