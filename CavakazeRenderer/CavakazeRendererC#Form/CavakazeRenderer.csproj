@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalizerAndAttributes\ObjectAnalizer.cs" />
     <Compile Include="CavakazeRendererForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +75,13 @@
     <Compile Include="IDGenerator\OrderedIDGenerator.cs" />
     <Compile Include="Managers\Manager.cs" />
     <Compile Include="Managers\RenderManager.cs" />
+    <Compile Include="AnalizerAndAttributes\Analizer.cs" />
+    <Compile Include="Materials\Disney2012PBRMaterial.cs" />
+    <Compile Include="Materials\Material.cs" />
+    <Compile Include="Math\Math.cs" />
+    <Compile Include="Math\Mesh.cs" />
+    <Compile Include="Math\Object.cs" />
+    <Compile Include="Math\Primitive.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThreadStarts\ThreadStarts.cs" />

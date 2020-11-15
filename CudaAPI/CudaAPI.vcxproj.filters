@@ -80,7 +80,6 @@
     <CudaCompile Include="SourceCode\CudaAPI.cuh">
       <Filter>SourceCode</Filter>
     </CudaCompile>
-    <CudaCompile Include="SourceCode\CudaAPI.h" />
     <CudaCompile Include="SourceCode\Common\Geometry\Geometry.cu">
       <Filter>SourceCode\Common\Geometry</Filter>
     </CudaCompile>

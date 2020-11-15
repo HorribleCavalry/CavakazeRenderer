@@ -20,7 +20,6 @@
     <ClInclude Include="SourceCode\Common\stb_image.h" />
     <CudaCompile Include="SourceCode\Common\Utility.cuh" />
     <CudaCompile Include="SourceCode\CudaAPI.cuh" />
-    <CudaCompile Include="SourceCode\CudaAPI.h" />
     <CudaCompile Include="SourceCode\CudaSTD\cuarray.cuh" />
     <CudaCompile Include="SourceCode\CudaSTD\CudaUtility.cuh" />
     <CudaCompile Include="SourceCode\CudaSTD\cuiostream.cuh" />
