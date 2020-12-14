@@ -54,6 +54,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.UpdateTicker = new System.Windows.Forms.Timer(this.components);
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.RenderImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -93,6 +95,7 @@
             this.AddButton.TabIndex = 2;
             this.AddButton.Text = "Add Object";
             this.AddButton.UseVisualStyleBackColor = true;
+            this.AddButton.Visible = false;
             this.AddButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
             // button1
@@ -103,6 +106,7 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "Remove Object";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Hierarchy
@@ -115,6 +119,7 @@
             treeNode3});
             this.Hierarchy.Size = new System.Drawing.Size(174, 200);
             this.Hierarchy.TabIndex = 4;
+            this.Hierarchy.Visible = false;
             this.Hierarchy.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // label1
@@ -125,6 +130,7 @@
             this.label1.Size = new System.Drawing.Size(131, 12);
             this.label1.TabIndex = 5;
             this.label1.Text = "Position| X | Y | Z |";
+            this.label1.Visible = false;
             // 
             // numericUpDown1
             // 
@@ -132,6 +138,7 @@
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown1.TabIndex = 6;
+            this.numericUpDown1.Visible = false;
             // 
             // numericUpDown2
             // 
@@ -139,6 +146,7 @@
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown2.TabIndex = 7;
+            this.numericUpDown2.Visible = false;
             // 
             // numericUpDown3
             // 
@@ -146,6 +154,7 @@
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown3.TabIndex = 8;
+            this.numericUpDown3.Visible = false;
             // 
             // numericUpDown4
             // 
@@ -153,6 +162,7 @@
             this.numericUpDown4.Name = "numericUpDown4";
             this.numericUpDown4.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown4.TabIndex = 12;
+            this.numericUpDown4.Visible = false;
             // 
             // numericUpDown5
             // 
@@ -160,6 +170,7 @@
             this.numericUpDown5.Name = "numericUpDown5";
             this.numericUpDown5.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown5.TabIndex = 11;
+            this.numericUpDown5.Visible = false;
             // 
             // numericUpDown6
             // 
@@ -167,6 +178,7 @@
             this.numericUpDown6.Name = "numericUpDown6";
             this.numericUpDown6.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown6.TabIndex = 10;
+            this.numericUpDown6.Visible = false;
             // 
             // label2
             // 
@@ -176,6 +188,7 @@
             this.label2.Size = new System.Drawing.Size(131, 12);
             this.label2.TabIndex = 9;
             this.label2.Text = "Rotation| X | Y | Z |";
+            this.label2.Visible = false;
             // 
             // numericUpDown7
             // 
@@ -183,6 +196,7 @@
             this.numericUpDown7.Name = "numericUpDown7";
             this.numericUpDown7.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown7.TabIndex = 16;
+            this.numericUpDown7.Visible = false;
             // 
             // numericUpDown8
             // 
@@ -190,6 +204,7 @@
             this.numericUpDown8.Name = "numericUpDown8";
             this.numericUpDown8.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown8.TabIndex = 15;
+            this.numericUpDown8.Visible = false;
             // 
             // numericUpDown9
             // 
@@ -197,6 +212,7 @@
             this.numericUpDown9.Name = "numericUpDown9";
             this.numericUpDown9.Size = new System.Drawing.Size(54, 21);
             this.numericUpDown9.TabIndex = 14;
+            this.numericUpDown9.Visible = false;
             // 
             // label3
             // 
@@ -206,6 +222,7 @@
             this.label3.Size = new System.Drawing.Size(113, 12);
             this.label3.TabIndex = 13;
             this.label3.Text = "Scale| X | Y | Z |";
+            this.label3.Visible = false;
             // 
             // textBox1
             // 
@@ -213,6 +230,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(176, 21);
             this.textBox1.TabIndex = 17;
+            this.textBox1.Visible = false;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label4
@@ -223,6 +241,7 @@
             this.label4.Size = new System.Drawing.Size(83, 12);
             this.label4.TabIndex = 18;
             this.label4.Text = "Material Path";
+            this.label4.Visible = false;
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
@@ -233,6 +252,7 @@
             this.label5.Size = new System.Drawing.Size(71, 12);
             this.label5.TabIndex = 20;
             this.label5.Text = "Object Path";
+            this.label5.Visible = false;
             // 
             // textBox2
             // 
@@ -240,6 +260,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(176, 21);
             this.textBox2.TabIndex = 19;
+            this.textBox2.Visible = false;
             // 
             // label6
             // 
@@ -249,6 +270,7 @@
             this.label6.Size = new System.Drawing.Size(59, 12);
             this.label6.TabIndex = 21;
             this.label6.Text = "Hierarchy";
+            this.label6.Visible = false;
             this.label6.Click += new System.EventHandler(this.label6_Click);
             // 
             // button2
@@ -259,17 +281,36 @@
             this.button2.TabIndex = 22;
             this.button2.Text = "Reset Object";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
             // 
             // UpdateTicker
             // 
             this.UpdateTicker.Interval = 20;
             this.UpdateTicker.Tick += new System.EventHandler(this.UpdateTicker_Tick);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(8, 425);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(65, 12);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Scene Path";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(10, 440);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(176, 21);
+            this.textBox3.TabIndex = 23;
+            // 
             // CavakazeRendererMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1486, 752);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.textBox3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -337,6 +378,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Timer UpdateTicker;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 

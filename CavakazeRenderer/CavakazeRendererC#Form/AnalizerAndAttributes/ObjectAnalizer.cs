@@ -1,4 +1,4 @@
-﻿using CavakazeRenderer.Math;
+﻿using CavakazeRenderer.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +10,9 @@ namespace CavakazeRenderer.Analizer
 
     class ObjectAnalizer : Analizer
     {
-        public Math.Object Analizing(string path)
+        public Common.Object Analizing(string path)
         {
-            return new Math.Object();
+            return new Common.Object();
         }
     }
 }

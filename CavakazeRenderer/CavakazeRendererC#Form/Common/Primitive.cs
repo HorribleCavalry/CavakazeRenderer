@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CavakazeRenderer.Math
+namespace CavakazeRenderer.Common
 {
     abstract class Primitive
     {
@@ -13,7 +13,7 @@ namespace CavakazeRenderer.Math
     class Triangle
     {
         public Vec3[] points;
-        public Vec2[] uvs
+        public Vec2[] uvs;
         public Triangle()
         {
             points = new Vec3[3];

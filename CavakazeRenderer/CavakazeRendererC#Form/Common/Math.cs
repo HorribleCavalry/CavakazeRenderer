@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CavakazeRenderer.Math
+namespace CavakazeRenderer.Common
 {
     class Vec2
     {
